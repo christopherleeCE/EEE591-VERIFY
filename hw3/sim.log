@@ -1,36 +1,28 @@
 #  vlog *.sv
 # Questa Intel Starter FPGA Edition-64 vlog 2024.3 Compiler 2024.09 Sep 10 2024
-# Start time: 20:32:34 on Mar 04,2026
+# Start time: 22:29:54 on Mar 04,2026
 # vlog top_verichip.sv verichip.sv 
 # -- Compiling module top_verichip
-# ** Warning: ** while parsing macro expansion: 'CHECK_RW' starting at top_verichip.sv(199)
-# ** at top_verichip.sv(199): (vlog-13528) Extra Parentheses after time system function.
-# ** Warning: ** while parsing macro expansion: 'CHECK_RW' starting at top_verichip.sv(212)
-# ** at top_verichip.sv(212): (vlog-13528) Extra Parentheses after time system function.
-# ** Warning: ** while parsing macro expansion: 'CHIP_ERROR' starting at top_verichip.sv(222)
-# ** at top_verichip.sv(222): (vlog-13528) Extra Parentheses after time system function.
-# ** Warning: ** while parsing macro expansion: 'CHECK_RW' starting at top_verichip.sv(226)
-# ** at top_verichip.sv(226): (vlog-13528) Extra Parentheses after time system function.
-# ** Warning: ** while parsing macro expansion: 'CHECK_RW' starting at top_verichip.sv(238)
-# ** at top_verichip.sv(238): (vlog-13528) Extra Parentheses after time system function.
+# ** Warning: ** while parsing macro expansion: 'CHECK_RW' starting at top_verichip.sv(201)
+# ** at top_verichip.sv(201): (vlog-13528) Extra Parentheses after time system function.
+# ** Warning: ** while parsing macro expansion: 'CHECK_RW' starting at top_verichip.sv(216)
+# ** at top_verichip.sv(216): (vlog-13528) Extra Parentheses after time system function.
+# ** Warning: ** while parsing macro expansion: 'CHIP_ERROR' starting at top_verichip.sv(227)
+# ** at top_verichip.sv(227): (vlog-13528) Extra Parentheses after time system function.
+# ** Warning: ** while parsing macro expansion: 'CHECK_RW' starting at top_verichip.sv(232)
+# ** at top_verichip.sv(232): (vlog-13528) Extra Parentheses after time system function.
+# ** Warning: ** while parsing macro expansion: 'CHECK_RW' starting at top_verichip.sv(245)
+# ** at top_verichip.sv(245): (vlog-13528) Extra Parentheses after time system function.
 # -- Compiling module verichip
 # 
 # Top level modules:
 # 	top_verichip
-# End time: 20:32:35 on Mar 04,2026, Elapsed time: 0:00:01
+# End time: 22:29:54 on Mar 04,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 5
 #  vsim -voptargs=+acc work.top_verichip 
 # vsim -voptargs="+acc" work.top_verichip 
-# Start time: 20:32:35 on Mar 04,2026
-# ** Note: (vsim-3812) Design is being optimized...
-# ** Warning: (vopt-10908) Some optimizations are turned off because the +acc switch is in effect.
-# ** Warning: top_verichip.sv(199): (vopt-13528) Extra Parentheses after time system function.
-# ** Warning: top_verichip.sv(212): (vopt-13528) Extra Parentheses after time system function.
-# ** Warning: top_verichip.sv(222): (vopt-13528) Extra Parentheses after time system function.
-# ** Warning: top_verichip.sv(226): (vopt-13528) Extra Parentheses after time system function.
-# ** Warning: top_verichip.sv(238): (vopt-13528) Extra Parentheses after time system function.
-# ** Note: (vopt-143) Recognized 1 FSM in module "verichip(fast)".
-# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=6.
+# Start time: 22:29:54 on Mar 04,2026
+# ** Note: (vsim-8009) Loading existing optimized design _opt
 # //  Questa Intel Starter FPGA Edition-64
 # //  Version 2024.3 win64 Sep 10 2024
 # //
@@ -49,225 +41,165 @@
 # Loading work.top_verichip(fast)
 # Loading work.verichip(fast)
 #  run 100us
-# macro args: ffff, 0000
-# data out is 0000
-# 0000, 0000
-# macro args: aaaa, 0000
-# data out is 0000
-# 0000, 0000
-# macro args: 5555, 0000
-# data out is 0000
-# 0000, 0000
-# macro args: 0000, 0000
-# data out is 0000
-# 0000, 0000
-# macro args: ffff, 00ff
-# data out is 00ff
-# 00ff, 00ff
-# macro args: aaaa, 00aa
-# data out is 00aa
-# 00aa, 00aa
-# macro args: 5555, 0055
-# data out is 0055
-# 0055, 0055
-# macro args: 0000, 0000
-# data out is 0000
-# 0000, 0000
-# macro args: ffff, ff00
-# data out is ff00
-# ff00, ff00
-# macro args: aaaa, aa00
-# data out is aa00
-# aa00, aa00
-# macro args: 5555, 5500
-# data out is 5500
-# 5500, 5500
-# macro args: 0000, 0000
-# data out is 0000
-# 0000, 0000
-# macro args: ffff, ffff
-# data out is ffff
-# ffff, ffff
-# macro args: aaaa, aaaa
-# data out is aaaa
-# aaaa, aaaa
-# macro args: 5555, 5555
-# data out is 5555
-# 5555, 5555
-# macro args: 0000, 0000
-# data out is 0000
-# 0000, 0000
 # 
 #  
 #  
-#  NORMAL
+# 
 # state: 0
-# macro args: ffff, 0000
-# data out is 0000
-# 0000, 0000
-# macro args: aaaa, 0000
-# data out is 0000
-# 0000, 0000
-# macro args: 5555, 0000
-# data out is 0000
-# 0000, 0000
-# macro args: 0000, 0000
-# data out is 0000
-# 0000, 0000
-# macro args: ffff, 00ff
-# data out is 00ff
-# 00ff, 00ff
-# macro args: aaaa, 00aa
-# data out is 00aa
-# 00aa, 00aa
-# macro args: 5555, 0055
-# data out is 0055
-# 0055, 0055
-# macro args: 0000, 0000
-# data out is 0000
-# 0000, 0000
-# macro args: ffff, ff00
-# data out is ff00
-# ff00, ff00
-# macro args: aaaa, aa00
-# data out is aa00
-# aa00, aa00
-# macro args: 5555, 5500
-# data out is 5500
-# 5500, 5500
-# macro args: 0000, 0000
-# data out is 0000
-# 0000, 0000
-# macro args: ffff, ffff
-# data out is ffff
-# ffff, ffff
-# macro args: aaaa, aaaa
-# data out is aaaa
-# aaaa, aaaa
-# macro args: 5555, 5555
-# data out is 5555
-# 5555, 5555
-# macro args: 0000, 0000
-# data out is 0000
-# 0000, 0000
-# 
-#  
-#  
-#  ERROR
-# state: 1
-# data out is 1234
-# 1234, 1234
-# macro args: ffff, 0000
-# data out is 1234
-# 1234, 1234
-# macro args: aaaa, 0000
-# data out is 1234
-# 1234, 1234
-# macro args: 5555, 0000
-# data out is 1234
-# 1234, 1234
-# macro args: 0000, 0000
-# data out is 1234
-# 1234, 1234
-# macro args: ffff, 00ff
-# data out is 1234
-# 1234, 1234
-# macro args: aaaa, 00aa
-# data out is 1234
-# 1234, 1234
-# macro args: 5555, 0055
-# data out is 1234
-# 1234, 1234
-# macro args: 0000, 0000
-# data out is 1234
-# 1234, 1234
-# macro args: ffff, ff00
-# data out is 1234
-# 1234, 1234
-# macro args: aaaa, aa00
-# data out is 1234
-# 1234, 1234
-# macro args: 5555, 5500
-# data out is 1234
-# 1234, 1234
-# macro args: 0000, 0000
-# data out is 1234
-# 1234, 1234
-# macro args: ffff, ffff
-# data out is 1234
-# 1234, 1234
-# macro args: aaaa, aaaa
-# data out is 1234
-# 1234, 1234
-# macro args: 5555, 5555
-# data out is 1234
-# 1234, 1234
-# macro args: 0000, 0000
-# data out is 1234
-# 1234, 1234
-# 
-#  
-#  
-#  EXP VIO
-# state: 2
-# state: 2
+# calling `CHIP_RESET...
 # state: 0
+# data out is 0000
+# [data_out, expected] = [0000, 0000] 
+# data out is 0000
+# [data_out, expected] = [0000, 0000] 
+# data out is 0000
+# [data_out, expected] = [0000, 0000] 
+# data out is 0000
+# [data_out, expected] = [0000, 0000] 
+# data out is 00ff
+# [data_out, expected] = [00ff, 00ff] 
+# data out is 00aa
+# [data_out, expected] = [00aa, 00aa] 
+# data out is 0055
+# [data_out, expected] = [0055, 0055] 
+# data out is 0000
+# [data_out, expected] = [0000, 0000] 
+# data out is ff00
+# [data_out, expected] = [ff00, ff00] 
+# data out is aa00
+# [data_out, expected] = [aa00, aa00] 
+# data out is 5500
+# [data_out, expected] = [5500, 5500] 
+# data out is 0000
+# [data_out, expected] = [0000, 0000] 
+# data out is ffff
+# [data_out, expected] = [ffff, ffff] 
+# data out is aaaa
+# [data_out, expected] = [aaaa, aaaa] 
+# data out is 5555
+# [data_out, expected] = [5555, 5555] 
+# data out is 0000
+# [data_out, expected] = [0000, 0000] 
+# 
+#  
+#  
+# 
+# state: 0
+# calling `CHIP_NORMAL...
 # state: 1
-# verichip.cmd : 0
-# verichip.cmd_reg : 0000
-# ED: 1
-# verichip.cmd : 8
-# verichip.cmd_reg : 8008
+# data out is 0000
+# [data_out, expected] = [0000, 0000] 
+# data out is 0000
+# [data_out, expected] = [0000, 0000] 
+# data out is 0000
+# [data_out, expected] = [0000, 0000] 
+# data out is 0000
+# [data_out, expected] = [0000, 0000] 
+# data out is 00ff
+# [data_out, expected] = [00ff, 00ff] 
+# data out is 00aa
+# [data_out, expected] = [00aa, 00aa] 
+# data out is 0055
+# [data_out, expected] = [0055, 0055] 
+# data out is 0000
+# [data_out, expected] = [0000, 0000] 
+# data out is ff00
+# [data_out, expected] = [ff00, ff00] 
+# data out is aa00
+# [data_out, expected] = [aa00, aa00] 
+# data out is 5500
+# [data_out, expected] = [5500, 5500] 
+# data out is 0000
+# [data_out, expected] = [0000, 0000] 
+# data out is ffff
+# [data_out, expected] = [ffff, ffff] 
+# data out is aaaa
+# [data_out, expected] = [aaaa, aaaa] 
+# data out is 5555
+# [data_out, expected] = [5555, 5555] 
+# data out is 0000
+# [data_out, expected] = [0000, 0000] 
+# 
+#  
+#  
+# 
+# state: 1
+# calling `CHIP_ERROR...
+# data out is 1234
+# [data_out, expected] = [1234, 1234] 
+# state: 2
+# data out is 1234
+# [data_out, expected] = [1234, 1234] 
+# data out is 1234
+# [data_out, expected] = [1234, 1234] 
+# data out is 1234
+# [data_out, expected] = [1234, 1234] 
+# data out is 1234
+# [data_out, expected] = [1234, 1234] 
+# data out is 1234
+# [data_out, expected] = [1234, 1234] 
+# data out is 1234
+# [data_out, expected] = [1234, 1234] 
+# data out is 1234
+# [data_out, expected] = [1234, 1234] 
+# data out is 1234
+# [data_out, expected] = [1234, 1234] 
+# data out is 1234
+# [data_out, expected] = [1234, 1234] 
+# data out is 1234
+# [data_out, expected] = [1234, 1234] 
+# data out is 1234
+# [data_out, expected] = [1234, 1234] 
+# data out is 1234
+# [data_out, expected] = [1234, 1234] 
+# data out is 1234
+# [data_out, expected] = [1234, 1234] 
+# data out is 1234
+# [data_out, expected] = [1234, 1234] 
+# data out is 1234
+# [data_out, expected] = [1234, 1234] 
+# data out is 1234
+# [data_out, expected] = [1234, 1234] 
+# 
+#  
+#  
+# 
+# state: 2
+# calling `CHIP_EXP_VIO...
 # state: 8
-# macro args: ffff, 0000
 # data out is 0000
-# 0000, 0000
-# macro args: aaaa, 0000
+# [data_out, expected] = [0000, 0000] 
 # data out is 0000
-# 0000, 0000
-# macro args: 5555, 0000
+# [data_out, expected] = [0000, 0000] 
 # data out is 0000
-# 0000, 0000
-# macro args: 0000, 0000
+# [data_out, expected] = [0000, 0000] 
 # data out is 0000
-# 0000, 0000
-# macro args: ffff, 00ff
+# [data_out, expected] = [0000, 0000] 
 # data out is 0000
-# 0000, 0000
-# macro args: aaaa, 00aa
+# [data_out, expected] = [0000, 0000] 
 # data out is 0000
-# 0000, 0000
-# macro args: 5555, 0055
+# [data_out, expected] = [0000, 0000] 
 # data out is 0000
-# 0000, 0000
-# macro args: 0000, 0000
+# [data_out, expected] = [0000, 0000] 
 # data out is 0000
-# 0000, 0000
-# macro args: ffff, ff00
+# [data_out, expected] = [0000, 0000] 
 # data out is 0000
-# 0000, 0000
-# macro args: aaaa, aa00
+# [data_out, expected] = [0000, 0000] 
 # data out is 0000
-# 0000, 0000
-# macro args: 5555, 5500
+# [data_out, expected] = [0000, 0000] 
 # data out is 0000
-# 0000, 0000
-# macro args: 0000, 0000
+# [data_out, expected] = [0000, 0000] 
 # data out is 0000
-# 0000, 0000
-# macro args: ffff, ffff
+# [data_out, expected] = [0000, 0000] 
 # data out is 0000
-# 0000, 0000
-# macro args: aaaa, aaaa
+# [data_out, expected] = [0000, 0000] 
 # data out is 0000
-# 0000, 0000
-# macro args: 5555, 5555
+# [data_out, expected] = [0000, 0000] 
 # data out is 0000
-# 0000, 0000
-# macro args: 0000, 0000
+# [data_out, expected] = [0000, 0000] 
 # data out is 0000
-# 0000, 0000
-# ** Note: $finish    : top_verichip.sv(242)
-#    Time: 2075 ns  Iteration: 1  Instance: /top_verichip
-# End time: 20:32:38 on Mar 04,2026, Elapsed time: 0:00:03
-# Errors: 0, Warnings: 6
+# [data_out, expected] = [0000, 0000] 
+# ** Note: $finish    : top_verichip.sv(249)
+#    Time: 2065 ns  Iteration: 1  Instance: /top_verichip
+# End time: 22:29:55 on Mar 04,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

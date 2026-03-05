@@ -49,15 +49,17 @@
    wait(clk == 1'b1);
 
 //give it a value, if the data_out on the data bus is not that value, throw an error
-`define CHECK_VAL(val)              \
-    $display("%h, %h", data_out, val); \
-   if ( data_out != val )           \
-       $display("bad read, got %h but expected %h at %t",data_out,val,$time());
+`define CHECK_VAL(val)                                      \
+   $write("[data_out, expected] = [%h, %h]", data_out, val);\
+   if ( data_out != val )                                   \
+      $write(" : bad read @ time: ",data_out,val,$time());  \
+   $display();
 
 `define CHECK_RW(addr,wval,exp_val,bytes,cs)    \
-   `WRITE_REG(addr,wval,bytes,cs)       \
-   `READ_REG(addr,cs)                   \
-    $display("data out is %h",data_out);\
+   `WRITE_REG(addr,wval,bytes,cs)         \
+   `READ_REG(addr,cs)                     \
+   //TODO can we comment out this debug output? \
+   $display("data out is %h",data_out);   \
    `CHECK_VAL(exp_val)
 
 // waits for the clock to be 0 and then asserts reset, then waits for 
@@ -81,7 +83,7 @@
    wait(clk == 1'b1);  \
    wait(clk == 1'b0);  \
 
-   `define CHIP_ERROR  \
+`define CHIP_ERROR  \
    wait(clk == 1'b0);  \
    rst_b <= 1'b0;      \
    wait(clk == 1'b1);  \
@@ -94,42 +96,34 @@
    wait(clk == 1'b1);  \
    wait(clk == 1'b0);  \
                        \
-`CHECK_RW(7'h10, 16'h1234, 16'h1234, 2'b11, 1'b1) //set to a non-zero initial value \
+   //set to a non-zero initial value                     \
+   `CHECK_RW(VCHIP_ALU_LEFT_ADDR, 16'h1234, 16'h1234, 2'b11, 1'b1)     \
+                                                         \
    //write bad command to command reg to go into error   \
-`WRITE_REG(VCHIP_CMD_ADDR, 16'h8008, 2'b11, 1'b1)	
-   //ends on clk = 0
+   `WRITE_REG(VCHIP_CMD_ADDR, 16'h800C, 2'b11, 1'b1)     \
+   wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output   \
 
    `define CHIP_EXP_VIO    \
-                     \
-   `DISPLAY_STATE    \
-   wait(clk == 1'b0);  \
-   rst_b <= 1'b0;      \
-   wait(clk == 1'b1);  \
-   rst_b <= 1'b1;      \
-   wait(clk == 1'b0);  \
-                       \
-   //go into normal from reset \
-                     \
-   `DISPLAY_STATE    \
-   maroon <= 1'b0;     \
-   gold <= 1'b1;       \
-   wait(clk == 1'b1);  \
-   wait(clk == 1'b0);  \
                         \
-                     \
-   `DISPLAY_STATE    \
+   wait(clk == 1'b0);   \
+   rst_b <= 1'b0;       \
+   wait(clk == 1'b1);   \
+   rst_b <= 1'b1;       \
+   wait(clk == 1'b0);   \
+                        \
+   //go into normal from reset \
+                        \
+   maroon <= 1'b0;      \
+   gold <= 1'b1;        \
+   wait(clk == 1'b1);   \
+   wait(clk == 1'b0);   \
+                        \
    export_disable <= 1'b1; \
-   wait(clk == 1'b1);  \
-   wait(clk == 1'b0);  \
-   wait(clk == 1'b1);  \
-   wait(clk == 1'b0);  \
-    $display("verichip.cmd : %h\nverichip.cmd_reg : %h", verichip.cmd, verichip.cmd_reg);    \
+                        \
    //write restricted cmd to command reg to go into error   \
-    $display("ED: %b",export_disable);                          \
-`WRITE_REG(VCHIP_CMD_ADDR, 16'h8008, 2'b11, 1'b1)                    \
-    $display("verichip.cmd : %h\nverichip.cmd_reg : %h", verichip.cmd, verichip.cmd_reg);    \
-    wait(clk == 1'b0); wait(clk == 1'b1);   wait(clk == 1'b0); wait(clk == 1'b1);                \
-   `DISPLAY_STATE
+   //(even invalid commands are restricted)                 \
+   `WRITE_REG(VCHIP_CMD_ADDR, 16'h8008, 2'b11, 1'b1)                                   \
+   wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output   \
 
 
 module top_verichip ();
@@ -181,7 +175,7 @@ end
 // need to test all byte enables, do it with a for loop and a case statement
 // test writing regisers, test address 50 and ensure nothing is written to ALU_left,
 // which is address 10
-// wait for the
+
 ///////////////////////////////////////////////////////////////////////////////////// 
 reg [15:0] stim_array [4];
 reg [15:0] bit_mask_array [4];
@@ -193,49 +187,59 @@ begin
 stim_array = {16'hFFFF, 16'hAAAA, 16'h5555, 16'h0000};
 bit_mask_array = {16'h0000, 16'h00FF, 16'hFF00, 16'hFFFF};
 
-for (int _cs = 0; _cs < 4; _cs ++) begin
+$display("\n \n \n");
+`DISPLAY_STATE
+
+$display("calling `CHIP_RESET...");
+`CHIP_RESET
+`DISPLAY_STATE
+for (int _be = 0; _be < 4; _be ++) begin
    for (int i = 0; i < 4; i++) begin
-    $display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_cs]); 
-     `CHECK_RW(7'h10,stim_array[i],(stim_array[i] & bit_mask_array[_cs]),_cs,1)
+      //$display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_be]); 
+      `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
    end
 end
 // YOUR STIMULUS GOES HERE!
 
-$display("\n \n \n NORMAL");
+$display("\n \n \n");
 `DISPLAY_STATE
 
-
+$display("calling `CHIP_NORMAL...");
 `CHIP_NORMAL
-for (int _cs = 0; _cs < 4; _cs ++) begin
+`DISPLAY_STATE
+for (int _be = 0; _be < 4; _be ++) begin
    for (int i = 0; i < 4; i++) begin
-    $display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_cs]); 
-     `CHECK_RW(7'h10,stim_array[i],(stim_array[i] & bit_mask_array[_cs]),_cs,1)
+      //$display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_be]); 
+      `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
    end
 end
 
 //set initial value
 
 
-$display("\n \n \n ERROR");
+$display("\n \n \n");
 `DISPLAY_STATE 
 
+$display("calling `CHIP_ERROR...");
 `CHIP_ERROR
-for (int _cs = 0; _cs < 4; _cs ++)
+`DISPLAY_STATE
+for (int _be = 0; _be < 4; _be ++)
    for (int i = 0; i < 4; i++) begin
-    $display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_cs]); 
-     `CHECK_RW(7'h10,stim_array[i],16'h1234,_cs,1)
+      //$display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_be]); 
+      `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], 16'h1234, _be, 1'b1)
    end
 
    
-$display("\n \n \n EXP VIO");
+$display("\n \n \n");
 `DISPLAY_STATE   
 
-
+$display("calling `CHIP_EXP_VIO...");
 `CHIP_EXP_VIO
-for (int _cs = 0; _cs < 4; _cs ++)
+`DISPLAY_STATE
+for (int _be = 0; _be < 4; _be ++)
    for (int i = 0; i < 4; i++) begin
-    $display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_cs]); 
-     `CHECK_RW(7'h10,stim_array[i],16'h0000,_cs,1)
+      //$display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_be]); 
+      `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], 16'h0000, _be, 1'b1)
    end
 
 
