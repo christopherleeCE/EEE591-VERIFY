@@ -1,96 +1,11 @@
 `timescale 1ns/1ps
-
-//TODO i dont even think maroon and gold are declared, issue?
-
-//there is another way of added "branching" in the macro, looks like this
-//`define DO_0  $display("Code A");
-//`define DO_1  $display("Code B");
-//
-//`define DO(x) `DO_``x
-//
-//i opted just to use if statements cus millman doesnt hate them afaink
-//
-//yes you need a \ at EVERY LINE, even if the line is just a newline,
-//and yes, you need the backlash after the comment, you can have it before
-//quick tip, use ':set list' to show newlines where newlines are, they will be
-//indicated with a '$', so you can tell if there is whitespace after ur \
-//aruguably i shouldve made a set_reset macro, and set normal macro, however
-//looking at it now i find that this is more readable anyway imo (to me at least)
-`define CHANGE_STATE(state)    \
-    if(state == 16'h0) begin    \
-                            \
-        wait(clk == 1'b0);  \
-        rst_b <= 1'b0;      \
-        wait(clk == 1'b1);  \
-        rst_b <= 1'b1;      \
-        wait(clk == 1'b0); //idk *shrug \
-                            \
-    end else if(state == 16'h1) begin   \
-                            \
-        //go into reset     \
-        wait(clk == 1'b0);  \
-        rst_b <= 1'b0;      \
-        wait(clk == 1'b1);  \
-        rst_b <= 1'b1;      \
-        wait(clk == 1'b0);  \
-                            \
-        //go into normal from reset \
-        maroon <= 1'b0;     \
-        gold <= 1'b1;       \
-        wait(clk == 1'b1);  \
-        wait(clk == 1'b0);  \
-                            \
-    end else if(state == 16'h2) begin   \
-                            \
-        //go into reset     \
-        wait(clk == 1'b0);  \
-        rst_b <= 1'b0;      \
-        wait(clk == 1'b1);  \
-        rst_b <= 1'b1;      \
-        wait(clk == 1'b0);  \
-                            \
-        //go into normal from reset \
-        maroon <= 1'b0;     \
-        gold <= 1'b1;       \
-        wait(clk == 1'b1);  \
-        wait(clk == 1'b0);  \
-                            \
-        //go into error from normal                 \
-        //either for bad cmd or get it organically  \
-                                        \
-    end else if(state == 16'h8) begin   \
-                            \
-        //go into reset     \
-        wait(clk == 1'b0);  \
-        rst_b <= 1'b0;      \
-        wait(clk == 1'b1);  \
-        rst_b <= 1'b1;      \
-        wait(clk == 1'b0);  \
-                            \
-        //go into normal from reset \
-        maroon <= 1'b0;     \
-        gold <= 1'b1;       \
-        wait(clk == 1'b1);  \
-        wait(clk == 1'b0);  \
-                            \
-        //go into expviol from normal                                                   \
-        //either force an intrupt or sumthin, or get it organically, need timing waits  \
-                            \
-    end else begin  \
-                        \
-        $error("bad macro call, CHANGE_STATE(%h)", state); \
-                        \
-    end \
-
-
+// performed in 0 time
 
 `define DISPLAY_STATE \
-    $display("state: %h", verichip.state); 
+   $display("state: %h", verichip.state);  
 
-
-// performed in 0 time
 `define SET_WRITE(addr,val,bytes,cs)   \
-    rw_ <= 1'b0;                     \
+   rw_ <= 1'b0;                     \
    chip_select <= cs;               \
    byte_en <= bytes;                \
    address <= addr;                 \
@@ -128,20 +43,22 @@
 
 
 `define READ_REG(addr,cs) \
-   wait(clk == 1'b0); \
-   `SET_READ(addr,cs) \
    wait(clk == 1'b1); \
-   wait(clk == 1'b0);
+   `SET_READ(addr,cs) \
+   wait(clk == 1'b0); \
+   wait(clk == 1'b1);
 
 //give it a value, if the data_out on the data bus is not that value, throw an error
 `define CHECK_VAL(val)              \
+    $display("%h, %h", data_out, val); \
    if ( data_out != val )           \
        $display("bad read, got %h but expected %h at %t",data_out,val,$time());
 
-//TODO should be include check_val() here too? the name kinda implies that it does some checking, but from what i see it only gets the read value onto the data_out
-`define CHECK_RW(addr,wval,bytes,cs)    \
-   `WRITE_REG(addr,wval,bytes,cs)            \
-   `READ_REG(addr,cs)
+`define CHECK_RW(addr,wval,exp_val,bytes,cs)    \
+   `WRITE_REG(addr,wval,bytes,cs)       \
+   `READ_REG(addr,cs)                   \
+    $display("data out is %h",data_out);\
+   `CHECK_VAL(exp_val)
 
 // waits for the clock to be 0 and then asserts reset, then waits for 
 // clk == 1 to deassert reset
@@ -150,6 +67,70 @@
    rst_b <= 1'b0;                   \
    wait( clk == 1'b1 );             \
    rst_b <= 1'b1;
+
+`define CHIP_NORMAL    \
+   wait(clk == 1'b0);  \
+   rst_b <= 1'b0;      \
+   wait(clk == 1'b1);  \
+   rst_b <= 1'b1;      \
+   wait(clk == 1'b0);  \
+                       \
+   //go into normal from reset \
+   maroon <= 1'b0;     \
+   gold <= 1'b1;       \
+   wait(clk == 1'b1);  \
+   wait(clk == 1'b0);  \
+
+   `define CHIP_ERROR  \
+   wait(clk == 1'b0);  \
+   rst_b <= 1'b0;      \
+   wait(clk == 1'b1);  \
+   rst_b <= 1'b1;      \
+   wait(clk == 1'b0);  \
+                       \
+   //go into normal from reset \
+   maroon <= 1'b0;     \
+   gold <= 1'b1;       \
+   wait(clk == 1'b1);  \
+   wait(clk == 1'b0);  \
+                       \
+`CHECK_RW(7'h10, 16'h1234, 16'h1234, 2'b11, 1'b1) //set to a non-zero initial value \
+   //write bad command to command reg to go into error   \
+`WRITE_REG(VCHIP_CMD_ADDR, 16'h8008, 2'b11, 1'b1)	
+   //ends on clk = 0
+
+   `define CHIP_EXP_VIO    \
+                     \
+   `DISPLAY_STATE    \
+   wait(clk == 1'b0);  \
+   rst_b <= 1'b0;      \
+   wait(clk == 1'b1);  \
+   rst_b <= 1'b1;      \
+   wait(clk == 1'b0);  \
+                       \
+   //go into normal from reset \
+                     \
+   `DISPLAY_STATE    \
+   maroon <= 1'b0;     \
+   gold <= 1'b1;       \
+   wait(clk == 1'b1);  \
+   wait(clk == 1'b0);  \
+                        \
+                     \
+   `DISPLAY_STATE    \
+   export_disable <= 1'b1; \
+   wait(clk == 1'b1);  \
+   wait(clk == 1'b0);  \
+   wait(clk == 1'b1);  \
+   wait(clk == 1'b0);  \
+    $display("verichip.cmd : %h\nverichip.cmd_reg : %h", verichip.cmd, verichip.cmd_reg);    \
+   //write restricted cmd to command reg to go into error   \
+    $display("ED: %b",export_disable);                          \
+`WRITE_REG(VCHIP_CMD_ADDR, 16'h8008, 2'b11, 1'b1)                    \
+    $display("verichip.cmd : %h\nverichip.cmd_reg : %h", verichip.cmd, verichip.cmd_reg);    \
+    wait(clk == 1'b0); wait(clk == 1'b1);   wait(clk == 1'b0); wait(clk == 1'b1);                \
+   `DISPLAY_STATE
+
 
 module top_verichip ();
 
@@ -202,43 +183,63 @@ end
 // which is address 10
 // wait for the
 ///////////////////////////////////////////////////////////////////////////////////// 
+reg [15:0] stim_array [4];
+reg [15:0] bit_mask_array [4];
 initial
 begin
-    `CLEAR_ALL
-    `CHIP_RESET
-#10;
-    //you can delete the $time outputs and extra waits
-    `CHECK_RW(7'h10, 16'h00AA, 2'b11, 1'b1) 
-    `CHECK_VAL(16'h00AA) 
+   `CLEAR_ALL
+   `CHIP_RESET
 
-    $display("time: $d", $time);
-    wait(clk == 1'b0);
-    `DISPLAY_STATE
-    `CHANGE_STATE(16'h0001)
-    `DISPLAY_STATE
-    `CHANGE_STATE(16'h0000)
-    `DISPLAY_STATE
+stim_array = {16'hFFFF, 16'hAAAA, 16'h5555, 16'h0000};
+bit_mask_array = {16'h0000, 16'h00FF, 16'hFF00, 16'hFFFF};
 
-    $display("time: $d", $time);
-    wait(clk == 1'b0);
-
-    $display("time: $d", $time);
-    wait(clk == 1'b0);
-    wait(clk == 1'b0);
-    wait(clk == 1'b0);
-    $display("time: $d", $time);
-//#10; 
-//wait(clk == 1'b0);
-// wait(clk == 1'b1);
-// wait(clk == 1'b0);
-// wait(clk == 1'b1);
-// `SET_READ(7'h10,1'b1)
-//#10;
-//`READ_REG(7'h10,1'b1)
- 
+for (int _cs = 0; _cs < 4; _cs ++) begin
+   for (int i = 0; i < 4; i++) begin
+    $display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_cs]); 
+     `CHECK_RW(7'h10,stim_array[i],(stim_array[i] & bit_mask_array[_cs]),_cs,1)
+   end
+end
 // YOUR STIMULUS GOES HERE!
 
-   #5 $finish;
+$display("\n \n \n NORMAL");
+`DISPLAY_STATE
+
+
+`CHIP_NORMAL
+for (int _cs = 0; _cs < 4; _cs ++) begin
+   for (int i = 0; i < 4; i++) begin
+    $display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_cs]); 
+     `CHECK_RW(7'h10,stim_array[i],(stim_array[i] & bit_mask_array[_cs]),_cs,1)
+   end
+end
+
+//set initial value
+
+
+$display("\n \n \n ERROR");
+`DISPLAY_STATE 
+
+`CHIP_ERROR
+for (int _cs = 0; _cs < 4; _cs ++)
+   for (int i = 0; i < 4; i++) begin
+    $display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_cs]); 
+     `CHECK_RW(7'h10,stim_array[i],16'h1234,_cs,1)
+   end
+
+   
+$display("\n \n \n EXP VIO");
+`DISPLAY_STATE   
+
+
+`CHIP_EXP_VIO
+for (int _cs = 0; _cs < 4; _cs ++)
+   for (int i = 0; i < 4; i++) begin
+    $display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_cs]); 
+     `CHECK_RW(7'h10,stim_array[i],16'h0000,_cs,1)
+   end
+
+
+   $finish;
 end // initial begin
 
 
@@ -259,6 +260,8 @@ verichip verichip (.clk           ( clk            ),    // system clock
 
                    .data_out      ( data_out       ) );  // output data bus
 
-
+initial begin
+  $dumpfile("dump.vcd");
+  $dumpvars();
+end
 endmodule
-
