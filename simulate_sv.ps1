@@ -2,8 +2,10 @@
 
 param(
     [switch]$help,
-    [int]$time = 100
+    [int]$time = 1000
 )
+
+$timer = [System.Diagnostics.Stopwatch]::StartNew()
 
 $vsimArgs = ""
 
@@ -16,3 +18,6 @@ if ($Help) {
     exit 0
 }
 vsim -c -do "file delete -force sim.log; transcript file sim.log; vlog *.sv; vsim -voptargs=+acc work.top_verichip $vsimArgs; run ${time}us; quit -f"
+
+$timer.Stop()
+Write-Host ("Total runtime: {0}" -f $timer.Elapsed)
