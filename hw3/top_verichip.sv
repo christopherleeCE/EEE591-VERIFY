@@ -395,8 +395,8 @@ end
 for (int _be = 0; _be < 4; _be ++) begin
   `CHIP_NORMAL
   `DISPLAY_STATE
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b0) // cs low
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0) // cs low
   `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR) // read validate
 end
 
@@ -404,8 +404,8 @@ end
 for (int _be = 0; _be < 4; _be ++) begin
   `CHIP_ERROR(16'h0000)
   `DISPLAY_STATE
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b0) // cs low
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0) // cs low
   `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR) // read validate
 end
 
@@ -413,8 +413,8 @@ end
 for (int _be = 0; _be < 4; _be ++) begin
   `CHIP_EXP_VIO
   `DISPLAY_STATE
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b0) // cs low
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0) // cs low
   `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR) // read validate
 end
 
