@@ -3,7 +3,7 @@
 // performed in 0 time
 
 `define DISPLAY_STATE \
-   $display("state: %h", verichip.state);  
+   $display("state: %h", verichip.state);
 
 `define SET_WRITE(addr,val,bytes,cs)   \
    rw_ <= 1'b0;                     \
@@ -48,11 +48,11 @@
    wait(clk == 1'b1);
 
 //give it a value, if the data_out on the data bus is not that value, throw an error
-`define CHECK_VAL(val)                                      \
-   $write("[data_out, expected] = [%h, %h]", data_out, val);\
-   if ( data_out != val )                                   \
-      $write(" : bad read @ time: %d",$time());  \
-   $display();
+`define CHECK_VAL(rd_val)                                      \
+  assert (data_out == rd_val)                         \
+    	$display("Read and Write Passed");							\
+	else											\
+		$display("CHECK VAL Er: Exp %h, Actual %h at %t", rd_val, data_out, $time());
 
 `define CHECK_ALU_LEFT(val)                                      \
    // $write("[verichip.alu_left, expected] = [%h, %h]", verichip.alu_left, val);   \
@@ -67,6 +67,52 @@
    $display("data out is %h",data_out);   \
    `CHECK_VAL(exp_val)
 
+
+`define ALIASING_READ_CHECK(addr)	         \
+	`WRITE_REG(addr, 16'hFFFF, 2'b11, 1'b1)	\
+	for(int ii = 0; ii < 128; ++ii)	         \
+	begin	                                    \
+      if(!(ii == 24 || ii == 20 || ii == 16 || ii == 12 || ii == 8 || ii == 4 || ii == 0)) begin  \
+                                                   \
+         `READ_REG(ii, 1'b1)	               \
+                                             \
+         assert (data_out == 16'h0000)	      \
+         else $display("Er: expctd %h, actual %h at %t", 16'h0000, data_out, $time());   \
+                                             \
+         `READ_REG(addr, 1'b0)	                  \
+                                                   \
+         assert (data_out == 16'h0000)	            \
+         else begin                                \
+         $display("Er: expctd %h, actual %h at %t", 16'h0000, data_out, $time());             \
+         end                                       \
+      end                                          \
+   end                                             
+    
+
+
+
+`define ALIASING_WRITE_CHECK(addr,bytes = 2'b11,cs) //TODO need to havea  for loop for all byte enables\
+for (int ii = 0 ; ii < 128 ; ++ii) begin  \
+      if(!(ii == 24 || ii == 20 || ii == 16 || ii == VCHIP_ALU_LEFT_ADDR || ii == 12 || ii == 8 || ii == 4 || ii == 0)) begin  \
+         `CHECK_RW(addr, 16'h0000, 16'h0000, 2'b11, 1'b1)	   \
+         `WRITE_REG(ii, 16'hFFFF, bytes, cs)	   \
+         `READ_REG(addr, 1'b1)	                  \
+                                       \
+         assert (data_out == 16'h0000)	         \
+         else begin  	                                    \
+            $display("cs = 1 Er: expctd %h, actual %h @ %h at %t", 16'h0000, data_out, addr, $time());	\
+         end	                                    \
+                                                \
+         `WRITE_REG(ii, 16'hFFFF, bytes, cs)	   \
+         `READ_REG(addr, 1'b1)	                  \
+                                                \
+         assert (data_out == 16'h0000)	         \
+			else	                                    \
+				$display("cs = 0, Er: expctd %h, actual %h @ %h at %t", 16'h0000, data_out, addr, $time());   \
+                                                   \
+      end	                                       \
+end	                                             
+   
 // waits for the clock to be 0 and then asserts reset, then waits for 
 // clk == 1 to deassert reset
 `define CHIP_RESET                  \
@@ -88,7 +134,7 @@
    wait(clk == 1'b1);  \
    wait(clk == 1'b0);  \
 
-`define CHIP_ERROR  \
+`define CHIP_ERROR(init_alu_lft_val)  \
    wait(clk == 1'b0);  \
    rst_b <= 1'b0;      \
    wait(clk == 1'b1);  \
@@ -102,7 +148,7 @@
    wait(clk == 1'b0);  \
                        \
    //set to a non-zero initial value                     \
-   `CHECK_RW(VCHIP_ALU_LEFT_ADDR, 16'h1234, 16'h1234, 2'b11, 1'b1)     \
+   `CHECK_RW(VCHIP_ALU_LEFT_ADDR, init_alu_lft_val, init_alu_lft_val, 2'b11, 1'b1)     \
                                                          \
    //write bad command to command reg to go into error   \
    `WRITE_REG(VCHIP_CMD_ADDR, 16'h800C, 2'b11, 1'b1)     \
@@ -229,8 +275,8 @@ initial begin
    $display("\n \n \n");
    `DISPLAY_STATE 
 
-   $display("calling `CHIP_ERROR...");
-   `CHIP_ERROR
+   $display("calling `CHIP_ER...");
+   `CHIP_ERROR(16'h1234)
    `DISPLAY_STATE
    for (int _be = 0; _be < 4; _be ++)
       for (int i = 0; i < 4; i++) begin
@@ -303,7 +349,7 @@ initial begin
 
    export_disable <= 0;
    
-   $display("calling `CHIP_ERROR...");
+   $display("calling `CHIP_ER...");
    //not calling macro cus we need to get beaf into alu left, after reset occures
       wait(clk == 1'b0);  
       rst_b <= 1'b0;      
@@ -341,283 +387,48 @@ initial begin
    $display("\n \n \n");
    `DISPLAY_STATE   
 
-   $display("calling `CHIP_EXP_VIO...");
 
-   //in place of macro call
-      wait(clk == 1'b0);   
-      rst_b <= 1'b0;       
-      wait(clk == 1'b1);   
-      rst_b <= 1'b1;       
-      wait(clk == 1'b0);   
-                           
-      //go into normal from reset 
-                           
-      maroon <= 1'b0;      
-      gold <= 1'b1;        
-      wait(clk == 1'b1);   
-      wait(clk == 1'b0);
-                           
-      export_disable <= 1'b1; 
-                           
-      //write restricted cmd to command reg to go into error   
-      //(even invalid commands are restricted)                 
-      `WRITE_REG(VCHIP_CMD_ADDR, 16'h8008, 2'b11, 1'b1)                                   
-      wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output   
+///////////////////////////////////////
+// ALIAS TESTING
+///////////////////////////////////////
 
+
+ // run for all states
+  `CHIP_RESET
+  `DISPLAY_STATE
+for (int _be = 0; _be < 4; _be ++) begin
+     `DISPLAY_STATE
+`ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1) //TODO haev for all byte enable
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0) //TODO haev for all byte enable
+  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR)
+end
+
+for (int _be = 0; _be < 4; _be ++) begin
+  `CHIP_NORMAL
+     `DISPLAY_STATE
+`ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b1) //TODO haev for all byte enable
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b0) //TODO haev for all byte enable
+  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR)
+end
+
+for (int _be = 0; _be < 4; _be ++) begin
+  `CHIP_ERROR(16'h0000)
    `DISPLAY_STATE
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b1) //TODO haev for all byte enable
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b0) //TODO haev for all byte enable
+  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR)
+end
 
-   for (int _be = 0; _be < 4; _be ++)
-      for (int i = 0; i < 4; i++) begin
-         //$display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_be]); 
-         `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], 16'h0, _be, 1'b0)
-         `CHECK_ALU_LEFT(16'h0)
-      end
-
-
-///////////////////////////////////////////////////////////////////////////////////// 
-//cs = 1 + Aliasing; Check all register addresses that are not ALU left 7'h00-7'h7f
-///////////////////////////////////////////////////////////////////////////////////// 
-
-///// RESET STATE ALIASING TESTS /////
-   export_disable <= 1'b0;
-   $display("\n \n \n");
-   $display("TESTING: cs = 1 + Aliasing in RESET state...");
-   //for (int aliasing_address = 0; aliasing_address <= 7'h7F; aliasing_address++) begin 
-      // if (aliasing_address == VCHIP_ALU_LEFT_ADDR) continue;
-      for (int _be = 0; _be < 4; _be ++) begin
-         for (int i = 0; i < 4; i++) begin
-            // Reset the chip to ensure test independence.
-            `CHIP_RESET
-
-            `DISPLAY_STATE
-            
-            `WRITE_REG(VCHIP_ALU_LEFT_ADDR, 16'hBEAF, 2'b11, 1'b1) //register initialization
-            // Check if aliasing occurs after writing to specified address.
-            
-            `CHECK_RW((7'b1000000  + VCHIP_ALU_LEFT_ADDR), stim_array[i], 16'h0000, _be, 1'b1)
-            `CHECK_ALU_LEFT(16'hBEAF)
-         end
-      end
-   //end
-
-//////// NORMAL STATE ALIASING TESTS /////
-   $display("\n \n \n");
-   $display("TESTING: cs = 1 + Aliasing in NORMAL state...");
-   // for (int aliasing_address = 0; aliasing_address <= 7'h7F; aliasing_address++) begin 
-     // if (aliasing_address == VCHIP_ALU_LEFT_ADDR) continue;
-      for (int _be = 0; _be < 4; _be ++) begin
-         for (int i = 0; i < 4; i++) begin
-            // Reset the chip to ensure test independence.
-            `CHIP_RESET
-            `WRITE_REG(VCHIP_ALU_LEFT_ADDR, 16'hBEAF, 2'b11, 1'b1) //initalize the register
-            //go into normal from reset
-            maroon <= 1'b0;     
-            gold <= 1'b1;       
-            wait(clk == 1'b1);  
-            wait(clk == 1'b0);  
-            // Check if aliasing occurs after writing to specified address.
-
-            `DISPLAY_STATE
-
-            //`WRITE_REG(VCHIP_ALU_LEFT_ADDR, stim_array[i], _be, 1'b1)
-            
-            
-            `CHECK_RW((7'b1000000  + VCHIP_ALU_LEFT_ADDR), stim_array[i], 16'h0000, _be, 1'b1)
-            `CHECK_ALU_LEFT(16'hBEAF)
-         end
-      end
-   // end
-
-///////// ERROR STATE ALIASING TESTS /////
-   $display("\n \n \n");
-   $display("TESTING: cs = 1 + Aliasing in ERROR state...");
-   // for (int aliasing_address = 0; aliasing_address <= 7'h7F; aliasing_address++) begin 
-     // if (aliasing_address == VCHIP_ALU_LEFT_ADDR) continue;
-      for (int _be = 0; _be < 4; _be ++) begin
-         for (int i = 0; i < 4; i++) begin
-            
-            wait(clk == 1'b0);  
-            rst_b <= 1'b0;      
-            wait(clk == 1'b1);  
-            rst_b <= 1'b1;      
-            wait(clk == 1'b0);  
-
-            //go into normal from reset 
-            maroon <= 1'b0;     
-            gold <= 1'b1;       
-            wait(clk == 1'b1);  
-            wait(clk == 1'b0);  
-
-            `DISPLAY_STATE
-                              
-            //set to a non-zero initial value                     
-            `WRITE_REG(VCHIP_ALU_LEFT_ADDR, 16'hBEAF, 2'b11, 1'b1)                
-            //write bad command to command reg to go into error
-            `WRITE_REG(VCHIP_CMD_ADDR, 16'h800C, 2'b11, 1'b1)
-            wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output
- 
-            // Check if aliasing occurs after writing to specified address.
-                        
-            `CHECK_RW((7'b1000000  + VCHIP_ALU_LEFT_ADDR), stim_array[i], 16'h0000, _be, 1'b1)
-            `CHECK_ALU_LEFT(16'hBEAF)
-         end
-      end
-   // end
-
-//////// EXPORT VIOLATION STATE ALIASING TESTS /////
-   $display("\n \n \n");
-   $display("TESTING: cs = 1 + Aliasing in EXPORT VIOLATION state...");
-   // for (int aliasing_address = 0; aliasing_address <= 7'h7F; aliasing_address++) begin 
-     // if (aliasing_address == VCHIP_ALU_LEFT_ADDR) continue;
-      for (int _be = 0; _be < 4; _be ++) begin
-         for (int i = 0; i < 4; i++) begin
-            // Reset the chip to ensure test independence.
-            `CHIP_RESET
-            `WRITE_REG(VCHIP_ALU_LEFT_ADDR, 16'hBEAF, 2'b11, 1'b1)
-            // Go into normal state
-            maroon <= 1'b0;
-            gold <= 1'b1;
-            wait(clk == 1'b1);
-            wait(clk == 1'b0);
-            // go to export violation
-            export_disable <= 1'b1;
-            `WRITE_REG(VCHIP_CMD_ADDR, 16'h8008, 2'b11, 1'b1)
-            wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output 
-            // Check if aliasing occurs after writing to specified address.
-
-            `DISPLAY_STATE
-
-            `CHECK_RW((7'b1000000  + VCHIP_ALU_LEFT_ADDR), stim_array[i], 16'h0000, _be, 1'b1)
-            `CHECK_ALU_LEFT(16'hBEAF)
-         end
-      end
-   // end
-   export_disable <= 1'b0;
-///////////////////////////////////////////////////////////////////////////////////// 
-//cs = 0 + Aliasing
-///////////////////////////////////////////////////////////////////////////////////// 
-
-/////// RESET STATE ALIASING TESTS /////
-   export_disable <= 1'b0;
-   $display("\n \n \n");
-   $display("TESTING: cs = 0 + Aliasing in RESET state...");
-   // for (int aliasing_address = 0; aliasing_address <= 7'h7F; aliasing_address++) begin 
-      //if (aliasing_address == VCHIP_ALU_LEFT_ADDR) continue;
-      for (int _be = 0; _be < 4; _be ++) begin
-         for (int i = 0; i < 4; i++) begin
-            // Reset the chip to ensure test independence.
-            `CHIP_RESET
-
-            `DISPLAY_STATE
-
-            `WRITE_REG(VCHIP_ALU_LEFT_ADDR, 16'hBEAF, 2'b11, 1'b1) //bit initialization
-            // Check if aliasing occurs after writing to specified address.
-            `CHECK_RW((7'b1000000  + VCHIP_ALU_LEFT_ADDR), stim_array[i], 16'h0000, _be, 1'b1)
-            `CHECK_ALU_LEFT(16'hBEAF)
-         end
-      end
-   // end
-
-//////// NORMAL STATE ALIASING TESTS /////
-   $display("\n \n \n");
-   $display("TESTING: cs = 0 + Aliasing in NORMAL state...");
-   // for (int aliasing_address = 0; aliasing_address <= 7'h7F; aliasing_address++) begin 
-     // if (aliasing_address == VCHIP_ALU_LEFT_ADDR) continue;
-      for (int _be = 0; _be < 4; _be ++) begin
-         for (int i = 0; i < 4; i++) begin
-            // Reset the chip to ensure test independence.
-            `CHIP_RESET
-            `WRITE_REG(VCHIP_ALU_LEFT_ADDR, 16'hBEAF, 2'b11, 1'b1)
-            //go into normal from reset
-            maroon <= 1'b0;     
-            gold <= 1'b1;       
-            wait(clk == 1'b1);  
-            wait(clk == 1'b0);  
-
-            `DISPLAY_STATE
-
-            // Check if aliasing occurs after writing to specified address.
-            `CHECK_RW((7'b1000000  + VCHIP_ALU_LEFT_ADDR), stim_array[i], 16'h0000, _be, 1'b1)
-            `CHECK_ALU_LEFT(16'hBEAF)
-         end
-      end
-   // end
-
-/////// ERROR STATE ALIASING TESTS /////
-   $display("\n \n \n");
-   $display("TESTING: cs = 0 + Aliasing in ERROR state...");
-   // for (int aliasing_address = 0; aliasing_address <= 7'h7F; aliasing_address++) begin 
-     // if (aliasing_address == VCHIP_ALU_LEFT_ADDR) continue;
-      for (int _be = 0; _be < 4; _be ++) begin
-         for (int i = 0; i < 4; i++) begin
-            
-            wait(clk == 1'b0);  
-            rst_b <= 1'b0;      
-            wait(clk == 1'b1);  
-            rst_b <= 1'b1;      
-            wait(clk == 1'b0);  
-
-            //go into normal from reset 
-            maroon <= 1'b0;     
-            gold <= 1'b1;       
-            wait(clk == 1'b1);  
-            wait(clk == 1'b0);  
-                              
-            //set to a non-zero initial value                     
-            `WRITE_REG(VCHIP_ALU_LEFT_ADDR, 16'hBEAF, 2'b11, 1'b1)                
-            //write bad command to command reg to go into error
-            `WRITE_REG(VCHIP_CMD_ADDR, 16'h800C, 2'b11, 1'b1)
-            wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output
- 
-            `DISPLAY_STATE
-
-            // Check if aliasing occurs after writing to specified address.
-            `CHECK_RW((7'b1000000  + VCHIP_ALU_LEFT_ADDR), stim_array[i], 16'h0000, _be, 1'b1)
-            `CHECK_ALU_LEFT(16'hBEAF)
-         end
-      end
-   // end
-
-///////// EXPORT VIOLATION STATE ALIASING TESTS /////
-   $display("\n \n \n");
-   $display("TESTING: cs = 0 + Aliasing in EXPORT VIOLATION state...");
-   // for (int aliasing_address = 0; aliasing_address <= 7'h7F; aliasing_address++) begin 
-      // if (aliasing_address == VCHIP_ALU_LEFT_ADDR) continue;
-      for (int _be = 0; _be < 4; _be ++) begin
-         for (int i = 0; i < 4; i++) begin
-            // Reset the chip to ensure test independence.
-            `CHIP_RESET
-            `WRITE_REG(VCHIP_ALU_LEFT_ADDR, 16'hBEAF, 2'b11, 1'b1)
-            // Go into normal state
-            maroon <= 1'b0;
-            gold <= 1'b1;
-            wait(clk == 1'b1);
-            wait(clk == 1'b0);
-            // go to export violation
-            export_disable <= 1'b1;
-            `WRITE_REG(VCHIP_CMD_ADDR, 16'h8008, 2'b11, 1'b1)
-            wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output 
-            // Check if aliasing occurs after writing to specified address.
-
-            `DISPLAY_STATE
-
-            `CHECK_RW((7'b1000000  + VCHIP_ALU_LEFT_ADDR), stim_array[i], 16'h0000, _be, 1'b1)
-            `CHECK_ALU_LEFT(16'h0000)
-         end
-      end
-   // end
-   export_disable <= 1'b0;
-
-
-// Cs being 0 for all four states
-// Aliased register addressed with cs = 0
-// Aliased registers with cs = 1
-// ##Change _cs to _bit_enable in the for loops because I totally called it the wrong thing 😎
-
-
+for (int _be = 0; _be < 4; _be ++) begin
+  `CHIP_EXP_VIO
+     `DISPLAY_STATE
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b1) //TODO haev for all byte enable
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b0) //TODO haev for all byte enable
+  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR)
+end
 
    $finish();
-end // initial begin
+end 
 
 verichip verichip (.clk           ( clk            ),    // system clock
                    .rst_b         ( rst_b          ),    // chip reset
