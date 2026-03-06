@@ -67,48 +67,42 @@
    $display("data out is %h",data_out);   \
    `CHECK_VAL(exp_val)
 
-
 `define ALIASING_READ_CHECK(addr)	         \
 	`WRITE_REG(addr, 16'hFFFF, 2'b11, 1'b1)	\
 	for(int ii = 0; ii < 128; ++ii)	         \
 	begin	                                    \
-      if(!(ii == 24 || ii == 20 || ii == 16 || ii == 12 || ii == 8 || ii == 4 || ii == 0)) begin  \
-                                                   \
+      //Do not overrite existing known good addresses/registers \
+      if((ii != VCHIP_ALU_OUT_ADDR) && (ii != VCHIP_ALU_RIGHT_ADDR) && (ii != VCHIP_ALU_LEFT_ADDR) && (ii != VCHIP_CON_ADDR) && (ii != VCHIP_CMD_ADDR) && (ii != VCHIP_STA_ADDR) && (ii != VCHIP_VER_ADDR)) begin  \
+         // read with cs high                \
          `READ_REG(ii, 1'b1)	               \
                                              \
-         assert (data_out == 16'h0000)	      \
-         else $display("Er: expctd %h, actual %h at %t", 16'h0000, data_out, $time());   \
-                                             \
+         if (data_out != 16'h0000)	         \
+         $display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
+         // read with cs low                       \
          `READ_REG(addr, 1'b0)	                  \
                                                    \
-         assert (data_out == 16'h0000)	            \
-         else begin                                \
-         $display("Er: expctd %h, actual %h at %t", 16'h0000, data_out, $time());             \
-         end                                       \
+         if (data_out != 16'h0000)	               \
+         $display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
       end                                          \
    end                                             
     
-
-
-
 `define ALIASING_WRITE_CHECK(addr,bytes = 2'b11,cs) //TODO need to havea  for loop for all byte enables\
 for (int ii = 0 ; ii < 128 ; ++ii) begin  \
-      if(!(ii == 24 || ii == 20 || ii == 16 || ii == VCHIP_ALU_LEFT_ADDR || ii == 12 || ii == 8 || ii == 4 || ii == 0)) begin  \
+      // Do not check/overrite known good registers/addresses \
+      if((ii != VCHIP_ALU_OUT_ADDR) && (ii != VCHIP_ALU_RIGHT_ADDR) && (ii != VCHIP_ALU_LEFT_ADDR) && (ii != VCHIP_CON_ADDR) && (ii != VCHIP_CMD_ADDR) && (ii != VCHIP_STA_ADDR) && (ii != VCHIP_VER_ADDR)) begin  \
+         // Clear the address of interest write to it and validate correct write \
          `CHECK_RW(addr, 16'h0000, 16'h0000, 2'b11, 1'b1)	   \
-         `WRITE_REG(ii, 16'hFFFF, bytes, cs)	   \
+         `WRITE_REG(ii, 16'hFFFF, bytes, cs)	                  \
+         `READ_REG(addr, 1'b1)	                              \
+                                                               \
+         if (data_out != 16'h0000)	                           \
+            $display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
+                                                   \
+         `WRITE_REG(ii, 16'hFFFF, bytes, cs)	      \
          `READ_REG(addr, 1'b1)	                  \
-                                       \
-         assert (data_out == 16'h0000)	         \
-         else begin  	                                    \
-            $display("cs = 1 Er: expctd %h, actual %h @ %h at %t", 16'h0000, data_out, addr, $time());	\
-         end	                                    \
-                                                \
-         `WRITE_REG(ii, 16'hFFFF, bytes, cs)	   \
-         `READ_REG(addr, 1'b1)	                  \
-                                                \
-         assert (data_out == 16'h0000)	         \
-			else	                                    \
-				$display("cs = 0, Er: expctd %h, actual %h @ %h at %t", 16'h0000, data_out, addr, $time());   \
+                                                   \
+         if (data_out != 16'h0000)	            \
+				$display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
                                                    \
       end	                                       \
 end	                                             
@@ -317,8 +311,7 @@ initial begin
    `CHECK_ALU_LEFT(16'hBEAF)
 
    for (int _be = 0; _be < 4; _be ++) begin
-      for (int i = 0; i < 4; i++) begin
-         //$display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_be]); 
+      for (int i = 0; i < 4; i++) begin 
          `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], 16'h0, _be, 1'b0)
          `CHECK_ALU_LEFT(16'hBEAF)
       end
@@ -337,7 +330,6 @@ initial begin
 
    for (int _be = 0; _be < 4; _be ++) begin
       for (int i = 0; i < 4; i++) begin
-         //$display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_be]); 
          `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], 16'h0, _be, 1'b0)
          `CHECK_ALU_LEFT(16'hBEAF)
       end
@@ -375,11 +367,8 @@ initial begin
    
    `DISPLAY_STATE
 
-
-
    for (int _be = 0; _be < 4; _be ++)
       for (int i = 0; i < 4; i++) begin
-         //$display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_be]); 
          `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], 16'h0, _be, 1'b0)
          `CHECK_ALU_LEFT(16'hBEAF)
       end
@@ -389,42 +378,44 @@ initial begin
 
 
 ///////////////////////////////////////
-// ALIAS TESTING
+// ALIAS TESTING- for all states
 ///////////////////////////////////////
 
 
- // run for all states
+// Testing Reset State for all byte_enables and chip select 0 & 1
+for (int _be = 0; _be < 4; _be ++) begin
   `CHIP_RESET
   `DISPLAY_STATE
-for (int _be = 0; _be < 4; _be ++) begin
-     `DISPLAY_STATE
-`ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1) //TODO haev for all byte enable
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0) //TODO haev for all byte enable
-  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR)
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR) // read validate
 end
 
+// Testing Normal State for all byte_enables and chip select 0 & 1
 for (int _be = 0; _be < 4; _be ++) begin
   `CHIP_NORMAL
-     `DISPLAY_STATE
-`ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b1) //TODO haev for all byte enable
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b0) //TODO haev for all byte enable
-  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR)
+  `DISPLAY_STATE
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b1) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b0) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR) // read validate
 end
 
+// Testing Error State for all byte_enables and chip select 0 & 1
 for (int _be = 0; _be < 4; _be ++) begin
   `CHIP_ERROR(16'h0000)
-   `DISPLAY_STATE
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b1) //TODO haev for all byte enable
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b0) //TODO haev for all byte enable
-  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR)
+  `DISPLAY_STATE
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b1) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b0) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR) // read validate
 end
 
+// Testing Export Violation State for all byte_enables and chip select 0 & 1
 for (int _be = 0; _be < 4; _be ++) begin
   `CHIP_EXP_VIO
-     `DISPLAY_STATE
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b1) //TODO haev for all byte enable
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b0) //TODO haev for all byte enable
-  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR)
+  `DISPLAY_STATE
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b1) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,2'b11,1'b0) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR) // read validate
 end
 
    $finish();
@@ -443,7 +434,7 @@ verichip verichip (.clk           ( clk            ),    // system clock
                    .address       ( address        ),    // address bus
                    .byte_en       ( byte_en        ),    // write byte enables
                    .rw_           ( rw_            ),    // read/write
-                   .data_in       ( data_in        ),    // data bus
+                   .data_in       ( data_in        ),    // data bus\
 
                    .data_out      ( data_out       ) );  // output data bus
 
