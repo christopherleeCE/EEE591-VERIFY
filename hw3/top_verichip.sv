@@ -1,4 +1,10 @@
-////////////////////////////
+///////////////////////////////////////////
+// Christopher Lee; Nick Marta; Andy Cox V
+// EEE598: Digital Verification & Test
+// Dr. Steven Millman
+// Spring 2026
+// 6 MAR 2026
+
 `timescale 1ns/1ps
 // performed in 0 time
 
@@ -12,7 +18,6 @@
    address <= addr;                 \
    data_in <= val;
 
-// also in 0 time?
 `define SET_READ(addr,cs)           \
    rw_ <= 1'b1;                     \
    chip_select <= cs;               \
@@ -20,7 +25,7 @@
    address <= addr;                 \
    data_in <= 16'h0;
 
-// sets everything to "active"(?) values
+// sets everything to "active" values
 `define CLEAR_BUS                   \
    chip_select    <= 1'b0;          \
    address        <= 7'h0;          \
@@ -48,30 +53,28 @@
    wait(clk == 1'b1);
 
 //give it a value, if the data_out on the data bus is not that value, throw an error
-`define CHECK_VAL(rd_val)                                      \
-  assert (data_out == rd_val)                         \
-    	$display("Read and Write Passed");							\
-	else											\
-		$display("CHECK VAL Er: Exp %h, Actual %h at %t", rd_val, data_out, $time());
+`define CHECK_VAL(val)                                      \
+  if (data_out != val)                                      \
+		$display("Bad read: [data_out, expected] = [%h, %h]", val, data_out);
 
+// check the value in the ALU left register
 `define CHECK_ALU_LEFT(val)                                      \
-   // $write("[verichip.alu_left, expected] = [%h, %h]", verichip.alu_left, val);   \
-   if ( verichip.alu_left != val )                                               \
-   //    $write(" : bad read @ time: %d",$time());                                  \
-   $display();
+   if ( verichip.alu_left != val )                               \
+      $display("Bad read: [data_out, expected] = [%h, %h]", verichip.alu_left, val);
 
+// perform a write and verify it with a read
 `define CHECK_RW(addr,wval,exp_val,bytes,cs)    \
-   `WRITE_REG(addr,wval,bytes,cs)         \
-   `READ_REG(addr,cs)                     \
-   //TODO can we comment out this debug output? \
-   $display("data out is %h",data_out);   \
+   `WRITE_REG(addr,wval,bytes,cs)               \
+   `READ_REG(addr,cs)                           \
    `CHECK_VAL(exp_val)
 
+// Ensures that reading from addresses not linked to an address given regardless of cs value
+// expecting 0x0000 covers exp vio and writing 0xFFFF to the target register ensures that no bit fields associated
+// with aliased registers can be flipped from 0 to 1
 `define ALIASING_READ_CHECK(addr)	         \
 	`WRITE_REG(addr, 16'hFFFF, 2'b11, 1'b1)	\
 	for(int ii = 0; ii < 128; ++ii)	         \
 	begin	                                    \
-      //Do not overrite existing known good addresses/registers \
       if((ii != VCHIP_ALU_OUT_ADDR) && (ii != VCHIP_ALU_RIGHT_ADDR) && (ii != VCHIP_ALU_LEFT_ADDR) && (ii != VCHIP_CON_ADDR) && (ii != VCHIP_CMD_ADDR) && (ii != VCHIP_STA_ADDR) && (ii != VCHIP_VER_ADDR)) begin  \
          // read with cs high                \
          `READ_REG(ii, 1'b1)	               \
@@ -79,18 +82,20 @@
          if (data_out != 16'h0000)	         \
          $display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
          // read with cs low                       \
-         `READ_REG(addr, 1'b0)	                  \
+         `READ_REG(ii, 1'b0)	                  \
                                                    \
          if (data_out != 16'h0000)	               \
          $display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
       end                                          \
    end                                             
     
+// Write 16'h0000 to the address of interest and validate an aliased write does not affect reg value for cs = 0 and cs = 1
+// expecting 16'h0000 also covers export violation so a new macro does not have to be made
+// NOTE, aliased registers have 0xFFFF writen to them to check that no bit fields in ALU left go from 0 => 1
 `define ALIASING_WRITE_CHECK(addr,bytes = 2'b11,cs) //TODO need to havea  for loop for all byte enables\
 for (int ii = 0 ; ii < 128 ; ++ii) begin  \
       // Do not check/overrite known good registers/addresses \
       if((ii != VCHIP_ALU_OUT_ADDR) && (ii != VCHIP_ALU_RIGHT_ADDR) && (ii != VCHIP_ALU_LEFT_ADDR) && (ii != VCHIP_CON_ADDR) && (ii != VCHIP_CMD_ADDR) && (ii != VCHIP_STA_ADDR) && (ii != VCHIP_VER_ADDR)) begin  \
-         // Clear the address of interest write to it and validate correct write \
          `CHECK_RW(addr, 16'h0000, 16'h0000, 2'b11, 1'b1)	   \
          `WRITE_REG(ii, 16'hFFFF, bytes, cs)	                  \
          `READ_REG(addr, 1'b1)	                              \
@@ -101,7 +106,7 @@ for (int ii = 0 ; ii < 128 ; ++ii) begin  \
          `WRITE_REG(ii, 16'hFFFF, bytes, cs)	      \
          `READ_REG(addr, 1'b1)	                  \
                                                    \
-         if (data_out != 16'h0000)	            \
+         if (data_out != 16'h0000)	               \
 				$display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
                                                    \
       end	                                       \
@@ -115,6 +120,7 @@ end
    wait( clk == 1'b1 );             \
    rst_b <= 1'b1;
 
+// go into normal state
 `define CHIP_NORMAL    \
    wait(clk == 1'b0);  \
    rst_b <= 1'b0;      \
@@ -128,6 +134,7 @@ end
    wait(clk == 1'b1);  \
    wait(clk == 1'b0);  \
 
+// go into error state
 `define CHIP_ERROR(init_alu_lft_val)  \
    wait(clk == 1'b0);  \
    rst_b <= 1'b0;      \
@@ -148,6 +155,7 @@ end
    `WRITE_REG(VCHIP_CMD_ADDR, 16'h800C, 2'b11, 1'b1)     \
    wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output   \
 
+   // go into chip exp state
    `define CHIP_EXP_VIO    \
                         \
    wait(clk == 1'b0);   \
@@ -223,7 +231,7 @@ begin
 end
 /////////////////////////////////////////////////////////////////////////////////////
 // need to test all byte enables, do it with a for loop and a case statement
-// test writing regisers, test address 50 and ensure nothing is written to ALU_left,
+// test writing registers, test address 50 and ensure nothing is written to ALU_left,
 // which is address 10
 ///////////////////////////////////////////////////////////////////////////////////// 
 reg [15:0] stim_array [4];
@@ -248,7 +256,6 @@ initial begin
    `DISPLAY_STATE
    for (int _be = 0; _be < 4; _be ++) begin
       for (int i = 0; i < 4; i++) begin
-         //$display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_be]); 
          `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
       end
    end
@@ -261,7 +268,6 @@ initial begin
    `DISPLAY_STATE
    for (int _be = 0; _be < 4; _be ++) begin
       for (int i = 0; i < 4; i++) begin
-         //$display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_be]); 
          `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
       end
    end
@@ -306,10 +312,12 @@ initial begin
    `CHIP_RESET
    `DISPLAY_STATE
 
+   // Set ALU_LEFT to non-zero value.
    `WRITE_REG(VCHIP_ALU_LEFT_ADDR, 16'hBEAF, 2'b11, 1'b1)
    `READ_REG(VCHIP_ALU_LEFT_ADDR, 1'b1)
    `CHECK_ALU_LEFT(16'hBEAF)
 
+   // Check read write and byte enable combinations.
    for (int _be = 0; _be < 4; _be ++) begin
       for (int i = 0; i < 4; i++) begin 
          `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], 16'h0, _be, 1'b0)
@@ -324,10 +332,12 @@ initial begin
    `CHIP_NORMAL
    `DISPLAY_STATE
 
+   // Set ALU_LEFT to non-zero value.
    `WRITE_REG(VCHIP_ALU_LEFT_ADDR, 16'hBEAF, 2'b11, 1'b1)
    `READ_REG(VCHIP_ALU_LEFT_ADDR, 1'b1)
    `CHECK_ALU_LEFT(16'hBEAF)
 
+   // Check r/w all be and write combinations.
    for (int _be = 0; _be < 4; _be ++) begin
       for (int i = 0; i < 4; i++) begin
          `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], 16'h0, _be, 1'b0)
@@ -356,7 +366,6 @@ initial begin
       wait(clk == 1'b0);  
                         
       //set to a non-zero initial value                     
-
       `WRITE_REG(VCHIP_ALU_LEFT_ADDR, 16'hBEAF, 2'b11, 1'b1)
       `READ_REG(VCHIP_ALU_LEFT_ADDR, 1'b1)
       `CHECK_ALU_LEFT(16'hBEAF)
@@ -367,6 +376,7 @@ initial begin
    
    `DISPLAY_STATE
 
+   // Check all byte enable and write combinations.
    for (int _be = 0; _be < 4; _be ++)
       for (int i = 0; i < 4; i++) begin
          `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], 16'h0, _be, 1'b0)
