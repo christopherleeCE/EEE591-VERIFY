@@ -1,0 +1,281 @@
+$date
+	Sun Mar 15 23:05:19 2026
+$end
+$version
+	Questa Intel Starter FPGA Edition Version 2024.3
+$end
+$timescale
+	1ps
+$end
+
+$scope module top_verichip4 $end
+$var parameter 2 ! RO $end
+$var parameter 2 " W1C $end
+$var parameter 2 # RW $end
+$var parameter 7 $ VCHIP_VER_ADDR $end
+$var parameter 7 % VCHIP_STA_ADDR $end
+$var parameter 7 & VCHIP_CMD_ADDR $end
+$var parameter 7 ' VCHIP_CON_ADDR $end
+$var parameter 7 ( VCHIP_ALU_LEFT_ADDR $end
+$var parameter 7 ) VCHIP_ALU_RIGHT_ADDR $end
+$var parameter 7 * VCHIP_ALU_OUT_ADDR $end
+$var parameter 16 + VCHIP_ALU_VALID $end
+$var parameter 16 , VCHIP_ALU_ADD $end
+$var parameter 16 - VCHIP_ALU_SUB $end
+$var parameter 16 . VCHIP_ALU_MVL $end
+$var parameter 16 / VCHIP_ALU_MVR $end
+$var parameter 16 0 VCHIP_ALU_SWA $end
+$var parameter 16 1 VCHIP_ALU_SHL $end
+$var parameter 16 2 VCHIP_ALU_SHR $end
+$var reg 1 3 clk $end
+$var reg 1 4 rst_b $end
+$var reg 1 5 export_disable $end
+$var reg 1 6 interrupt_1 $end
+$var reg 1 7 interrupt_2 $end
+$var reg 1 8 maroon $end
+$var reg 1 9 gold $end
+$var reg 1 : chip_select $end
+$var reg 7 ; address [6:0] $end
+$var reg 2 < byte_en [1:0] $end
+$var reg 1 = rw_ $end
+$var reg 16 > data_in [15:0] $end
+$var reg 16 ? data_out [15:0] $end
+$var reg 16 @ my_wr_val [15:0] $end
+$var reg 16 A my_reg_val [15:0] $end
+$var reg 16 B my_out_reg [15:0] $end
+
+$scope module verichip $end
+$var parameter 4 C VCHIP_ALU_VER $end
+$var parameter 4 D VCHIP_MAJ_VER $end
+$var parameter 4 E VCHIP_MIN_VER $end
+$var parameter 4 F VCHIP_STATE_RESET $end
+$var parameter 4 G VCHIP_STATE_NORM $end
+$var parameter 4 H VCHIP_STATE_ERR $end
+$var parameter 4 I VCHIP_STATE_EXP $end
+$var parameter 4 J VCHIP_STATE_LOST $end
+$var parameter 7 K VCHIP_ADDR_VER $end
+$var parameter 7 L VCHIP_ADDR_STA $end
+$var parameter 7 M VCHIP_ADDR_CMD $end
+$var parameter 7 N VCHIP_ADDR_CON $end
+$var parameter 7 O VCHIP_ADDR_LFT $end
+$var parameter 7 P VCHIP_ADDR_RGT $end
+$var parameter 7 Q VCHIP_ADDR_ALU $end
+$var parameter 4 R VCHIP_CMD_NONE $end
+$var parameter 32 S VCHIP_STA_INT2 $end
+$var parameter 32 T VCHIP_STA_INT1 $end
+$var parameter 32 U VCHIP_CMD_LEFT $end
+$var parameter 32 V VCHIP_CMD_VAL $end
+$var parameter 32 W VCHIP_CMD_NON $end
+$var parameter 32 X VCHIP_CMD_ADD $end
+$var parameter 32 Y VCHIP_CMD_SUB $end
+$var parameter 32 Z VCHIP_CMD_MVL $end
+$var parameter 32 [ VCHIP_CMD_MVR $end
+$var parameter 32 \ VCHIP_CMD_SWA $end
+$var parameter 32 ] VCHIP_CMD_SHL $end
+$var parameter 32 ^ VCHIP_CMD_SHR $end
+$var parameter 32 _ VCHIP_LAST_CMD $end
+$var parameter 32 ` VCHIP_LAST_EXP_CMD $end
+$var wire 1 a clk $end
+$var wire 1 b rst_b $end
+$var wire 1 c export_disable $end
+$var reg 1 d interrupt_1 $end
+$var reg 1 e interrupt_2 $end
+$var wire 1 f maroon $end
+$var wire 1 g gold $end
+$var wire 1 h chip_select $end
+$var wire 1 i address [6] $end
+$var wire 1 j address [5] $end
+$var wire 1 k address [4] $end
+$var wire 1 l address [3] $end
+$var wire 1 m address [2] $end
+$var wire 1 n address [1] $end
+$var wire 1 o address [0] $end
+$var wire 1 p byte_en [1] $end
+$var wire 1 q byte_en [0] $end
+$var wire 1 r rw_ $end
+$var wire 1 s data_in [15] $end
+$var wire 1 t data_in [14] $end
+$var wire 1 u data_in [13] $end
+$var wire 1 v data_in [12] $end
+$var wire 1 w data_in [11] $end
+$var wire 1 x data_in [10] $end
+$var wire 1 y data_in [9] $end
+$var wire 1 z data_in [8] $end
+$var wire 1 { data_in [7] $end
+$var wire 1 | data_in [6] $end
+$var wire 1 } data_in [5] $end
+$var wire 1 ~ data_in [4] $end
+$var wire 1 !! data_in [3] $end
+$var wire 1 "! data_in [2] $end
+$var wire 1 #! data_in [1] $end
+$var wire 1 $! data_in [0] $end
+$var reg 16 %! data_out [15:0] $end
+$var reg 1 &! export_dis $end
+$var reg 16 '! version_reg [15:0] $end
+$var reg 1 (! int2 $end
+$var reg 1 )! int1 $end
+$var reg 4 *! state [3:0] $end
+$var reg 16 +! status_reg [15:0] $end
+$var reg 4 ,! next_state [3:0] $end
+$var reg 1 -! valid $end
+$var reg 4 .! cmd [3:0] $end
+$var reg 16 /! cmd_reg [15:0] $end
+$var reg 1 0! bad_exp_cmd $end
+$var reg 1 1! bad_cmd $end
+$var reg 1 2! int2_en $end
+$var reg 1 3! int1_en $end
+$var reg 16 4! con_reg [15:0] $end
+$var reg 16 5! alu_left [15:0] $end
+$var reg 16 6! alu_right [15:0] $end
+$var reg 16 7! alu_out [15:0] $end
+$var reg 1 8! overflow $end
+$var reg 16 9! alu_result [15:0] $end
+$var reg 16 :! next_left [15:0] $end
+$var reg 16 ;! next_right [15:0] $end
+$var reg 1 <! load_left $end
+$var reg 1 =! load_right $end
+$var reg 16 >! data_out_tmp [15:0] $end
+$upscope $end
+$upscope $end
+
+$scope begin std $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+03
+04
+05
+06
+07
+08
+09
+0:
+b0 ;
+b0 <
+1=
+b0 >
+b0 ?
+b1111111111111111 @
+b1011111011101111 A
+b0 B
+0d
+0e
+b0 %!
+0&!
+b1000010000 '!
+0(!
+0)!
+b0 *!
+b0 +!
+b0 ,!
+0-!
+b0 .!
+b0 /!
+00!
+01!
+02!
+03!
+b0 4!
+b0 5!
+b0 6!
+b0 7!
+08!
+b0 9!
+b0 :!
+b0 ;!
+0<!
+0=!
+b1000010000 >!
+b0 !
+b1 "
+b10 #
+b0 $
+b100 %
+b1000 &
+b1100 '
+b10000 (
+b10100 )
+b11000 *
+b1000000000000000 +
+b1 ,
+b10 -
+b11 .
+b100 /
+b101 0
+b110 1
+b111 2
+b10 C
+b1 D
+b0 E
+b0 F
+b1 G
+b10 H
+b1000 I
+b1111 J
+b0 K
+b100 L
+b1000 M
+b1100 N
+b10000 O
+b10100 P
+b11000 Q
+b0 R
+b1001 S
+b1000 T
+b11 U
+b1111 V
+b0 W
+b1 X
+b10 Y
+b11 Z
+b100 [
+b101 \
+b110 ]
+b111 ^
+b111 _
+b10 `
+0$!
+0#!
+0"!
+0!!
+0~
+0}
+0|
+0{
+0z
+0y
+0x
+0w
+0v
+0u
+0t
+0s
+1r
+0q
+0p
+0o
+0n
+0m
+0l
+0k
+0j
+0i
+0h
+0g
+0f
+0c
+0b
+0a
+$end
+#5000
+13
+1a
+b1 B
+b11 B
+b111 B
+b1111 B
+b11111 B
+b111111 B
+b1111111 B
+b11111111 B

@@ -3,7 +3,7 @@
 // EEE598: Digital Verification & Test
 // Dr. Steven Millman
 // Spring 2026
-// 6 MAR 2026
+// TODO date here
 
 `timescale 1ns/1ps
 // performed in 0 time
@@ -109,7 +109,24 @@ for (int ii = 0 ; ii < 128 ; ++ii) begin  \
          if (data_out != 16'h0000)                 \
                 $display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
                                                    \
-      end                                          \
+      end	                                       \
+end	                                             
+
+
+`define GEN_EXP_VAL(wr_val, reg_val, access_array, out_reg) \
+for (int i = 0; i < 16; ++i) begin \
+   //$write(" %0d", access_array[i]);         \
+   case (access_array[i])           \
+      RO:                           \
+         out_reg[i] = reg_val[i];  \
+      W1C:                          \
+         out_reg[i] = ~wr_val[i] & reg_val[i]; \
+      RW:                              \
+         out_reg[i] =  wr_val[i];     \
+      default:                         \
+         out_reg[i] = reg_val[i];      \
+                                       \
+   endcase                             \
 end                                              
    
 // waits for the clock to be 0 and then asserts reset, then waits for 
@@ -181,6 +198,10 @@ end
 
 module top_verichip4 ();
 
+localparam RO = 2'b0;
+localparam W1C = 2'b1;
+localparam RW = 2'b10;
+
 logic clk;                       // system clock
 logic rst_b;                     // chip reset
 logic export_disable;            // disable features
@@ -238,12 +259,36 @@ reg [15:0] stim_array [4];
 reg [15:0] bit_mask_array [4];
 
 
+//int my_access_array [16] = {RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW};
+int my_access_array [15:0] = {W1C, W1C, W1C, W1C, W1C, W1C, W1C, W1C, RW, RW, RW, RW, RO, RO, RO, RO};
+logic [15:0] my_wr_val = {16{1'b1}};
+logic [15:0] my_reg_val = 16'hBEEF;
+logic [15:0] my_out_reg = 16'h0000;
+
 initial begin
    `CLEAR_ALL
    `CHIP_RESET
 
    stim_array = {16'hFFFF, 16'hAAAA, 16'h5555, 16'h0000};
    bit_mask_array = {16'h0000, 16'h00FF, 16'hFF00, 16'hFFFF};
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+//test
+/////////////////////////////////////////////////////////////////////////////////////
+
+$display("my_access_array: %p", my_access_array);
+
+$display("nick notes: out_reg %h", my_out_reg);
+$display("nick notes: my_wr_val %h", my_wr_val);
+`GEN_EXP_VAL(my_wr_val,my_reg_val,my_access_array,my_out_reg)
+$display("nick notes: %h", my_out_reg);
+
+
+
+
+$display("calling finish");
+$finish();
 
 ///////////////////////////////////////////////////////////////////////////////////// 
 //cs = 1

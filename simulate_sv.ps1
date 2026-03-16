@@ -17,7 +17,18 @@ if ($Help) {
     "
     exit 0
 }
-vsim -c -do "file delete -force sim.log; transcript file sim.log; vlog *.sv; vsim -voptargs=+acc work.top_verichip $vsimArgs; run ${time}us; quit -f"
+
+$do = @"
+file delete -force sim.log
+transcript file sim.log;
+vlog *.sv;
+vsim -voptargs=+acc work.top_verichip4 $vsimArgs;
+run ${time}us; quit -f
+"@
+
+vsim -c -do $do
+
+Select-String -Path sim.log -Pattern "error" | Out-String | Write-Host -ForegroundColor Cyan
 
 $timer.Stop()
 Write-Host ("Total runtime: {0}" -f $timer.Elapsed)
