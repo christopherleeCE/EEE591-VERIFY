@@ -55,7 +55,7 @@
 //give it a value, if the data_out on the data bus is not that value, throw an error
 `define CHECK_VAL(val)                                      \
   if (data_out != val)                                      \
-        $display("Bad read: [data_out, expected] = [%h, %h]", val, data_out);
+		$display("Bad read: [data_out, expected] = [%h, %h]", val, data_out);
 
 // check the value in the ALU left register
 `define CHECK_ALU_LEFT(val)                                      \
@@ -107,7 +107,7 @@ for (int ii = 0 ; ii < 128 ; ++ii) begin  \
          `READ_REG(addr, 1'b1)                    \
                                                    \
          if (data_out != 16'h0000)                 \
-                $display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
+				$display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
                                                    \
       end	                                       \
 end	                                             
@@ -127,8 +127,8 @@ for (int i = 0; i < 16; ++i) begin \
          out_reg[i] = reg_val[i];      \
                                        \
    endcase                             \
-end                                              
-   
+end
+
 // waits for the clock to be 0 and then asserts reset, then waits for 
 // clk == 1 to deassert reset
 `define CHIP_RESET                  \
