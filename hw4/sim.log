@@ -1,20 +1,20 @@
 # 
 # vlog *.sv
 # Questa Intel Starter FPGA Edition-64 vlog 2024.3 Compiler 2024.09 Sep 10 2024
-# Start time: 23:05:18 on Mar 15,2026
+# Start time: 14:45:33 on Mar 16,2026
 # vlog top_verichip4.sv verichip4.sv 
 # -- Compiling module top_verichip4
 # -- Compiling module verichip4
 # 
 # Top level modules:
 # 	top_verichip4
-# End time: 23:05:18 on Mar 15,2026, Elapsed time: 0:00:00
+# End time: 14:45:33 on Mar 16,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # 
 # vsim -voptargs=+acc work.top_verichip4 
 # vsim -voptargs="+acc" work.top_verichip4 
-# Start time: 23:05:18 on Mar 15,2026
-# ** Note: (vsim-8009) Loading existing optimized design _opt4
+# Start time: 14:45:34 on Mar 16,2026
+# ** Note: (vsim-8009) Loading existing optimized design _opt1
 # //  Questa Intel Starter FPGA Edition-64
 # //  Version 2024.3 win64 Sep 10 2024
 # //
@@ -34,12 +34,11 @@
 # Loading work.verichip4(fast)
 # 
 # run 1000us
-# my_access_array: '{1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0}
 # nick notes: out_reg 0000
 # nick notes: my_wr_val ffff
-# nick notes: 00ff
+# nick notes: beef
 # calling finish
-# ** Note: $finish    : top_verichip4.sv(291)
+# ** Note: $finish    : top_verichip4.sv(301)
 #    Time: 5 ns  Iteration: 1  Instance: /top_verichip4
-# End time: 23:05:19 on Mar 15,2026, Elapsed time: 0:00:01
+# End time: 14:45:35 on Mar 16,2026, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 0

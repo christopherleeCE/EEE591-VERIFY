@@ -258,9 +258,22 @@ end
 reg [15:0] stim_array [4];
 reg [15:0] bit_mask_array [4];
 
+//aa stands for access array
+// TODO: Not all bits are init 0, version register have init 1 at position 9 and 4.
+int vers_reg_aa  [15:0] = {RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO};
+int stat_reg_aa  [15:0] = {RO, RO, RO, RO, RO, RO, W1C,W1C,RO, RO, RO, RO, RO, RO, RO, RO};
+int cmd_reg_aa   [15:0] = {W1C,RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RW, RW, RW, RW};
+int cfg_reg_aa   [15:0] = {RO, RO, RO, RO, RO, RO, RW, RW, RO, RO, RO, RO, RO, RO, RO, RO};
+int left_reg_aa  [15:0] = {RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW};
+int right_reg_aa [15:0] = {RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW};
+int aout_reg_aa  [15:0] = {RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO};
 
-//int my_access_array [16] = {RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW};
-int my_access_array [15:0] = {W1C, W1C, W1C, W1C, W1C, W1C, W1C, W1C, RW, RW, RW, RW, RO, RO, RO, RO};
+// rv -- reset values.
+bit vers_reg_rv  [15:0] = {0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0};
+bit other_rv     [15:0] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+int my_access_array [0:6] [15:0] = {vers_reg_aa, stat_reg_aa, cmd_reg_aa, cfg_reg_aa, left_reg_aa, right_reg_aa, aout_reg_aa};
+bit my_reset_val_array [0:6] [15:0] = {vers_reg_rv, other_rv, other_rv, other_rv, other_rv, other_rv, other_rv};
 logic [15:0] my_wr_val = {16{1'b1}};
 logic [15:0] my_reg_val = 16'hBEEF;
 logic [15:0] my_out_reg = 16'h0000;
@@ -277,15 +290,12 @@ initial begin
 //test
 /////////////////////////////////////////////////////////////////////////////////////
 
-$display("my_access_array: %p", my_access_array);
+//$display("my_access_array: %p", my_access_array);
 
 $display("nick notes: out_reg %h", my_out_reg);
 $display("nick notes: my_wr_val %h", my_wr_val);
-`GEN_EXP_VAL(my_wr_val,my_reg_val,my_access_array,my_out_reg)
+`GEN_EXP_VAL(my_wr_val,my_reg_val,my_access_array[0],my_out_reg)
 $display("nick notes: %h", my_out_reg);
-
-
-
 
 $display("calling finish");
 $finish();
