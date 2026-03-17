@@ -1,441 +1,509 @@
-module verichip4(input logic clk,                       // system clock
-                 input logic rst_b,                     // chip reset
-                 input logic export_disable,            // disable features
-                 output logic interrupt_1,              // first interrupt
-                 output logic interrupt_2,              // second interrupt
+`timescale 1ns/1ps
+// performed in 0 time
 
-                 input logic maroon,                    // maroon state machine input
-                 input logic gold,                      // gold state machine input
+`define DISPLAY_STATE \
+   $display("state: %h", verichip.state);
 
-                 input logic chip_select,               // target of r/w
-                 input logic [6:0] address,             // address bus
-                 input logic [1:0] byte_en,             // write byte enables
-                 input logic       rw_,                 // read/write
-                 input logic [15:0] data_in,            // input data bus
+`define SET_WRITE(addr,val,bytes,cs)   \
+   rw_ <= 1'b0;                     \
+   chip_select <= cs;               \
+   byte_en <= bytes;                \
+   address <= addr;                 \
+   data_in <= val;
 
-                 output logic [15:0] data_out);          // output data bus
+`define SET_READ(addr,cs)           \
+   rw_ <= 1'b1;                     \
+   chip_select <= cs;               \
+   byte_en <= 2'b00;                \
+   address <= addr;                 \
+   data_in <= 16'h0;
 
-localparam VCHIP_ALU_VER = 4'h2;    // current ALU version
-localparam VCHIP_MAJ_VER = 4'h1;
-localparam VCHIP_MIN_VER = 4'h0;
+// sets everything to "active" values
+`define CLEAR_BUS                   \
+   chip_select    <= 1'b0;          \
+   address        <= 7'h0;          \
+   byte_en        <= 2'h0;          \
+   rw_            <= 1'b1;          \
+   data_in        <= 16'h0;
 
-localparam VCHIP_STATE_RESET = 4'h0;
-localparam VCHIP_STATE_NORM  = 4'h1;
-localparam VCHIP_STATE_ERR   = 4'h2;
-localparam VCHIP_STATE_EXP   = 4'h8;
-localparam VCHIP_STATE_LOST  = 4'hF;
+`define CLEAR_ALL                   \
+   export_disable <= 1'b0;          \
+   maroon         <= 1'b0;          \
+   gold           <= 1'b0;          \
+   `CLEAR_BUS
 
-localparam VCHIP_ADDR_VER = 7'h00;
-localparam VCHIP_ADDR_STA = 7'h04;
-localparam VCHIP_ADDR_CMD = 7'h08;
-localparam VCHIP_ADDR_CON = 7'h0C;
-localparam VCHIP_ADDR_LFT = 7'h10;
-localparam VCHIP_ADDR_RGT = 7'h14;
-localparam VCHIP_ADDR_ALU = 7'h18;
+`define WRITE_REG(addr,wval,bytes,cs) \
+   wait(clk == 1'b0); \
+   `SET_WRITE(addr,wval,bytes,cs) \
+   wait(clk == 1'b1); \
+   `CLEAR_BUS \
+   wait(clk == 1'b0);
 
-localparam VCHIP_CMD_NONE = 4'h0;
+`define READ_REG(addr,cs) \
+   wait(clk == 1'b1); \
+   `SET_READ(addr,cs) \
+   wait(clk == 1'b0); \
+   wait(clk == 1'b1);
 
-localparam VCHIP_STA_INT2 = 9;      // bit position of interrupt 2
-localparam VCHIP_STA_INT1 = 8;      // bit position of interrupt 1
+//give it a value, if the data_out on the data bus is not that value, throw an error
+`define CHECK_VAL(val)                                      \
+  if (data_out != val)                                      \
+        $display("Bad read: [data_out, expected] = [%h, %h]", data_out, val);
 
-localparam VCHIP_CMD_LEFT = 3;      // left bit of command in command register
-localparam VCHIP_CMD_VAL  = 15;     // valid bit
-localparam VCHIP_CMD_NON = 0;
-localparam VCHIP_CMD_ADD = 1;
-localparam VCHIP_CMD_SUB = 2;
-localparam VCHIP_CMD_MVL = 3;
-localparam VCHIP_CMD_MVR = 4;
-localparam VCHIP_CMD_SWA = 5;
-localparam VCHIP_CMD_SHL = 6;
-localparam VCHIP_CMD_SHR = 7;
-localparam VCHIP_LAST_CMD = 7;
-localparam VCHIP_LAST_EXP_CMD = 2;
+// check the value in the ALU left register
+`define CHECK_ALU_LEFT(val)                                      \
+   if ( verichip.alu_left != val )                               \
+      $display("Bad read: [data_out, expected] = [%h, %h]", verichip.alu_left, val);
 
-// Version Register flops
-logic export_dis;                   // if 1, export disable is 1
-logic [15:0] version_reg;           // concat of bits
+// perform a write and verify it with a read
+`define CHECK_RW(addr,wval,exp_val,bytes,cs)    \
+   `WRITE_REG(addr,wval,bytes,cs)               \
+   `READ_REG(addr,cs)                           \
+   `CHECK_VAL(exp_val)
 
-// Status Regiser flops
-logic        int2;                  // interrupt 2
-logic        int1;                  // interrupt 1
-logic [3:0]  state;                 // state machine state
-logic [15:0] status_reg;            // concat of bits
-logic [3:0]  next_state;            // next state machine state
+// Ensures that reading from addresses not linked to an address given regardless of cs value
+// expecting 0x0000 covers exp vio and writing 0xFFFF to the target register ensures that no bit fields associated
+// with aliased registers can be flipped from 0 to 1
+`define ALIASING_READ_CHECK(addr)            \
+    `WRITE_REG(addr, 16'hFFFF, 2'b11, 1'b1) \
+    for(int ii = 0; ii < 128; ++ii)          \
+    begin                                       \
+      if((ii != VCHIP_ALU_OUT_ADDR) && (ii != VCHIP_ALU_RIGHT_ADDR) && (ii != VCHIP_ALU_LEFT_ADDR) && (ii != VCHIP_CON_ADDR) && (ii != VCHIP_CMD_ADDR) && (ii != VCHIP_STA_ADDR) && (ii != VCHIP_VER_ADDR)) begin  \
+         // read with cs high                \
+         `READ_REG(ii, 1'b1)                   \
+                                             \
+         if (data_out != 16'h0000)           \
+         $display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
+         // read with cs low                       \
+         `READ_REG(ii, 1'b0)                      \
+                                                   \
+         if (data_out != 16'h0000)                 \
+         $display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
+      end                                          \
+   end                                             
+    
+// Write 16'h0000 to the address of interest and validate an aliased write does not affect reg value for cs = 0 and cs = 1
+// expecting 16'h0000 also covers export violation so a new macro does not have to be made
+// NOTE, aliased registers have 0xFFFF writen to them to check that no bit fields in ALU left go from 0 => 1
+`define ALIASING_WRITE_CHECK(addr,bytes = 2'b11,cs) //TODO need to havea  for loop for all byte enables\
+for (int ii = 0 ; ii < 128 ; ++ii) begin  \
+      // Do not check/overrite known good registers/addresses \
+      if((ii != VCHIP_ALU_OUT_ADDR) && (ii != VCHIP_ALU_RIGHT_ADDR) && (ii != VCHIP_ALU_LEFT_ADDR) && (ii != VCHIP_CON_ADDR) && (ii != VCHIP_CMD_ADDR) && (ii != VCHIP_STA_ADDR) && (ii != VCHIP_VER_ADDR)) begin  \
+         `CHECK_RW(addr, 16'h0000, 16'h0000, 2'b11, 1'b1)      \
+         `WRITE_REG(ii, 16'hFFFF, bytes, cs)                      \
+         `READ_REG(addr, 1'b1)                                \
+                                                               \
+         if (data_out != 16'h0000)                             \
+            $display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
+                                                   \
+         `WRITE_REG(ii, 16'hFFFF, bytes, cs)          \
+         `READ_REG(addr, 1'b1)                    \
+                                                   \
+         if (data_out != 16'h0000)                 \
+                $display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
+                                                   \
+      end                                          \
+end                                              
 
-// Command Register flops
-logic        valid;                 // command is valid
-logic [3:0]  cmd;                   // the command
-logic [15:0] cmd_reg;               // concat of bits
-logic        bad_exp_cmd;           // bad command when export disable asserted
-logic        bad_cmd;               // undefined command
 
-// Configuration Register flops
-logic int2_en;                      // enable interrupt 2
-logic int1_en;                      // enable interrupt 1
-logic [15:0] con_reg;               // concat of bits
-
-// ALU Registers
-logic [15:0] alu_left;              // left input
-logic [15:0] alu_right;             // right input
-logic [15:0] alu_out;               // result
-logic        overflow;              // bad add/sub
-logic [15:0] alu_result;            // result
-logic [15:0] next_left;             // value from ALU to load
-logic [15:0] next_right;            // value from ALU to load
-logic        load_left;             // load value from ALU
-logic        load_right;            // load value from ALU
-
-logic [15:0] data_out_tmp;          // read data
-
-always_ff @ ( posedge clk or negedge rst_b )
-begin
-  if ( !rst_b )
-  begin
-     export_dis <= export_disable;
-     state      <= VCHIP_STATE_RESET;
-     alu_out    <= 16'h0;
-  end // if ( !rst_b )
-  else
-  begin
-     export_dis <= export_disable;
-     state <= next_state;
-     alu_out <= alu_result;
-  end // else: !if( !rst_b )
+`define GEN_EXP_VAL(wr_val, reg_val, access_array, out_reg) \
+for (int i = 0; i < 16; ++i) begin \
+   //$write(" %0d", access_array[i]);         \
+   case (access_array[i])           \
+      RO:                           \
+         out_reg[i] = reg_val[i];  \
+      W1C:                          \
+         out_reg[i] = ~wr_val[i] & reg_val[i]; \
+      RW:                              \
+         out_reg[i] =  wr_val[i];     \
+      default:                         \
+         out_reg[i] = reg_val[i];      \
+                                       \
+   endcase                             \
 end
 
-assign bad_exp_cmd = export_dis && valid && ( cmd > VCHIP_LAST_EXP_CMD );
-assign bad_cmd     = valid && ( cmd > VCHIP_LAST_CMD );
-assign overflow    = valid &&
-                     ( ( ( cmd == VCHIP_CMD_ADD ) &&                                      // adding
-                         ( ( alu_left[15] && alu_right[15] && !alu_result[15] ) ||        // two neg -> pos
-                           ( !alu_left[15] && !alu_right[15] && alu_result[15] ) ) ) ||   // two pos -> neg
-                        ( ( cmd == VCHIP_CMD_SUB ) &&                                     // subtracting
-                          ( ( alu_left[15] && !alu_right[15] && !alu_result[15] ) ||      // neg - pos -> pos
-                            ( !alu_left[15] && alu_right[15] && alu_result[15] ) ) ) );   // pos - neg -> neg
+// waits for the clock to be 0 and then asserts reset, then waits for 
+// clk == 1 to deassert reset
+`define CHIP_RESET                  \
+   wait( clk == 1'b0 );             \
+   rst_b <= 1'b0;                   \
+   wait( clk == 1'b1 );             \
+   rst_b <= 1'b1;
 
-assign interrupt_1 = int1;
-assign interrupt_2 = int2;
+// go into normal state
+`define CHIP_NORMAL    \
+   wait(clk == 1'b0);  \
+   rst_b <= 1'b0;      \
+   wait(clk == 1'b1);  \
+   rst_b <= 1'b1;      \
+   wait(clk == 1'b0);  \
+                       \
+   //go into normal from reset \
+   maroon <= 1'b0;     \
+   gold <= 1'b1;       \
+   wait(clk == 1'b1);  \
+   wait(clk == 1'b0);  \
 
-always_comb
+// go into error state
+`define CHIP_ERROR(init_alu_lft_val)  \
+   wait(clk == 1'b0);  \
+   rst_b <= 1'b0;      \
+   wait(clk == 1'b1);  \
+   rst_b <= 1'b1;      \
+   wait(clk == 1'b0);  \
+                       \
+   //go into normal from reset \
+   maroon <= 1'b0;     \
+   gold <= 1'b1;       \
+   wait(clk == 1'b1);  \
+   wait(clk == 1'b0);  \
+                       \
+   //set to a non-zero initial value                     \
+   `CHECK_RW(VCHIP_ALU_LEFT_ADDR, init_alu_lft_val, init_alu_lft_val, 2'b11, 1'b1)     \
+                                                         \
+   //write bad command to command reg to go into error   \
+   `WRITE_REG(VCHIP_CMD_ADDR, 16'h800C, 2'b11, 1'b1)     \
+   wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output   \
+
+   // go into chip exp state
+   `define CHIP_EXP_VIO    \
+                        \
+   wait(clk == 1'b0);   \
+   rst_b <= 1'b0;       \
+   wait(clk == 1'b1);   \
+   rst_b <= 1'b1;       \
+   wait(clk == 1'b0);   \
+                        \
+   //go into normal from reset \
+                        \
+   maroon <= 1'b0;      \
+   gold <= 1'b1;        \
+   wait(clk == 1'b1);   \
+   wait(clk == 1'b0);   \
+                        \
+   export_disable <= 1'b1; \
+                        \
+   //write restricted cmd to command reg to go into error   \
+   //(even invalid commands are restricted)                 \
+   `WRITE_REG(VCHIP_CMD_ADDR, 16'h8008, 2'b11, 1'b1)                                   \
+   wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output   \
+
+
+module top_verichip4 ();
+
+localparam RO = 2'b0;
+localparam W1C = 2'b1;
+localparam RW = 2'b10;
+
+logic clk;                       // system clock
+logic rst_b;                     // chip reset
+logic export_disable;            // disable features
+logic interrupt_1;               // first interrupt
+logic interrupt_2;               // second interrupt
+
+logic maroon;                    // maroon state machine input
+logic gold;                      // gold state machine input
+
+logic chip_select;               // target of r/w
+logic [6:0] address;             // address bus
+logic [1:0] byte_en;             // write byte enables
+logic       rw_;                 // read/write
+logic [15:0] data_in;            // input data bus
+
+logic [15:0] data_out;           // output data bus
+
+localparam VCHIP_VER_ADDR       = 7'h00;
+localparam VCHIP_STA_ADDR       = 7'h04;
+localparam VCHIP_CMD_ADDR       = 7'h08;
+localparam VCHIP_CON_ADDR       = 7'h0C;
+localparam VCHIP_ALU_LEFT_ADDR  = 7'h10;
+localparam VCHIP_ALU_RIGHT_ADDR = 7'h14;
+localparam VCHIP_ALU_OUT_ADDR   = 7'h18;
+
+localparam VCHIP_ALU_VALID = 16'h8000;
+localparam VCHIP_ALU_ADD   = 16'h0001;
+localparam VCHIP_ALU_SUB   = 16'h0002;
+localparam VCHIP_ALU_MVL   = 16'h0003;
+localparam VCHIP_ALU_MVR   = 16'h0004;
+localparam VCHIP_ALU_SWA   = 16'h0005;
+localparam VCHIP_ALU_SHL   = 16'h0006;
+localparam VCHIP_ALU_SHR   = 16'h0007;
+
+initial begin
+  $dumpfile("dump.vcd");
+  $dumpvars();
+end
+
+initial
 begin
-   case ( state )
-     VCHIP_STATE_RESET:
-     begin
-        if ( !maroon && gold )
-           next_state = VCHIP_STATE_NORM;
-        else
-           next_state = VCHIP_STATE_RESET;
-     end // case: VCHIP_STATE_RESET
-
-     VCHIP_STATE_NORM:
-     begin
-        if ( export_dis && valid && bad_exp_cmd )
-           next_state = VCHIP_STATE_EXP;
-        else if ( valid && ( bad_cmd || overflow ) )
-           next_state = VCHIP_STATE_ERR;
-        else
-           next_state = VCHIP_STATE_NORM;
-     end // case: VCHIP_STATE_NORM
-
-     VCHIP_STATE_ERR:
-     begin
-        if ( maroon && !gold )
-           next_state = VCHIP_STATE_NORM;
-        else
-           next_state = VCHIP_STATE_ERR;
-     end // case: VCHIP_STATE_ERR
-
-     VCHIP_STATE_EXP:
-     begin
-        next_state = VCHIP_STATE_EXP;
-     end // case: VCHIP_STATE_EXP
-
-     default:
-     begin
-        next_state = VCHIP_STATE_LOST;
-     end // case: default
-
-   endcase // case ( state )
-end // always_comb
-
-always_ff @ ( posedge clk or negedge rst_b )
-begin
-  if ( !rst_b )
-  begin
-     int1       <= 1'b0;
-  end // if ( !rst_b )
-  else if ( int1_en && ( state == VCHIP_STATE_NORM ) && valid &&
-            ( bad_cmd || overflow ) )
-  begin
-     int1 <= 1'b1;
-  end // if ( ( state == VCHIP_STATE_NORM ) && valid &&...
-  else if ( chip_select && !rw_ && ( address == VCHIP_ADDR_STA ) && byte_en[1] )
-  begin
-     if ( data_in[VCHIP_STA_INT1] )
-        int1 <= 1'b0;
-  end // else: !if( !rst_b )
-end // always_ff @ ( posedge clk or negedge rst_b )
-
-always_ff @ ( posedge clk or negedge rst_b )
-begin
-  if ( !rst_b )
-  begin
-     int2       <= 1'b0;
-  end // if ( !rst_b )
-  else if ( int2_en && ( state == VCHIP_STATE_NORM ) && valid && bad_exp_cmd )
-  begin
-     int2 <= 1'b1;
-  end // if ( ( state == VCHIP_STATE_NORM ) && valid &&...
-  else if ( chip_select && !rw_ && ( address == VCHIP_ADDR_STA ) && byte_en[1] )
-  begin
-     if ( data_in[VCHIP_STA_INT2] )
-        int2 <= 1'b0;
-  end // else: !if( !rst_b )
-end // always_ff @ ( posedge clk or negedge rst_b )
-
-always_ff @ ( posedge clk or negedge rst_b )
-begin
-  if ( !rst_b )
-  begin
-     valid <= 1'b0;
-     cmd <= VCHIP_CMD_NONE;
-  end // if ( !rst_b )
-  else if ( next_state == VCHIP_STATE_EXP )
-  begin
-     valid <= 1'b0;
-     cmd <= VCHIP_CMD_NONE;
-  end // if ( next_state == VCHIP_STATE_EXP )
-  else if ( state == VCHIP_STATE_ERR )
-  begin
-     valid <= 1'b0;
-     cmd <= cmd;
-  end // if ( state == VCHIP_STATE_ERR )
-  else if ( chip_select && !rw_ && ( address == VCHIP_ADDR_CMD ) )
-  begin
-     valid <= data_in[VCHIP_CMD_VAL] && byte_en[1];
-     if ( byte_en[0] )
-        cmd <= data_in[VCHIP_CMD_LEFT:0];
-  end // if ( chip_select && !rw_ && ( address == VCHIP_ADDR_CMD ) )
-  else
-  begin
-     valid <= 1'b0;
-  end // else: !if( chip_select && !rw_ && ( address == VCHIP_ADDR_CMD ) )
-end // always_ff @ ( posedge clk or negedge rst_b )
-
-always_ff @ ( posedge clk or negedge rst_b )
-begin
-  if ( !rst_b )
-  begin
-     int2_en    <= 1'b0;
-     int1_en    <= 1'b0;
-  end // if ( !rst_b )
-  else if ( next_state == VCHIP_STATE_EXP )
-  begin
-     int2_en <= 1'b0;
-     int1_en <= 1'b0;
-  end // if ( next_state == VCHIP_STATE_EXP )
-  else if ( state == VCHIP_STATE_ERR )
-  begin
-     int2_en <= int2_en;
-     int1_en <= int1_en;
-  end // if ( state == VCHIP_STATE_ERR )
-  else if ( chip_select && !rw_ && ( address == VCHIP_ADDR_CON ) && byte_en[1] )
-  begin
-     int2_en <= data_in[VCHIP_STA_INT2];
-     int1_en <= data_in[VCHIP_STA_INT1];
-  end // else: !if( !rst_b )
-end // always_ff @ ( posedge clk or negedge rst_b )
-
-always_ff @ ( posedge clk or negedge rst_b )
-begin
-  if ( !rst_b )
-  begin
-     alu_left <= 16'h0;
-  end // if ( !rst_b )
-  else if ( next_state == VCHIP_STATE_EXP )
-  begin
-     alu_left <= 16'h0;
-  end // if ( next_state == VCHIP_STATE_EXP )
-  else if ( state == VCHIP_STATE_ERR )
-  begin
-     alu_left <= alu_left;
-  end // if ( state == VCHIP_STATE_ERR )
-  else if ( chip_select && !rw_ && ( address == VCHIP_ADDR_LFT ) )
-  begin
-     if ( byte_en[0] )
-        alu_left[7:0] <= data_in[7:0];
-     if ( byte_en[1] )
-        alu_left[15:8] <= data_in[15:8];
-  end // if ( chip_select && !rw_ && ( address == VCHIP_ADDR_LFT ) )
-  else if ( load_left )
-  begin
-     alu_left <= next_left;
-  end // if ( load_left )
-end // always_ff @ ( posedge clk or negedge rst_b )
-
-always_ff @ ( posedge clk or negedge rst_b )
-begin
-  if ( !rst_b )
-  begin
-     alu_right <= 16'h0;
-  end // if ( !rst_b )
-  else if ( next_state == VCHIP_STATE_EXP )
-  begin
-     alu_right <= 16'h0;
-  end // if ( next_state == VCHIP_STATE_EXP )
-  else if ( state == VCHIP_STATE_ERR )
-  begin
-     alu_right <= alu_right;
-  end // if ( state == VCHIP_STATE_ERR )
-  else if ( chip_select && !rw_ && ( address == VCHIP_ADDR_RGT ) )
-  begin
-     if ( byte_en[0] )
-        alu_right[7:0] <= data_in[7:0];
-     if ( byte_en[1] )
-        alu_right[15:8] <= data_in[15:8];
-  end // if ( chip_select && !rw_ && ( address == VCHIP_ADDR_LFT ) )
-  else if ( load_right )
-  begin
-     alu_right <= next_right;
-  end // if ( load_right )
-end // always_ff @ ( posedge clk or negedge rst_b )
-
-always_comb
-begin
-  if ( ( next_state == VCHIP_STATE_EXP ) && ( address != VCHIP_ADDR_STA ) )
-     data_out = 16'h0;
-  else if ( chip_select )
-     data_out = data_out_tmp;
-  else
-     data_out = 16'h0;
-end // always_comb
-
-assign version_reg = { export_dis, 3'h0, VCHIP_ALU_VER, VCHIP_MAJ_VER, VCHIP_MIN_VER };
-assign status_reg  = { 6'h0, int2, int1, 4'h0, state };
-assign cmd_reg     = { valid, 11'h0, cmd };
-assign con_reg     = { 6'h0, int2_en, int1_en, 8'h0 };
-
-always_comb
-begin
-  case ( address )
-    VCHIP_ADDR_VER: data_out_tmp = version_reg;
-    VCHIP_ADDR_STA: data_out_tmp = status_reg;
-    VCHIP_ADDR_CMD: data_out_tmp = cmd_reg;
-    VCHIP_ADDR_CON: data_out_tmp = con_reg;
-    VCHIP_ADDR_LFT: data_out_tmp = alu_left;
-    VCHIP_ADDR_RGT: data_out_tmp = alu_right;
-    VCHIP_ADDR_ALU: data_out_tmp = alu_out;
-
-    default: data_out_tmp = 16'h0;
-  endcase // case ( address )
-end // always_comb
-
-// build the ALU
-always_comb
-begin
-   if ( next_state == VCHIP_STATE_EXP )
+   clk <= 1'b0;
+   while ( 1 )
    begin
-      alu_result = 16'h0;
-      load_left = 1'b0;
-      load_right = 1'b0;
-      next_left = 16'h0;
-      next_right = 16'h0;
-   end // if ( next_state == VCHIP_STATE_EXP )
+      #5 clk <= 1'b1;
+      #5 clk <= 1'b0;
+   end
+end
+/////////////////////////////////////////////////////////////////////////////////////
+// need to test all byte enables, do it with a for loop and a case statement
+// test writing registers, test address 50 and ensure nothing is written to ALU_left,
+// which is address 10
+///////////////////////////////////////////////////////////////////////////////////// 
+//reg [15:0] stim_array [4];
+reg [15:0] bit_mask_array [4];
 
-   else if ( ( state != VCHIP_STATE_NORM ) || !valid || bad_cmd )
-   begin
-      alu_result = alu_out;
-      load_left = 1'b0;
-      load_right = 1'b0;
-      next_left = 16'h0;
-      next_right = 16'h0;
-   end // if ( ( state != VCHIP_STATE_NORM ) || !valid || bad_cmd )
+//aa stands for access array
+// TODO: Not all bits are init 0, version register have init 1 at position 9 and 4.
+int vers_reg_aa  [15:0] = {RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO};
+int stat_reg_aa  [15:0] = {RO, RO, RO, RO, RO, RO, W1C,W1C,RO, RO, RO, RO, RO, RO, RO, RO};
+int cmd_reg_aa   [15:0] = {W1C,RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RW, RW, RW, RW};
+int cfg_reg_aa   [15:0] = {RO, RO, RO, RO, RO, RO, RW, RW, RO, RO, RO, RO, RO, RO, RO, RO};
+int left_reg_aa  [15:0] = {RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW};
+int right_reg_aa [15:0] = {RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW, RW};
+int aout_reg_aa  [15:0] = {RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO};
 
-   else
-   begin
-      case ( cmd )
-        VCHIP_CMD_NONE:
-        begin
-           alu_result = alu_out;
-           load_left = 1'b0;
-           load_right = 1'b0;
-           next_left = 16'h0;
-           next_right = 16'h0;
-        end // case: VCHIP_CMD_NONE
+// rv -- reset values.
+bit vers_reg_rv  [15:0] = {0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0};
+bit other_rv     [15:0] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
-        VCHIP_CMD_ADD:
-        begin
-           alu_result = alu_left + alu_right;
-           load_left = 1'b0;
-           load_right = 1'b0;
-           next_left = 16'h0;
-           next_right = 16'h0;
-        end // case: VCHIP_CMD_ADD
+int my_access_array [0:6] [15:0] = {vers_reg_aa, stat_reg_aa, cmd_reg_aa, cfg_reg_aa, left_reg_aa, right_reg_aa, aout_reg_aa};
+bit my_reset_val_array [0:6] [15:0] = {vers_reg_rv, other_rv, other_rv, other_rv, other_rv, other_rv, other_rv};
+logic [15:0] my_wr_val = {16{1'b1}};
+logic [15:0] my_reg_val = 16'hBEEF;
+logic [15:0] my_out_reg = 16'h0000;
+logic [15:0] initial_val = 16'h0000;
+logic [15:0] stim_array [0:3] = {16'hFFFF, 16'hAAAA, 16'h5555, 16'h0000};
+int address_array [0:6] = {VCHIP_VER_ADDR, VCHIP_STA_ADDR, VCHIP_CMD_ADDR, VCHIP_CON_ADDR, VCHIP_ALU_LEFT_ADDR, VCHIP_ALU_RIGHT_ADDR, VCHIP_ALU_OUT_ADDR};
 
-        VCHIP_CMD_SUB:
-        begin
-           alu_result = alu_left - alu_right;
-           load_left = 1'b0;
-           load_right = 1'b0;
-           next_left = 16'h0;
-           next_right = 16'h0;
-        end // case: VCHIP_CMD_SUB
 
-        VCHIP_CMD_MVL:   // move out to left
-        begin
-           alu_result = alu_out;
-           load_left = 1'b1;
-           load_right = 1'b0;
-           next_left = alu_out;
-           next_right = 16'h0;
-        end // case: VCHIP_CMD_MVL
+initial begin
+   `CLEAR_ALL
+   `CHIP_RESET
+bit_mask_array = {16'h0000, 16'h00FF, 16'hFF00, 16'hFFFF};
 
-        VCHIP_CMD_MVR:   // move out to right
-        begin
-           alu_result = alu_out;
-           load_left = 1'b0;
-           load_right = 1'b1;
-           next_left = 16'h0;
-           next_right = alu_out;
-        end // case: VCHIP_CMD_MVR
+/////////////////////////////////////////////////////////////////////////////////////
+//test
+/////////////////////////////////////////////////////////////////////////////////////
 
-        VCHIP_CMD_SWA:
-        begin
-           alu_result = alu_out;
-           load_left = 1'b1;
-           load_right = 1'b1;
-           next_left = alu_right;
-           next_right = alu_left;
-        end // case: VCHIP_CMD_SWA
+//$display("my_access_array: %p", my_access_array);
 
-        VCHIP_CMD_SHL:
-        begin
-           alu_result = alu_left << alu_right;
-           load_left = 1'b0;
-           load_right = 1'b0;
-           next_left = 16'h0;
-           next_right = 16'h0;
-        end // case: VCHIP_CMD_SHL
+$display("nick notes: out_reg %h", my_out_reg);
+$display("nick notes: my_wr_val %h", my_wr_val);
+`GEN_EXP_VAL(my_wr_val,my_reg_val,my_access_array[5],my_out_reg)
+$display("nick notes out reg: %h", my_out_reg);
 
-        VCHIP_CMD_SHR:
-        begin
-           alu_result = alu_left >> alu_right;
-           load_left = 1'b0;
-           load_right = 1'b0;
-           next_left = 16'h0;
-           next_right = 16'h0;
-        end // case: VCHIP_CMD_SHR
+$display("calling finish");
 
-        default:
-        begin
-           alu_result = alu_out;
-           load_left = 1'b0;
-           load_right = 1'b0;
-           next_left = 16'h0;
-           next_right = 16'h0;
-        end // case: default
-      endcase // case ( cmd )
-   end // else: !if( ( state != VCHIP_STATE_NORM ) || !valid || bad_cmd )
-end // always_comb
+
+///////////////////////////////////////////////////////////////////////////////////// 
+//cs = 1
+///////////////////////////////////////////////////////////////////////////////////// 
+   $display("\n \n \n");
+   `DISPLAY_STATE
+    
+   $display("calling `CHIP_RESET...");
+   `CHIP_RESET
+   `DISPLAY_STATE
+   for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
+   for (int _be = 0; _be < 4; _be ++) begin
+      for (int i = 0; i < 4; i++) begin
+          my_wr_val = stim_array[i]; //this step is needed, I don't know why
+         `GEN_EXP_VAL(my_wr_val,my_reg_val,my_access_array[addr_idx],my_out_reg)
+         $display("nick notes my_wr_val %p", my_wr_val);
+         $display("nick notes out reg: %h", my_out_reg);
+         $display("nick notes address: %p", address_array[addr_idx]);
+         `CHECK_RW(address_array[addr_idx], stim_array[i], (my_out_reg & bit_mask_array[_be]), _be, 1'b1)
+      end
+   end
+end
+$finish();
+   $display("\n \n \n");
+   `DISPLAY_STATE
+
+   $display("calling `CHIP_NORMAL...");
+   `CHIP_NORMAL
+   `DISPLAY_STATE
+   for (int _be = 0; _be < 4; _be ++) begin
+      for (int i = 0; i < 4; i++) begin
+         `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
+      end
+   end
+
+   $display("\n \n \n");
+   `DISPLAY_STATE 
+
+   $display("calling `CHIP_ER...");
+   `CHIP_ERROR(16'h1234)
+   `DISPLAY_STATE
+   for (int _be = 0; _be < 4; _be ++)
+      for (int i = 0; i < 4; i++) begin
+         //$display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_be]); 
+         `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], 16'h1234, _be, 1'b1)
+      end
+      
+   $display("\n \n \n");
+   `DISPLAY_STATE   
+
+   $display("calling `CHIP_EXP_VIO...");
+   `CHIP_EXP_VIO
+   `DISPLAY_STATE
+   for (int _be = 0; _be < 4; _be ++)
+      for (int i = 0; i < 4; i++) begin
+         //$display("macro args: %h, %h", stim_array[i],stim_array[i] & bit_mask_array[_be]); 
+         `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], 16'h0000, _be, 1'b1)
+      end
+
+   `CHIP_RESET
+
+
+///////////////////////////////////////////////////////////////////////////////////// 
+//cs = 0 -- Verichip is unselected; read all zeros
+/////////////////////////////////////////////////////////////////////////////////////
+   $display("\n \n \n");
+   $display("cs %h", chip_select);   
+   
+   $display("\n \n \n");
+   `DISPLAY_STATE
+
+   $display("calling `CHIP_RESET...");
+   `CHIP_RESET
+   `DISPLAY_STATE
+
+   // Set ALU_LEFT to non-zero value.
+   `WRITE_REG(VCHIP_ALU_LEFT_ADDR, 16'hBEAF, 2'b11, 1'b1)
+   `READ_REG(VCHIP_ALU_LEFT_ADDR, 1'b1)
+   `CHECK_ALU_LEFT(16'hBEAF)
+
+   // Check read write and byte enable combinations.
+   for (int _be = 0; _be < 4; _be ++) begin
+      for (int i = 0; i < 4; i++) begin 
+         `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], 16'h0, _be, 1'b0)
+         `CHECK_ALU_LEFT(16'hBEAF)
+      end
+   end
+
+   $display("\n \n \n");
+   `DISPLAY_STATE
+
+   $display("calling `CHIP_NORMAL...");
+   `CHIP_NORMAL
+   `DISPLAY_STATE
+
+   // Set ALU_LEFT to non-zero value.
+   `WRITE_REG(VCHIP_ALU_LEFT_ADDR, 16'hBEAF, 2'b11, 1'b1)
+   `READ_REG(VCHIP_ALU_LEFT_ADDR, 1'b1)
+   `CHECK_ALU_LEFT(16'hBEAF)
+
+   // Check r/w all be and write combinations.
+   for (int _be = 0; _be < 4; _be ++) begin
+      for (int i = 0; i < 4; i++) begin
+         `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], 16'h0, _be, 1'b0)
+         `CHECK_ALU_LEFT(16'hBEAF)
+      end
+   end
+
+   $display("\n \n \n");
+   `DISPLAY_STATE 
+   $display("time: %d", $time);
+
+   export_disable <= 0;
+   
+   $display("calling `CHIP_ER...");
+   //not calling macro cus we need to get beaf into alu left, after reset occures
+      wait(clk == 1'b0);  
+      rst_b <= 1'b0;      
+      wait(clk == 1'b1);  
+      rst_b <= 1'b1;      
+      wait(clk == 1'b0);  
+
+      //go into normal from reset 
+      maroon <= 1'b0;     
+      gold <= 1'b1;       
+      wait(clk == 1'b1);  
+      wait(clk == 1'b0);  
+                        
+      //set to a non-zero initial value                     
+      `WRITE_REG(VCHIP_ALU_LEFT_ADDR, 16'hBEAF, 2'b11, 1'b1)
+      `READ_REG(VCHIP_ALU_LEFT_ADDR, 1'b1)
+      `CHECK_ALU_LEFT(16'hBEAF)
+                                                       
+      //write bad command to command reg to go into error   
+      `WRITE_REG(VCHIP_CMD_ADDR, 16'h800C, 2'b11, 1'b1)     
+      wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output   
+   
+   `DISPLAY_STATE
+
+   // Check all byte enable and write combinations.
+   for (int _be = 0; _be < 4; _be ++)
+      for (int i = 0; i < 4; i++) begin
+         `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], 16'h0, _be, 1'b0)
+         `CHECK_ALU_LEFT(16'hBEAF)
+      end
+      
+   $display("\n \n \n");
+   `DISPLAY_STATE   
+
+
+///////////////////////////////////////
+// ALIAS TESTING- for all states
+///////////////////////////////////////
+
+
+// Testing Reset State for all byte_enables and chip select 0 & 1
+for (int _be = 0; _be < 4; _be ++) begin
+  `CHIP_RESET
+  `DISPLAY_STATE
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR) // read validate
+end
+
+// Testing Normal State for all byte_enables and chip select 0 & 1
+for (int _be = 0; _be < 4; _be ++) begin
+  `CHIP_NORMAL
+  `DISPLAY_STATE
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR) // read validate
+end
+
+// Testing Error State for all byte_enables and chip select 0 & 1
+for (int _be = 0; _be < 4; _be ++) begin
+  `CHIP_ERROR(16'h0000)
+  `DISPLAY_STATE
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR) // read validate
+end
+
+// Testing Export Violation State for all byte_enables and chip select 0 & 1
+for (int _be = 0; _be < 4; _be ++) begin
+  `CHIP_EXP_VIO
+  `DISPLAY_STATE
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR) // read validate
+end
+
+   $finish();
+end 
+
+verichip4 verichip (.clk           ( clk            ),    // system clock
+                   .rst_b         ( rst_b          ),    // chip reset
+                   .export_disable( export_disable ),    // disable features
+                   .interrupt_1   ( interrupt_1    ),    // first interrupt
+                   .interrupt_2   ( interrupt_2    ),    // second interrupt
+ 
+                   .maroon        ( maroon         ),    // maroon state machine input
+                   .gold          ( gold           ),    // gold state machine input
+
+                   .chip_select   ( chip_select    ),    // target of r/w
+                   .address       ( address        ),    // address bus
+                   .byte_en       ( byte_en        ),    // write byte enables
+                   .rw_           ( rw_            ),    // read/write
+                   .data_in       ( data_in        ),    // data bus\
+
+                   .data_out      ( data_out       ) );  // output data bus
+
 
 endmodule
+
