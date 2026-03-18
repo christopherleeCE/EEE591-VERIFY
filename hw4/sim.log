@@ -1,20 +1,22 @@
 # 
 # vlog *.sv
 # Questa Intel Starter FPGA Edition-64 vlog 2024.3 Compiler 2024.09 Sep 10 2024
-# Start time: 14:45:33 on Mar 16,2026
+# Start time: 23:32:20 on Mar 17,2026
 # vlog top_verichip4.sv verichip4.sv 
 # -- Compiling module top_verichip4
 # -- Compiling module verichip4
 # 
 # Top level modules:
 # 	top_verichip4
-# End time: 14:45:33 on Mar 16,2026, Elapsed time: 0:00:00
+# End time: 23:32:21 on Mar 17,2026, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 0
 # 
 # vsim -voptargs=+acc work.top_verichip4 
 # vsim -voptargs="+acc" work.top_verichip4 
-# Start time: 14:45:34 on Mar 16,2026
-# ** Note: (vsim-8009) Loading existing optimized design _opt1
+# Start time: 23:32:21 on Mar 17,2026
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Warning: (vopt-10908) Some optimizations are turned off because the +acc switch is in effect.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
 # //  Questa Intel Starter FPGA Edition-64
 # //  Version 2024.3 win64 Sep 10 2024
 # //
@@ -34,11 +36,3048 @@
 # Loading work.verichip4(fast)
 # 
 # run 1000us
-# nick notes: out_reg 0000
-# nick notes: my_wr_val ffff
-# nick notes: beef
 # calling finish
-# ** Note: $finish    : top_verichip4.sv(301)
-#    Time: 5 ns  Iteration: 1  Instance: /top_verichip4
-# End time: 14:45:35 on Mar 16,2026, Elapsed time: 0:00:01
-# Errors: 0, Warnings: 0
+# 
+#  
+#  
+# 
+# state: reset
+# calling `CHIP_RESET...
+# state: reset
+# 
+# addr_idx = 0 (vers)
+# ==================================================
+# 
+# _be : 00
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 
+# _be : 00
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 
+# _be : 00
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 
+# _be : 01
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 
+# _be : 01
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 
+# _be : 01
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 
+# _be : 10
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 
+# _be : 10
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 
+# _be : 10
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 
+# _be : 11
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 
+# _be : 11
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 
+# _be : 11
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 
+# addr_idx = 1 (stat)
+# ==================================================
+# 
+# _be : 00
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 4 (stat)
+# 
+# _be : 00
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 4 (stat)
+# 
+# _be : 00
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 4 (stat)
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 4 (stat)
+# 
+# _be : 01
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 4 (stat)
+# 
+# _be : 01
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 4 (stat)
+# 
+# _be : 01
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 4 (stat)
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 4 (stat)
+# 
+# _be : 10
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 4 (stat)
+# 
+# _be : 10
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 4 (stat)
+# 
+# _be : 10
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 4 (stat)
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 4 (stat)
+# 
+# _be : 11
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 4 (stat)
+# 
+# _be : 11
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 4 (stat)
+# 
+# _be : 11
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 4 (stat)
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 4 (stat)
+# 
+# addr_idx = 2 (cmd)
+# ==================================================
+# 
+# _be : 00
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 
+# _be : 00
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 
+# _be : 00
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 
+# _be : 01
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 000f
+# nick notes address and reg name: 8 (cmd)
+# 
+# _be : 01
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 000a
+# nick notes address and reg name: 8 (cmd)
+# 
+# _be : 01
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0005
+# nick notes address and reg name: 8 (cmd)
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 
+# _be : 10
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 
+# _be : 10
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 
+# _be : 10
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 
+# _be : 11
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 000f
+# nick notes address and reg name: 8 (cmd)
+# 
+# _be : 11
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 000a
+# nick notes address and reg name: 8 (cmd)
+# 
+# _be : 11
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0005
+# nick notes address and reg name: 8 (cmd)
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 
+# addr_idx = 3 (cfg)
+# ==================================================
+# 
+# _be : 00
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 
+# _be : 00
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 
+# _be : 00
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 
+# _be : 01
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 
+# _be : 01
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 
+# _be : 01
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 
+# _be : 10
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0300
+# nick notes address and reg name: c (cfg)
+# 
+# _be : 10
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0200
+# nick notes address and reg name: c (cfg)
+# 
+# _be : 10
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0100
+# nick notes address and reg name: c (cfg)
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 
+# _be : 11
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0300
+# nick notes address and reg name: c (cfg)
+# 
+# _be : 11
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0200
+# nick notes address and reg name: c (cfg)
+# 
+# _be : 11
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0100
+# nick notes address and reg name: c (cfg)
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 
+# addr_idx = 4 (left)
+# ==================================================
+# 
+# _be : 00
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 
+# _be : 00
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 
+# _be : 00
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 
+# _be : 01
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 00ff
+# nick notes address and reg name: 10 (left)
+# 
+# _be : 01
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 00aa
+# nick notes address and reg name: 10 (left)
+# 
+# _be : 01
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0055
+# nick notes address and reg name: 10 (left)
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 
+# _be : 10
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: ff00
+# nick notes address and reg name: 10 (left)
+# 
+# _be : 10
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: aa00
+# nick notes address and reg name: 10 (left)
+# 
+# _be : 10
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 5500
+# nick notes address and reg name: 10 (left)
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 
+# _be : 11
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: ffff
+# nick notes address and reg name: 10 (left)
+# 
+# _be : 11
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: aaaa
+# nick notes address and reg name: 10 (left)
+# 
+# _be : 11
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 5555
+# nick notes address and reg name: 10 (left)
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 
+# addr_idx = 5 (right)
+# ==================================================
+# 
+# _be : 00
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 
+# _be : 00
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 
+# _be : 00
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 
+# _be : 01
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 00ff
+# nick notes address and reg name: 14 (right)
+# 
+# _be : 01
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 00aa
+# nick notes address and reg name: 14 (right)
+# 
+# _be : 01
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0055
+# nick notes address and reg name: 14 (right)
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 
+# _be : 10
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: ff00
+# nick notes address and reg name: 14 (right)
+# 
+# _be : 10
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: aa00
+# nick notes address and reg name: 14 (right)
+# 
+# _be : 10
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 5500
+# nick notes address and reg name: 14 (right)
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 
+# _be : 11
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: ffff
+# nick notes address and reg name: 14 (right)
+# 
+# _be : 11
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: aaaa
+# nick notes address and reg name: 14 (right)
+# 
+# _be : 11
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 5555
+# nick notes address and reg name: 14 (right)
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 
+# addr_idx = 6 (aout)
+# ==================================================
+# 
+# _be : 00
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 
+# _be : 00
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 
+# _be : 00
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 
+# _be : 01
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 
+# _be : 01
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 
+# _be : 01
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 
+# _be : 10
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 
+# _be : 10
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 
+# _be : 10
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 
+# _be : 11
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 
+# _be : 11
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 
+# _be : 11
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 
+#  
+#  
+# 
+# state: reset
+# calling `CHIP_NORMAL...
+# state: normal
+# 
+# addr_idx = 0 (vers)
+# ==================================================
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# ffff
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# aaaa
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 5555
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 0000
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# ffff
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# aaaa
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 5555
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 0000
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# ffff
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# aaaa
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 5555
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 0000
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# ffff
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# aaaa
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 5555
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 0000
+# 
+# addr_idx = 1 (stat)
+# ==================================================
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 4 (stat)
+# ffff
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 4 (stat)
+# aaaa
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 4 (stat)
+# 5555
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 4 (stat)
+# 0000
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 4 (stat)
+# ffff
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 4 (stat)
+# aaaa
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 4 (stat)
+# 5555
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 4 (stat)
+# 0000
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 4 (stat)
+# ffff
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 4 (stat)
+# aaaa
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 4 (stat)
+# 5555
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 4 (stat)
+# 0000
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 4 (stat)
+# ffff
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 4 (stat)
+# aaaa
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 4 (stat)
+# 5555
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 4 (stat)
+# 0000
+# 
+# addr_idx = 2 (cmd)
+# ==================================================
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# ffff
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# aaaa
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 5555
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 0000
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 000f
+# nick notes address and reg name: 8 (cmd)
+# ffff
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 000a
+# nick notes address and reg name: 8 (cmd)
+# aaaa
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0005
+# nick notes address and reg name: 8 (cmd)
+# 5555
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 0000
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# ffff
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# aaaa
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 5555
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 0000
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 000f
+# nick notes address and reg name: 8 (cmd)
+# ffff
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 000a
+# nick notes address and reg name: 8 (cmd)
+# aaaa
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0005
+# nick notes address and reg name: 8 (cmd)
+# 5555
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 0000
+# 
+# addr_idx = 3 (cfg)
+# ==================================================
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# ffff
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# aaaa
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 5555
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 0000
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# ffff
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# aaaa
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 5555
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 0000
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0300
+# nick notes address and reg name: c (cfg)
+# ffff
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0200
+# nick notes address and reg name: c (cfg)
+# aaaa
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0100
+# nick notes address and reg name: c (cfg)
+# 5555
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 0000
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0300
+# nick notes address and reg name: c (cfg)
+# ffff
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0200
+# nick notes address and reg name: c (cfg)
+# aaaa
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0100
+# nick notes address and reg name: c (cfg)
+# 5555
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 0000
+# 
+# addr_idx = 4 (left)
+# ==================================================
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# ffff
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# aaaa
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 5555
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 0000
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 00ff
+# nick notes address and reg name: 10 (left)
+# ffff
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 00aa
+# nick notes address and reg name: 10 (left)
+# aaaa
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0055
+# nick notes address and reg name: 10 (left)
+# 5555
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 0000
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: ff00
+# nick notes address and reg name: 10 (left)
+# ffff
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: aa00
+# nick notes address and reg name: 10 (left)
+# aaaa
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 5500
+# nick notes address and reg name: 10 (left)
+# 5555
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 0000
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: ffff
+# nick notes address and reg name: 10 (left)
+# ffff
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: aaaa
+# nick notes address and reg name: 10 (left)
+# aaaa
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 5555
+# nick notes address and reg name: 10 (left)
+# 5555
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 0000
+# 
+# addr_idx = 5 (right)
+# ==================================================
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# ffff
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# aaaa
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 5555
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 0000
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 00ff
+# nick notes address and reg name: 14 (right)
+# ffff
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 00aa
+# nick notes address and reg name: 14 (right)
+# aaaa
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0055
+# nick notes address and reg name: 14 (right)
+# 5555
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 0000
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: ff00
+# nick notes address and reg name: 14 (right)
+# ffff
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: aa00
+# nick notes address and reg name: 14 (right)
+# aaaa
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 5500
+# nick notes address and reg name: 14 (right)
+# 5555
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 0000
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: ffff
+# nick notes address and reg name: 14 (right)
+# ffff
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: aaaa
+# nick notes address and reg name: 14 (right)
+# aaaa
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 5555
+# nick notes address and reg name: 14 (right)
+# 5555
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 0000
+# 
+# addr_idx = 6 (aout)
+# ==================================================
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# ffff
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# aaaa
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 5555
+# state: normal
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 0000
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# ffff
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# aaaa
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 5555
+# state: normal
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 0000
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# ffff
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# aaaa
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 5555
+# state: normal
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 0000
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val ffff
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# ffff
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val aaaa
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# aaaa
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val 5555
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 5555
+# state: normal
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 0000
+# 
+#  
+#  
+# 
+# state: normal
+# calling `CHIP_ER...
+# state: err0r
+# 
+# addr_idx = 0 (vers)
+# ==================================================
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# ffff
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# aaaa
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 5555
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 0000
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# ffff
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# aaaa
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 5555
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 0000
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# ffff
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# aaaa
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 5555
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 0000
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# ffff
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# aaaa
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 5555
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0210
+# nick notes address and reg name: 0 (vers)
+# 0000
+# 
+# addr_idx = 1 (stat)
+# ==================================================
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0002
+# nick notes address and reg name: 4 (stat)
+# ffff
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0002
+# nick notes address and reg name: 4 (stat)
+# aaaa
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0002
+# nick notes address and reg name: 4 (stat)
+# 5555
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0002
+# nick notes address and reg name: 4 (stat)
+# 0000
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0002
+# nick notes address and reg name: 4 (stat)
+# ffff
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0002
+# nick notes address and reg name: 4 (stat)
+# aaaa
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0002
+# nick notes address and reg name: 4 (stat)
+# 5555
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0002
+# nick notes address and reg name: 4 (stat)
+# 0000
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0002
+# nick notes address and reg name: 4 (stat)
+# ffff
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0002
+# nick notes address and reg name: 4 (stat)
+# aaaa
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0002
+# nick notes address and reg name: 4 (stat)
+# 5555
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0002
+# nick notes address and reg name: 4 (stat)
+# 0000
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0002
+# nick notes address and reg name: 4 (stat)
+# ffff
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0002
+# nick notes address and reg name: 4 (stat)
+# aaaa
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0002
+# nick notes address and reg name: 4 (stat)
+# 5555
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0002
+# nick notes address and reg name: 4 (stat)
+# 0000
+# 
+# addr_idx = 2 (cmd)
+# ==================================================
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 8 (cmd)
+# ffff
+# if triggred
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 8 (cmd)
+# aaaa
+# if triggred
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 8 (cmd)
+# 5555
+# if triggred
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 8 (cmd)
+# 0000
+# if triggred
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 8 (cmd)
+# ffff
+# if triggred
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 8 (cmd)
+# aaaa
+# if triggred
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 8 (cmd)
+# 5555
+# if triggred
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 8 (cmd)
+# 0000
+# if triggred
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 8 (cmd)
+# ffff
+# if triggred
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 8 (cmd)
+# aaaa
+# if triggred
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 8 (cmd)
+# 5555
+# if triggred
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 8 (cmd)
+# 0000
+# if triggred
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 8 (cmd)
+# ffff
+# if triggred
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 8 (cmd)
+# aaaa
+# if triggred
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 8 (cmd)
+# 5555
+# if triggred
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 8 (cmd)
+# 0000
+# if triggred
+# 
+# addr_idx = 3 (cfg)
+# ==================================================
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# ffff
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# aaaa
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 5555
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 0000
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# ffff
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# aaaa
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 5555
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 0000
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# ffff
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# aaaa
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 5555
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 0000
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# ffff
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# aaaa
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 5555
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 0000
+# 
+# addr_idx = 4 (left)
+# ==================================================
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 10 (left)
+# ffff
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 10 (left)
+# aaaa
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 10 (left)
+# 5555
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 10 (left)
+# 0000
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 10 (left)
+# ffff
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 10 (left)
+# aaaa
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 10 (left)
+# 5555
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 10 (left)
+# 0000
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 10 (left)
+# ffff
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 10 (left)
+# aaaa
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 10 (left)
+# 5555
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 10 (left)
+# 0000
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 10 (left)
+# ffff
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 10 (left)
+# aaaa
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 10 (left)
+# 5555
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 10 (left)
+# 0000
+# 
+# addr_idx = 5 (right)
+# ==================================================
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 14 (right)
+# ffff
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 14 (right)
+# aaaa
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 14 (right)
+# 5555
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 14 (right)
+# 0000
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 14 (right)
+# ffff
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 14 (right)
+# aaaa
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 14 (right)
+# 5555
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 14 (right)
+# 0000
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 14 (right)
+# ffff
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 14 (right)
+# aaaa
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 14 (right)
+# 5555
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 14 (right)
+# 0000
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 14 (right)
+# ffff
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 14 (right)
+# aaaa
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 14 (right)
+# 5555
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0001
+# nick notes address and reg name: 14 (right)
+# 0000
+# 
+# addr_idx = 6 (aout)
+# ==================================================
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# ffff
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# aaaa
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 5555
+# state: err0r
+# 
+# _be : 00
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 0000
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# ffff
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# aaaa
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 5555
+# state: err0r
+# 
+# _be : 01
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 0000
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# ffff
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# aaaa
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 5555
+# state: err0r
+# 
+# _be : 10
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 0000
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# ffff
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# aaaa
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 5555
+# state: err0r
+# 
+# _be : 11
+# nick notes my_wr_val 0001
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 0000
+# 
+#  
+#  
+# 
+# state: err0r
+# calling `CHIP_EXP_VIO...
+# state: expvi
+# 
+# addr_idx = 0 (vers)
+# ==================================================
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 0 (vers)
+# ffff
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 0 (vers)
+# aaaa
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 0 (vers)
+# 5555
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 0 (vers)
+# 0000
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 0 (vers)
+# ffff
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 0 (vers)
+# aaaa
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 0 (vers)
+# 5555
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 0 (vers)
+# 0000
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 0 (vers)
+# ffff
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 0 (vers)
+# aaaa
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 0 (vers)
+# 5555
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 0 (vers)
+# 0000
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 0 (vers)
+# ffff
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 0 (vers)
+# aaaa
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 0 (vers)
+# 5555
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 0 (vers)
+# 0000
+# 
+# addr_idx = 1 (stat)
+# ==================================================
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0008
+# nick notes address and reg name: 4 (stat)
+# ffff
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0008
+# nick notes address and reg name: 4 (stat)
+# aaaa
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0008
+# nick notes address and reg name: 4 (stat)
+# 5555
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0008
+# nick notes address and reg name: 4 (stat)
+# 0000
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0008
+# nick notes address and reg name: 4 (stat)
+# ffff
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0008
+# nick notes address and reg name: 4 (stat)
+# aaaa
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0008
+# nick notes address and reg name: 4 (stat)
+# 5555
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0008
+# nick notes address and reg name: 4 (stat)
+# 0000
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0008
+# nick notes address and reg name: 4 (stat)
+# ffff
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0008
+# nick notes address and reg name: 4 (stat)
+# aaaa
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0008
+# nick notes address and reg name: 4 (stat)
+# 5555
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0008
+# nick notes address and reg name: 4 (stat)
+# 0000
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0008
+# nick notes address and reg name: 4 (stat)
+# ffff
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0008
+# nick notes address and reg name: 4 (stat)
+# aaaa
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0008
+# nick notes address and reg name: 4 (stat)
+# 5555
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0008
+# nick notes address and reg name: 4 (stat)
+# 0000
+# 
+# addr_idx = 2 (cmd)
+# ==================================================
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# ffff
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# aaaa
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 5555
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 0000
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# ffff
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# aaaa
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 5555
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 0000
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# ffff
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# aaaa
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 5555
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 0000
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# ffff
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# aaaa
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 5555
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 0000
+# 
+# addr_idx = 3 (cfg)
+# ==================================================
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# ffff
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# aaaa
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 5555
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 0000
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# ffff
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# aaaa
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 5555
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 0000
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# ffff
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# aaaa
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 5555
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 0000
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# ffff
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# aaaa
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 5555
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: c (cfg)
+# 0000
+# 
+# addr_idx = 4 (left)
+# ==================================================
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# ffff
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# aaaa
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 5555
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 0000
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# ffff
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# aaaa
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 5555
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 0000
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# ffff
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# aaaa
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 5555
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 0000
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# ffff
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# aaaa
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 5555
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 10 (left)
+# 0000
+# 
+# addr_idx = 5 (right)
+# ==================================================
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# ffff
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# aaaa
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 5555
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 0000
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# ffff
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# aaaa
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 5555
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 0000
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# ffff
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# aaaa
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 5555
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 0000
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# ffff
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# aaaa
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 5555
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 14 (right)
+# 0000
+# 
+# addr_idx = 6 (aout)
+# ==================================================
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# ffff
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# aaaa
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 5555
+# state: expvi
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 0000
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# ffff
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# aaaa
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 5555
+# state: expvi
+# 
+# _be : 01
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 0000
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# ffff
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# aaaa
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 5555
+# state: expvi
+# 
+# _be : 10
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 0000
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# ffff
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# aaaa
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 5555
+# state: expvi
+# 
+# _be : 11
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 18 (aout)
+# 0000
+# ** Note: $finish    : top_verichip4.sv(482)
+#    Time: 42035 ns  Iteration: 1  Instance: /top_verichip4
+# End time: 23:32:23 on Mar 17,2026, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 1
