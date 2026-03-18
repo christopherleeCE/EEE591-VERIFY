@@ -65,7 +65,7 @@
       $display(" Bad read: [data_out, expected] = [%h, %h]", verichip.alu_left, exp_val);
 
 // perform a write and verify it with a read
-`define CHECK_RW(addr,wval,exp_val,bytes,cs,check_val = 1)    \
+`define CHECK_RW(addr,wval,exp_val,bytes,cs)    \
    `WRITE_REG(addr,wval,bytes,cs)               \
    `READ_REG(addr,cs)                           \
    `CHECK_VAL(exp_val)
@@ -125,7 +125,7 @@ if(reg_addr != 0) begin                    \
          RO:                                  \
             out_reg[i] = reg_val[i];  \
          W1C:                                 \
-            out_reg[i] = ~wr_val[i] & reg_val[i] & bit_enable[i]; \
+            out_reg[i] = ~wr_val[i] & reg_val[i] & ~bit_enable[i]; \
          RW:                                      \
             out_reg[i] =  wr_val[i] & bit_enable[i];      \
          default:                                 \
@@ -163,7 +163,7 @@ end
 
 // go into error state
 //inital value is a raw 16h that goes into the CHECK_RW, not gaurenteed to actually write, depeding on the register
-`define CHIP_ERROR(init_value)  \
+`define CHIP_ERROR(init_value, int1_en)  \
    wait(clk == 1'b0);  \
    rst_b <= 1'b0;      \
    wait(clk == 1'b1);  \
@@ -181,8 +181,13 @@ end
    //`CHECK_RW(VCHIP_STA_ADDR, init_value, init_value, 2'b11, 1'b1)     \
    // $display("0"); \
    `CHECK_RW(VCHIP_CMD_ADDR, init_value, init_value, 2'b11, 1'b1)     \
-   // $display("1"); \
-   `CHECK_RW(VCHIP_CON_ADDR, init_value, (init_value & 16'h0300), 2'b11, 1'b1)     \
+   $display("1");                                                                \
+   if (int1_en == 1)                                                                \
+   begin                                                                            \
+      // `CHECK_RW(VCHIP_CON_ADDR, init_value, (init_value & 16'h0300), 2'b11, 1'b1)   \
+      // init_value = 16'h0300;                                                        \
+      `CHECK_RW(VCHIP_CON_ADDR, 16'h0300, (16'h0300), 2'b11, 1'b1)     \
+   end                                                                              \
    // $display("2"); \
    `CHECK_RW(VCHIP_ALU_LEFT_ADDR, init_value, init_value, 2'b11, 1'b1)     \
    // $display("3"); \
@@ -260,6 +265,7 @@ localparam VCHIP_ALU_SWA   = 16'h0005;
 localparam VCHIP_ALU_SHL   = 16'h0006;
 localparam VCHIP_ALU_SHR   = 16'h0007;
 
+
 string reg_names[7] = {
    "vers",
    "stat",
@@ -317,6 +323,7 @@ int address_array [0:6] = {VCHIP_VER_ADDR, VCHIP_STA_ADDR, VCHIP_CMD_ADDR, VCHIP
 logic [15:0] normal_reg_values [0:6];
 logic [15:0] error_reg_values [0:6];
 logic [15:0] expvi_reg_values [0:6];
+logic [15:0] scratch;
 
 initial begin
    `CLEAR_ALL
@@ -404,21 +411,30 @@ to put int he param list
          end
       end
    end
-   
+
+/////////////////////////////////////////////////////////////////////
+// ERROR/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
+
+
+
    error_reg_values [0:6] = {16'h0210, 16'h0002, 16'h0000, 16'h0000, 16'h0000, 16'h0000, 16'h0000};
+
 
    $display("\n \n \n");
    `DISPLAY_STATE 
 
    $display("calling `CHIP_ER...");
-   `CHIP_ERROR(16'h0001)
+   scratch = 16'h0001;
+   `CHIP_ERROR(scratch,1'b0)
    `DISPLAY_STATE
    for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
       $display("\naddr_idx = %0d (%s)", addr_idx, reg_names[addr_idx]);
       $display("==================================================");
       for (int _be = 0; _be < 4; _be ++) begin
          for (int i = 0; i < 4; i++) begin
-            `CHIP_ERROR(16'h0001) //set intiial reset vlaue to 1
+            `CHIP_ERROR(scratch,1'b0) //set intiial reset vlaue to 1
             `DISPLAY_STATE
             my_wr_val = 16'h0001; //this step is needed, I don't know why
             `GEN_EXP_VAL(my_wr_val,bit_mask_array[2'b11],error_reg_values[addr_idx],my_access_array[addr_idx],address_array[addr_idx],gen_exp_ret)
@@ -434,11 +450,58 @@ to put int he param list
                `GEN_EXP_VAL(my_wr_val,bit_mask_array[2'b11],error_reg_values[addr_idx],my_access_array[addr_idx],address_array[addr_idx],gen_exp_ret)
                `CHECK_RW(address_array[addr_idx], stim_array[i], gen_exp_ret, _be, 1'b1)
             end
+
              else
             `CHECK_RW(address_array[addr_idx], stim_array[i], (gen_exp_ret), _be, 1'b1)
          end
       end
    end
+
+   error_reg_values [0:6] = {16'h0210, 16'h0102, 16'h0000, 16'h0000, 16'h0000, 16'h0000, 16'h0000};
+//////////////////////////////////////////////////////////////////////////////////
+//////////ERROR state with interrupts enabled then cleared => NORMAL /////////////
+/////////////////////////////////////////////////////////////////////////////////
+ $display("calling `CHIP_ER int1 and int2 enabled..");
+   `CHIP_ERROR(scratch,1'b1)
+   `DISPLAY_STATE
+    $display("==================================================");
+   for (int addr_idx = 1; addr_idx ==1; addr_idx ++) begin
+      $display("\naddr_idx = %0d (%s)", addr_idx, reg_names[addr_idx]);
+      $display("==================================================");
+      for (int _be = 0; _be < 4; _be ++) begin
+         for (int i = 0; i < 4; i++) begin
+            `CHIP_ERROR(scratch,1'b1) //set intiial reset vlaue to 1
+            `DISPLAY_STATE
+            my_wr_val = stim_array[i]; //sets to an interrupt high and in error state
+            `GEN_EXP_VAL(my_wr_val,bit_mask_array[_be],error_reg_values[addr_idx],my_access_array[addr_idx],address_array[addr_idx],gen_exp_ret)
+            $display("\n_be : %2b", _be);
+            $display("nick notes my_wr_val %h", my_wr_val);
+            $display("nick notes gen_exp_ret: %h", gen_exp_ret);
+            $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
+            //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
+            $display("%h", stim_array[i]);
+            if (address_array[addr_idx] == VCHIP_CMD_ADDR) begin
+               $display("if triggred");
+               my_wr_val = 16'h800C; //acount for the cm reg value being 800c to enter error state
+               `GEN_EXP_VAL(my_wr_val,bit_mask_array[2'b11],error_reg_values[addr_idx],my_access_array[addr_idx],address_array[addr_idx],gen_exp_ret)
+               `CHECK_RW(address_array[addr_idx], stim_array[i], gen_exp_ret, _be, 1'b1)
+            end
+
+             else
+            `CHECK_RW(address_array[addr_idx], stim_array[i], (gen_exp_ret), _be, 1'b1)
+         end
+      end
+   end
+
+   maroon = 1;
+   gold = 0;
+   wait(clk == 1);
+   wait(clk == 0);
+   wait(clk == 1);
+   wait(clk == 0);
+   `GEN_EXP_VAL(my_wr_val,bit_mask_array[2'b11],error_reg_values[3],my_access_array[3],address_array[3],gen_exp_ret)
+
+
 
       
    expvi_reg_values [0:6] = {16'h0000, 16'h0008, 16'h0000, 16'h0000, 16'h0000, 16'h0000, 16'h0000};
@@ -474,6 +537,8 @@ to put int he param list
       end
    end
    
+
+
    `CHIP_RESET
 
    //todo all are zero but one?
@@ -649,7 +714,8 @@ end
 
 // Testing Error State for all byte_enables and chip select 0 & 1
 for (int _be = 0; _be < 4; _be ++) begin
-  `CHIP_ERROR(16'h0000)
+   scratch = 16'h0000;
+  `CHIP_ERROR(scratch,1'b0)
   `DISPLAY_STATE
   `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1) // cs high
   `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0) // cs low
