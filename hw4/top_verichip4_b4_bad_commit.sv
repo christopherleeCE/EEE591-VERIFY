@@ -1,3 +1,10 @@
+///////////////////////////////////////////
+// Christopher Lee; Nick Marta; Andy Cox V
+// EEE598: Digital Verification & Test
+// Dr. Steven Millman
+// Spring 2026
+// TODO date here
+
 `timescale 1ns/1ps
 // performed in 0 time
 
@@ -48,7 +55,7 @@
 //give it a value, if the data_out on the data bus is not that value, throw an error
 `define CHECK_VAL(val)                                      \
   if (data_out != val)                                      \
-        $display("Bad read: [data_out, expected] = [%h, %h]", data_out, val);
+		$display("Bad read: [data_out, expected] = [%h, %h]", val, data_out);
 
 // check the value in the ALU left register
 `define CHECK_ALU_LEFT(val)                                      \
@@ -100,10 +107,10 @@ for (int ii = 0 ; ii < 128 ; ++ii) begin  \
          `READ_REG(addr, 1'b1)                    \
                                                    \
          if (data_out != 16'h0000)                 \
-                $display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
+				$display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
                                                    \
-      end                                          \
-end                                              
+      end	                                       \
+end	                                             
 
 
 `define GEN_EXP_VAL(wr_val, reg_val, access_array, out_reg) \
@@ -248,7 +255,7 @@ end
 // test writing registers, test address 50 and ensure nothing is written to ALU_left,
 // which is address 10
 ///////////////////////////////////////////////////////////////////////////////////// 
-//reg [15:0] stim_array [4];
+reg [15:0] stim_array [4];
 reg [15:0] bit_mask_array [4];
 
 //aa stands for access array
@@ -270,15 +277,14 @@ bit my_reset_val_array [0:6] [15:0] = {vers_reg_rv, other_rv, other_rv, other_rv
 logic [15:0] my_wr_val = {16{1'b1}};
 logic [15:0] my_reg_val = 16'hBEEF;
 logic [15:0] my_out_reg = 16'h0000;
-logic [15:0] initial_val = 16'h0000;
-logic [15:0] stim_array [0:3] = {16'hFFFF, 16'hAAAA, 16'h5555, 16'h0000};
-int address_array [0:6] = {VCHIP_VER_ADDR, VCHIP_STA_ADDR, VCHIP_CMD_ADDR, VCHIP_CON_ADDR, VCHIP_ALU_LEFT_ADDR, VCHIP_ALU_RIGHT_ADDR, VCHIP_ALU_OUT_ADDR};
-
 
 initial begin
    `CLEAR_ALL
    `CHIP_RESET
-bit_mask_array = {16'h0000, 16'h00FF, 16'hFF00, 16'hFFFF};
+
+   stim_array = {16'hFFFF, 16'hAAAA, 16'h5555, 16'h0000};
+   bit_mask_array = {16'h0000, 16'h00FF, 16'hFF00, 16'hFFFF};
+
 
 /////////////////////////////////////////////////////////////////////////////////////
 //test
@@ -288,34 +294,27 @@ bit_mask_array = {16'h0000, 16'h00FF, 16'hFF00, 16'hFFFF};
 
 $display("nick notes: out_reg %h", my_out_reg);
 $display("nick notes: my_wr_val %h", my_wr_val);
-`GEN_EXP_VAL(my_wr_val,my_reg_val,my_access_array[5],my_out_reg)
-$display("nick notes out reg: %h", my_out_reg);
+`GEN_EXP_VAL(my_wr_val,my_reg_val,my_access_array[0],my_out_reg)
+$display("nick notes: %h", my_out_reg);
 
 $display("calling finish");
-
+$finish();
 
 ///////////////////////////////////////////////////////////////////////////////////// 
 //cs = 1
 ///////////////////////////////////////////////////////////////////////////////////// 
    $display("\n \n \n");
    `DISPLAY_STATE
-    
+
    $display("calling `CHIP_RESET...");
    `CHIP_RESET
    `DISPLAY_STATE
-   for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
    for (int _be = 0; _be < 4; _be ++) begin
       for (int i = 0; i < 4; i++) begin
-          my_wr_val = stim_array[i]; //this step is needed, I don't know why
-         `GEN_EXP_VAL(my_wr_val,my_reg_val,my_access_array[addr_idx],my_out_reg)
-         $display("nick notes my_wr_val %p", my_wr_val);
-         $display("nick notes out reg: %h", my_out_reg);
-         $display("nick notes address: %p", address_array[addr_idx]);
-         `CHECK_RW(address_array[addr_idx], stim_array[i], (my_out_reg & bit_mask_array[_be]), _be, 1'b1)
+         `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
       end
    end
-end
-$finish();
+
    $display("\n \n \n");
    `DISPLAY_STATE
 
