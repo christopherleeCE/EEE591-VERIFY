@@ -558,7 +558,11 @@ to put int he param list
 // /////////////////////////////////////////////////////////////////////////////////////
    $display("\n \n \n");
    $display("cs %h", chip_select);   
+   $display("\n \n \n");
+   $display("cs %h", chip_select);   
    
+   $display("\n \n \n");
+   `DISPLAY_STATE
    $display("\n \n \n");
    `DISPLAY_STATE
 
@@ -567,6 +571,10 @@ for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
    `CHIP_RESET
    `DISPLAY_STATE
 
+   // Set ALU_LEFT to non-zero value.
+   `WRITE_REG(address_array[addr_idx], 16'hBEAF, 2'b11, 1'b1)
+   `READ_REG(address_array[addr_idx], 1'b1)
+   `CHECK_ALU_LEFT(16'hBEAF)
    // Set ALU_LEFT to non-zero value.
    `WRITE_REG(address_array[addr_idx], 16'hBEAF, 2'b11, 1'b1)
    `READ_REG(address_array[addr_idx], 1'b1)
@@ -588,11 +596,20 @@ for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
 
    $display("\n \n \n");
    `DISPLAY_STATE
+   $display("\n \n \n");
+   `DISPLAY_STATE
 
    $display("calling `CHIP_NORMAL...");
    `CHIP_NORMAL
    `DISPLAY_STATE
+   $display("calling `CHIP_NORMAL...");
+   `CHIP_NORMAL
+   `DISPLAY_STATE
 
+   // Set ALU_LEFT to non-zero value.
+   `WRITE_REG(address_array[addr_idx], 16'h0001, 2'b11, 1'b1) //changed this from BEAF
+   `READ_REG(address_array[addr_idx], 1'b1)
+   `CHECK_ALU_LEFT(16'h0001)
    // Set ALU_LEFT to non-zero value.
    `WRITE_REG(address_array[addr_idx], 16'h0001, 2'b11, 1'b1) //changed this from BEAF
    `READ_REG(address_array[addr_idx], 1'b1)
@@ -615,9 +632,20 @@ for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
    $display("\n \n \n");
    `DISPLAY_STATE 
    $display("time: %d", $time);
+   $display("\n \n \n");
+   `DISPLAY_STATE 
+   $display("time: %d", $time);
 
    export_disable <= 0;
+   export_disable <= 0;
    
+   $display("calling `CHIP_ER...");
+   //not calling macro cus we need to get beaf into alu left, after reset occures
+      wait(clk == 1'b0);  
+      rst_b <= 1'b0;      
+      wait(clk == 1'b1);  
+      rst_b <= 1'b1;      
+      wait(clk == 1'b0);  
    $display("calling `CHIP_ER...");
    //not calling macro cus we need to get beaf into alu left, after reset occures
       wait(clk == 1'b0);  
@@ -631,7 +659,16 @@ for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
       gold <= 1'b1;       
       wait(clk == 1'b1);  
       wait(clk == 1'b0);  
+      //go into normal from reset 
+      maroon <= 1'b0;     
+      gold <= 1'b1;       
+      wait(clk == 1'b1);  
+      wait(clk == 1'b0);  
                         
+      //set to a non-zero initial value                     
+      `WRITE_REG(address_array[addr_idx], 16'hBEAF, 2'b11, 1'b1)
+      `READ_REG(address_array[addr_idx], 1'b1)
+      `CHECK_ALU_LEFT(16'hBEAF)
       //set to a non-zero initial value                     
       `WRITE_REG(address_array[addr_idx], 16'hBEAF, 2'b11, 1'b1)
       `READ_REG(address_array[addr_idx], 1'b1)
@@ -640,7 +677,11 @@ for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
       //write bad command to command reg to go into error   
       `WRITE_REG(VCHIP_CMD_ADDR, 16'h800C, 2'b11, 1'b1)     
       wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output   
+      //write bad command to command reg to go into error   
+      `WRITE_REG(VCHIP_CMD_ADDR, 16'h800C, 2'b11, 1'b1)     
+      wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output   
    
+   `DISPLAY_STATE
    `DISPLAY_STATE
 
    // Check all byte enable and write combinations.
