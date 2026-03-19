@@ -57,7 +57,7 @@
 //give it a value, if the data_out on the data bus is not that value, throw an error
 `define CHECK_VAL(exp_val)                                      \
   if (data_out != exp_val)                                      \
-        $display(" Bad read: [data_out, expected] = [%h, %h]", data_out, exp_val);
+        $display("Bad read: [data_out, expected] = [%h, %h]", data_out, exp_val);
 
 // check the value in the ALU left register
 `define CHECK_ALU_LEFT(exp_val)                                      \
@@ -73,7 +73,7 @@
 // Ensures that reading from addresses not linked to an address given regardless of cs value
 // expecting 0x0000 covers exp vio and writing 0xFFFF to the target register ensures that no bit fields associated
 // with aliased registers can be flipped from 0 to 1
-`define ALIASING_READ_CHECK(addr, write_val=16'hFFFF)            \
+`define ALIASING_READ_CHECK(addr, exp_val,write_val)            \
     `WRITE_REG(addr, write_val, 2'b11, 1'b1) \
     for(int ii = 0; ii < 128; ++ii)          \
     begin                                      \
@@ -82,34 +82,34 @@
          `READ_REG(ii, 1'b1)                 \
                                              \
          if (data_out != 16'h0000)           \
-         $display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
+         $display("alias read check Bad read: [data_out, expected] = [%h, %h]", data_out, exp_val); \
          // read with cs low                       \
          `READ_REG(ii, 1'b0)                      \
                                                    \
          if (data_out != 16'h0000)                 \
-         $display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
+         $display("alias read check Bad read: [data_out, expected] = [%h, %h]", data_out, exp_val); \
       end                                          \
    end                                             
     
 // Write 16'h0000 to the address of interest and validate an aliased write does not affect reg value for cs = 0 and cs = 1
 // expecting 16'h0000 also covers export violation so a new macro does not have to be made
 // NOTE, aliased registers have 0xFFFF writen to them to check that no bit fields in ALU left go from 0 => 1
-`define ALIASING_WRITE_CHECK(addr,bytes = 2'b11,cs,write_val = 16'hFFFF) //TODO need to havea  for loop for all byte enables\
+`define ALIASING_WRITE_CHECK(addr,bytes = 2'b11,cs,exp_val) //TODO need to havea  for loop for all byte enables\
 for (int ii = 0 ; ii < 128 ; ++ii) begin  \
       // Do not check/overrite known good registers/addresses \
       if((ii != VCHIP_ALU_OUT_ADDR) && (ii != VCHIP_ALU_RIGHT_ADDR) && (ii != VCHIP_ALU_LEFT_ADDR) && (ii != VCHIP_CON_ADDR) && (ii != VCHIP_CMD_ADDR) && (ii != VCHIP_STA_ADDR) && (ii != VCHIP_VER_ADDR)) begin  \
-         `CHECK_RW(addr, 16'h0000, 16'h0000, 2'b11, 1'b1)      \
-         `WRITE_REG(ii, write_val, bytes, cs)                      \
+         `CHECK_RW(addr, 16'h0000, exp_val, 2'b11, 1'b1)      \
+         `WRITE_REG(ii, 16'hFFFF, bytes, cs)                      \
          `READ_REG(addr, 1'b1)                                \
                                                                \
-         if (data_out != 16'h0000)                             \
-            $display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
+         if (data_out != exp_val)                             \
+            $display("alias write Bad read: [data_out, expected] = [%h, %h]", data_out, exp_val); \
                                                    \
-         `WRITE_REG(ii, write_val, bytes, cs)          \
+         `WRITE_REG(ii, 16'hFFFF, bytes, cs)          \
          `READ_REG(addr, 1'b1)                    \
                                                    \
-         if (data_out != 16'h0000)                 \
-                $display("Bad read: [data_out, expected] = [%h, %h]", data_out, 16'h0000); \
+         if (data_out != exp_val)                 \
+                $display("alias write Bad read: [data_out, expected] = [%h, %h]", data_out, exp_val); \
                                                    \
       end                                          \
 end                                              
@@ -544,7 +544,9 @@ to put int he param list
    //todo all are zero but one?
    //expvi_reg_values [0:6] = {};
 
-$finish();
+
+
+
 
 // ///////////////////////////////////////////////////////////////////////////////////// 
 // //cs = 0 -- Verichip is unselected; read all zeros
@@ -650,66 +652,79 @@ $finish();
 for (int _be = 0; _be < 4; _be ++) begin
   `CHIP_RESET
   `DISPLAY_STATE
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_ALU_RIGHT_ADDR) // read validate
+  `CHIP_RESET
+  `DISPLAY_STATE
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_RIGHT_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_ALU_OUT_ADDR) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_CON_ADDR) // read validate
+  `CHIP_RESET
+  `DISPLAY_STATE
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_OUT_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_CMD_ADDR) // read validate
+$display("ALIAS RESET 1");
+  `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_CON_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_STA_ADDR) // read validate
+$display("ALIAS RESET 2");
+  `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_CMD_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_VER_ADDR) // read validate
+$display("ALIAS RESET 3");
+  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b1, 16'h0308) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b0, 16'h0308) // cs low
+  `ALIASING_READ_CHECK(VCHIP_STA_ADDR, 16'h0308,16'hFFFF) // read validate
+
+$display("ALIAS RESET 4");
+  `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_VER_ADDR, 16'h0000,16'hFFFF) // read validate
 end
 
 // Testing Normal State for all byte_enables and chip select 0 & 1
 for (int _be = 0; _be < 4; _be ++) begin
   `CHIP_NORMAL
   `DISPLAY_STATE
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_ALU_RIGHT_ADDR) // read validate
+  `CHIP_NORMAL
+  `DISPLAY_STATE
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_RIGHT_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_ALU_OUT_ADDR) // read validate
+  `CHIP_NORMAL
+  `DISPLAY_STATE
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_OUT_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_CON_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_CON_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_CMD_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_CMD_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_STA_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_STA_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_VER_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_VER_ADDR, 16'h0000,16'hFFFF) // read validate
 end
 
 // Testing Error State for all byte_enables and chip select 0 & 1
@@ -717,66 +732,66 @@ for (int _be = 0; _be < 4; _be ++) begin
    scratch = 16'h0000;
   `CHIP_ERROR(scratch,1'b0)
   `DISPLAY_STATE
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_ALU_RIGHT_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_RIGHT_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_ALU_OUT_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_OUT_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_CON_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_CON_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_CMD_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_CMD_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_STA_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_STA_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_VER_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_VER_ADDR, 16'h0000,16'hFFFF) // read validate
 end
 
 // Testing Export Violation State for all byte_enables and chip select 0 & 1
 for (int _be = 0; _be < 4; _be ++) begin
   `CHIP_EXP_VIO
   `DISPLAY_STATE
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_ALU_RIGHT_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_RIGHT_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_ALU_OUT_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_ALU_OUT_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_CON_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_CON_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_CMD_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_CMD_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_STA_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_STA_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b1) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b0) // cs low
-  `ALIASING_READ_CHECK(VCHIP_VER_ADDR) // read validate
+  `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b1, 16'h0000) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_READ_CHECK(VCHIP_VER_ADDR, 16'h0000,16'hFFFF) // read validate
 end
 
    $finish();

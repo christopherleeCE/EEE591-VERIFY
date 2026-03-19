@@ -3,7 +3,7 @@
 param(
     [switch]$help,
     [string]$file_name,
-    [int]$time = 1000
+    [int]$time = 100000000
 )
 
 $timer = [System.Diagnostics.Stopwatch]::StartNew()
