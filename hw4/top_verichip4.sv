@@ -1096,8 +1096,53 @@ end
 
    //check int1 = 0
    `READ_REG(VCHIP_STA_ADDR, 1'b1)
-   $display("nrm, data_out: %h", data_out);
+   $display("err, data_out: %h", data_out);
    `CHECK_VAL(16'h0002) //check that int1 = 0 in rst state
+
+   $display("===============================================");
+
+   `DISPLAY_STATE
+
+   //get int1 = 1 in nrm state
+   `CHIP_ERROR(16'h0000, 1'b1)  //get in1 high, values dont matter
+   maroon = 1;
+   gold = 0;
+   wait(clk == 1);
+   wait(clk == 0);
+   wait(clk == 1);
+   wait(clk == 0);
+   `DISPLAY_STATE
+
+   `READ_REG(VCHIP_STA_ADDR, 1'b1)
+   $display("err, data_out: %h", data_out);
+   `CHECK_VAL(16'h0101) //check that int1 = 0 in nrm state
+
+   //assert exp disable, wait 2clk to ensure its in reg
+   export_disable <= 1'b1; 
+   wait(clk == 1'b1); wait(clk == 1'b0);
+   wait(clk == 1'b1); wait(clk == 1'b0);
+                        
+   //get into expvio
+   `WRITE_REG(VCHIP_CMD_ADDR, 16'h8008, 2'b11, 1'b1)                                  
+   wait(clk == 1'b1); wait(clk == 1'b0);
+
+   `READ_REG(VCHIP_STA_ADDR, 1'b1)
+   $display("expvi, data_out: %h", data_out);
+   `CHECK_VAL(16'h0308)
+
+   //clear int2
+   `WRITE_REG(VCHIP_STA_ADDR, 16'h0200, 2'b11, 1'b1)
+
+   `READ_REG(VCHIP_STA_ADDR, 1'b1)
+   $display("expvi, data_out: %h", data_out);
+   `CHECK_VAL(16'h0108)
+
+   //clear int1
+   `WRITE_REG(VCHIP_STA_ADDR, 16'h0100, 2'b11, 1'b1)
+
+   `READ_REG(VCHIP_STA_ADDR, 1'b1)
+   $display("expvi, data_out: %h", data_out);
+   `CHECK_VAL(16'h0008)
 
    $display("===============================================");
 

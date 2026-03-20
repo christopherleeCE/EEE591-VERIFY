@@ -1,9 +1,8 @@
 # 
 # vlog *.sv
-# Questa Altera Starter FPGA Edition-64 vlog 2025.2 Compiler 2025.05 May 31 2025
-# Start time: 22:20:45 on Mar 19,2026
+# Questa Intel Starter FPGA Edition-64 vlog 2024.3 Compiler 2024.09 Sep 10 2024
+# Start time: 23:45:08 on Mar 19,2026
 # vlog top_verichip4.sv top_verichip4_old.sv verichip4.sv 
-# ** Note: (vlog-220) 'C:/altera_pro/25.3.1/questa_fse/win64/../modelsim.ini' is used as the ini file.
 # -- Compiling module top_verichip4
 # -- Compiling module top_verichip4_old
 # -- Compiling module verichip4
@@ -11,21 +10,19 @@
 # Top level modules:
 # 	top_verichip4
 # 	top_verichip4_old
-# End time: 22:20:46 on Mar 19,2026, Elapsed time: 0:00:01
+# End time: 23:45:08 on Mar 19,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # 
 # vsim -voptargs=+acc work.top_verichip4 
-# ** Note: (vsim-220) 'C:/altera_pro/25.3.1/questa_fse/win64/../modelsim.ini' is used as the ini file.
 # vsim -voptargs="+acc" work.top_verichip4 
-# Start time: 22:20:46 on Mar 19,2026
+# Start time: 23:45:08 on Mar 19,2026
 # ** Note: (vsim-3813) Design is being optimized due to module recompilation...
 # ** Warning: (vopt-10908) Some optimizations are turned off because the +acc switch is in effect.
-# ** Note: (vopt-220) 'C:/altera_pro/25.3.1/questa_fse/win64/../modelsim.ini' is used as the ini file.
 # ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
-# //  Questa Altera Starter FPGA Edition-64
-# //  Version 2025.2 win64 May 31 2025
+# //  Questa Intel Starter FPGA Edition-64
+# //  Version 2024.3 win64 Sep 10 2024
 # //
-# // Unpublished work. Copyright 2025 Siemens
+# // Unpublished work. Copyright 2024 Siemens
 # //
 # // This material contains trade secrets or otherwise confidential information
 # // owned by Siemens Industry Software Inc. or its affiliates (collectively,
@@ -15408,7 +15405,15 @@
 # err, data_out: 0102
 # nrm, data_out: 0002
 # ===============================================
-# ** Note: $finish    : top_verichip4.sv(1104)
-#    Time: 2782525 ns  Iteration: 1  Instance: /top_verichip4
-# End time: 22:21:04 on Mar 19,2026, Elapsed time: 0:00:18
+# state: err0r
+# 1
+# state: normal
+# err, data_out: 0101
+# expvi, data_out: 0308
+# expvi, data_out: 0108
+# expvi, data_out: 0008
+# ===============================================
+# ** Note: $finish    : top_verichip4.sv(1149)
+#    Time: 2782865 ns  Iteration: 1  Instance: /top_verichip4
+# End time: 23:45:30 on Mar 19,2026, Elapsed time: 0:00:22
 # Errors: 0, Warnings: 1
