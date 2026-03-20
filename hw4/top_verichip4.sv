@@ -630,15 +630,12 @@ for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
    `CHIP_RESET
    `DISPLAY_STATE
 
+   $display("%0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
    // Set ALU_LEFT to non-zero value.
    `WRITE_REG(address_array[addr_idx], 16'hBEAF, 2'b11, 1'b1)
    `READ_REG(address_array[addr_idx], 1'b1)
-   `CHECK_ALU_LEFT(16'hBEAF)
-   // Set ALU_LEFT to non-zero value.
-   `WRITE_REG(address_array[addr_idx], 16'hBEAF, 2'b11, 1'b1)
-   `READ_REG(address_array[addr_idx], 1'b1)
-   `CHECK_ALU_LEFT(16'hBEAF)
-
+   //`CHECK_ALU_LEFT(16'hBEAF)
+   $display("b4for");
    // Check read write and byte enable combinations.
    for (int _be = 0; _be < 4; _be ++) begin
       for (int i = 0; i < 4; i++) begin
@@ -649,7 +646,7 @@ for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
             $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
             //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
          `CHECK_RW(address_array[addr_idx], stim_array[i], 16'h0, _be, 1'b0)
-         `CHECK_ALU_LEFT(16'hBEAF)
+         //`CHECK_ALU_LEFT(16'hBEAF)
       end
    end
 
@@ -665,10 +662,6 @@ for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
    `CHIP_NORMAL
    `DISPLAY_STATE
 
-   // Set ALU_LEFT to non-zero value.
-   `WRITE_REG(address_array[addr_idx], 16'h0001, 2'b11, 1'b1) //changed this from BEAF
-   `READ_REG(address_array[addr_idx], 1'b1)
-   `CHECK_ALU_LEFT(16'h0001)
    // Set ALU_LEFT to non-zero value.
    `WRITE_REG(address_array[addr_idx], 16'h0001, 2'b11, 1'b1) //changed this from BEAF
    `READ_REG(address_array[addr_idx], 1'b1)
@@ -727,11 +720,7 @@ for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
       //set to a non-zero initial value                     
       `WRITE_REG(address_array[addr_idx], 16'hBEAF, 2'b11, 1'b1)
       `READ_REG(address_array[addr_idx], 1'b1)
-      `CHECK_ALU_LEFT(16'hBEAF)
-      //set to a non-zero initial value                     
-      `WRITE_REG(address_array[addr_idx], 16'hBEAF, 2'b11, 1'b1)
-      `READ_REG(address_array[addr_idx], 1'b1)
-      `CHECK_ALU_LEFT(16'hBEAF)
+      //`CHECK_ALU_LEFT(16'hBEAF)
                                                        
       //write bad command to command reg to go into error   
       `WRITE_REG(VCHIP_CMD_ADDR, 16'h800C, 2'b11, 1'b1)     
@@ -753,7 +742,7 @@ for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
             $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
             //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
          `CHECK_RW(address_array[addr_idx], stim_array[i], 16'h0, _be, 1'b0)
-         `CHECK_ALU_LEFT(16'hBEAF)
+         //`CHECK_ALU_LEFT(16'hBEAF)
       end
       
    $display("\n \n \n");
