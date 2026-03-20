@@ -410,10 +410,62 @@ to put int he param list
             $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
             //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
             $display("%h", stim_array[i]);
-            `CHECK_RW(address_array[addr_idx], stim_array[i], (gen_exp_ret), _be, 1'b1)
+            if (address_array[addr_idx] == VCHIP_ALU_OUT_ADDR) begin
+            `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i],stim_array[i], bit_mask_array[_be], 1'b1)
+            `CHECK_RW(VCHIP_CMD_ADDR, 16'h8001,  16'h0001, 2'b11, 1'b1)
+            `CHECK_RW(address_array[addr_idx], stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
+            $display("ALU OUT");
+            $display("read in for loop: [data_out] = [%h]", data_out);
+            end
          end
       end
    end
+
+////////////////////////////////////////////////////////
+// READ all four values from ALU OUT IN Normal Mode
+// needs an aextra step to load value in
+///////////////////////////////////////////////////////////
+  `CHIP_NORMAL
+  `DISPLAY_STATE
+for (int _be = 0; _be < 4; _be ++) begin  
+
+   $display("ALU OUT TESTING");
+   `CHECK_RW(VCHIP_ALU_LEFT_ADDR, 16'h5555,  16'h5555, bit_mask_array[_be], 1'b1)
+   `READ_REG(VCHIP_ALU_RIGHT_ADDR,1'b1)                           
+   $display("alu right read: [data_out] = [%h]", data_out);
+   `CHECK_RW(VCHIP_CMD_ADDR, 16'h8001,  16'h0001, 2'b11, 1'b1)
+   byte_en=  bit_mask_array[_be];
+   `READ_REG(VCHIP_ALU_OUT_ADDR,1'b1) 
+   $display("read: [data_out] = [%h]", data_out);
+   `READ_REG(VCHIP_ALU_OUT_ADDR,1'b0) 
+
+
+   `CHECK_RW(VCHIP_ALU_LEFT_ADDR, 16'hAAAA,  16'hAAAA, bit_mask_array[_be], 1'b1)
+   `CHECK_RW(VCHIP_CMD_ADDR, 16'h8001,  16'h0001, 2'b11, 1'b1)
+   byte_en=  bit_mask_array[_be];
+   `READ_REG(VCHIP_ALU_OUT_ADDR,1'b1) 
+   $display("read: [data_out] = [%h]", data_out);
+   `READ_REG(VCHIP_ALU_OUT_ADDR,1'b0) 
+   
+
+   `CHECK_RW(VCHIP_ALU_LEFT_ADDR, 16'hFFFF,  16'hFFFF,bit_mask_array[_be], 1'b1)
+   `CHECK_RW(VCHIP_CMD_ADDR, 16'h8001,  16'h0001, 2'b11, 1'b1)
+   byte_en=  bit_mask_array[_be];
+   `READ_REG(VCHIP_ALU_OUT_ADDR,1'b1) 
+   $display("read: [data_out] = [%h]", data_out);
+   `READ_REG(VCHIP_ALU_OUT_ADDR,1'b0) 
+
+   `CHECK_RW(VCHIP_ALU_LEFT_ADDR, 16'h0000,  16'h0000, bit_mask_array[_be], 1'b1)
+   `CHECK_RW(VCHIP_CMD_ADDR, 16'h8001,  16'h0001, 2'b11, 1'b1)
+   byte_en=  bit_mask_array[_be];
+   `READ_REG(VCHIP_ALU_OUT_ADDR,1'b1) 
+   $display("read: [data_out] = [%h]", data_out);
+   `READ_REG(VCHIP_ALU_OUT_ADDR,1'b0) 
+
+end
+
+ 
+
 
 /////////////////////////////////////////////////////////////////////
 // ERROR/////////////////////////////////////////////////////////////
@@ -727,8 +779,30 @@ for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
 
    end
 
+   $display("status int routines");
+
+   //status int sections
+   `DISPLAY_STATE
+   `CHIP_RESET
+   `DISPLAY_STATE
+   `READ_REG(VCHIP_STA_ADDR, 1'b1)
+   `CHECK_VAL(16'h0000) //check that int1 = 0 in rst state
+
+   `DISPLAY_STATE
+   `CHIP_ERROR(16'h0000, 1'b1)  //get in1 high, values dont matter
+   maroon = 1;
+   gold = 0;
+   wait(clk == 1);
+   wait(clk == 0);
+   wait(clk == 1);
+   wait(clk == 0);
+   `DISPLAY_STATE
+   `READ_REG(VCHIP_STA_ADDR, 1'b1)
+   `CHECK_VAL(16'h0000) //check that int1 = 0 in rst state
+   
+
    //TODO remove this plz :)
-   $finish()
+  $finish()
 
 ///////////////////////////////////////
 // ALIAS TESTING- for all states
