@@ -99,17 +99,12 @@ for (int ii = 0 ; ii < 128 ; ++ii) begin  \
       // Do not check/overrite known good registers/addresses \
       if((ii != VCHIP_ALU_OUT_ADDR) && (ii != VCHIP_ALU_RIGHT_ADDR) && (ii != VCHIP_ALU_LEFT_ADDR) && (ii != VCHIP_CON_ADDR) && (ii != VCHIP_CMD_ADDR) && (ii != VCHIP_STA_ADDR) && (ii != VCHIP_VER_ADDR)) begin  \
          `CHECK_RW(addr, 16'h0000, exp_val, 2'b11, 1'b1)      \
-         `WRITE_REG(ii, 16'hFFFF, bytes, cs)                      \
-         `READ_REG(addr, 1'b1)                                \
-                                                               \
-         if (data_out != exp_val)                             \
-            $display("alias write Bad read: [data_out, expected] = [%h, %h]", data_out, exp_val); \
                                                    \
          `WRITE_REG(ii, 16'hFFFF, bytes, cs)          \
          `READ_REG(addr, 1'b1)                    \
                                                    \
          if (data_out != exp_val)                 \
-                $display("alias write Bad read: [data_out, expected] = [%h, %h]", data_out, exp_val); \
+                $display("alias write Bad read: @ %d [data_out, expected] = [%h, %h]", ii, data_out, exp_val); \
                                                    \
       end                                          \
 end                                              
@@ -812,57 +807,41 @@ $display("forloop2");
 for (int _be = 0; _be < 4; _be ++) begin
   `CHIP_NORMAL
   `DISPLAY_STATE
-   $display("ALIASING_WRITE_CHECK");
   `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b1, 16'h0000) // cs high
-   $display("ALIASING_WRITE_CHECK");
   `ALIASING_WRITE_CHECK(VCHIP_ALU_LEFT_ADDR,_be,1'b0, 16'h0000) // cs low
-   $display("ALIASING_READ_CHECK");
   `ALIASING_READ_CHECK(VCHIP_ALU_LEFT_ADDR, 16'h0000,16'hFFFF) // read validate
 
   `CHIP_NORMAL
   `DISPLAY_STATE
-   $display("ALIASING_WRITE_CHECK");
   `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b1, 16'h0000) // cs high
-   $display("ALIASING_WRITE_CHECK");
   `ALIASING_WRITE_CHECK(VCHIP_ALU_RIGHT_ADDR,_be,1'b0, 16'h0000) // cs low
-   $display("ALIASING_READ_CHECK");
   `ALIASING_READ_CHECK(VCHIP_ALU_RIGHT_ADDR, 16'h0000,16'hFFFF) // read validate
 
   `CHIP_NORMAL
   `DISPLAY_STATE
-   $display("ALIASING_WRITE_CHECK");
   `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b1, 16'h0000) // cs high
-   $display("ALIASING_WRITE_CHECK");
   `ALIASING_WRITE_CHECK(VCHIP_ALU_OUT_ADDR,_be,1'b0, 16'h0000) // cs low
-   $display("ALIASING_READ_CHECK");
   `ALIASING_READ_CHECK(VCHIP_ALU_OUT_ADDR, 16'h0000,16'hFFFF) // read validate
 
-   $display("ALIASING_WRITE_CHECK");
   `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b1, 16'h0000) // cs high
-   $display("ALIASING_WRITE_CHECK");
   `ALIASING_WRITE_CHECK(VCHIP_CON_ADDR,_be,1'b0, 16'h0000) // cs low
-   $display("ALIASING_READ_CHECK");
   `ALIASING_READ_CHECK(VCHIP_CON_ADDR, 16'h0000,16'hFFFF) // read validate
 
-   $display("ALIASING_WRITE_CHECK");
   `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b1, 16'h0000) // cs high
-   $display("ALIASING_WRITE_CHECK");
   `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b0, 16'h0000) // cs low
-   $display("ALIASING_READ_CHECK");
   `ALIASING_READ_CHECK(VCHIP_CMD_ADDR, 16'h0000,16'hFFFF) // read validate
 
-   $display("ALIASING_WRITE_CHECK");
+   $display("fails here???");
+   $display("awc, cs1");
   `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b1, 16'h0000) // cs high
-   $display("ALIASING_WRITE_CHECK");
+     $display("awc, cs0");
   `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b0, 16'h0000) // cs low
-   $display("ALIASING_READ_CHECK");
+     $display("arc");
   `ALIASING_READ_CHECK(VCHIP_STA_ADDR, 16'h0000,16'hFFFF) // read validate
+   $display("stop of fails here???");
 
-   $display("ALIASING_WRITE_CHECK");
   `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b1, 16'h0000) // cs high
-   $display("ALIASING_WRITE_CHECK");
   `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b0, 16'h0000) // cs low
-   $display("ALIASING_READ_CHECK");
   `ALIASING_READ_CHECK(VCHIP_VER_ADDR, 16'h0000,16'hFFFF) // read validate
 end
 
