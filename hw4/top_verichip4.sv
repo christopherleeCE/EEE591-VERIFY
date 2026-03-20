@@ -401,6 +401,7 @@ to put int he param list
             if(addr_idx == 4) begin $display("dry soup"); end //HERE 16
             `CHIP_NORMAL
             `DISPLAY_STATE
+            `CHECK_RW(address_array[addr_idx], 16'h0001, (gen_exp_ret), _be, 1'b1)
             my_wr_val = stim_array[i]; //this step is needed, I don't know why
             `GEN_EXP_VAL(my_wr_val,bit_mask_array[_be],normal_reg_values[addr_idx],my_access_array[addr_idx],address_array[addr_idx],gen_exp_ret)
             $display("\n_be : %2b", _be);
