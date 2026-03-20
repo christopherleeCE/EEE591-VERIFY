@@ -525,21 +525,33 @@ end
             `DISPLAY_STATE
             my_wr_val = stim_array[i]; //sets to an interrupt high and in error state
             `GEN_EXP_VAL(my_wr_val,bit_mask_array[_be],error_reg_values[addr_idx],my_access_array[addr_idx],address_array[addr_idx],gen_exp_ret)
+            $display("old ger: %h", gen_exp_ret);
+
+            //todo clean up
+               for (int i = 0; i < 16; ++i) begin         
+                  //$write(" %0d", access_array[i]);      
+                  case (my_access_array[addr_idx][i])                  
+                     RO:                                  
+                        gen_exp_ret[i] = error_reg_values[addr_idx][i];  
+                     W1C:                                 
+                        gen_exp_ret[i] = error_reg_values[addr_idx][i] && (~my_wr_val[i] || ~bit_mask_array[_be][i]); 
+                     RW:                                      
+                        gen_exp_ret[i] =  my_wr_val[i] & bit_mask_array[_be][i];      
+                     default:                                 
+                        gen_exp_ret[i] = error_reg_values[addr_idx][i] & bit_mask_array[_be][i];      
+                                                            
+                  endcase                                     
+               end
+               
+            $display("new ger: %h", gen_exp_ret);
+
             $display("\n_be : %2b", _be);
             $display("nick notes my_wr_val %h", my_wr_val);
             $display("nick notes gen_exp_ret: %h", gen_exp_ret);
             $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
             //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
-            $display("%h", stim_array[i]);
-            if (address_array[addr_idx] == VCHIP_CMD_ADDR) begin
-               $display("if triggred");
-               my_wr_val = 16'h800C; //acount for the cm reg value being 800c to enter error state
-               `GEN_EXP_VAL(my_wr_val,bit_mask_array[2'b11],error_reg_values[addr_idx],my_access_array[addr_idx],address_array[addr_idx],gen_exp_ret)
-               `CHECK_RW(address_array[addr_idx], stim_array[i], gen_exp_ret, _be, 1'b1)
-            end
-
-             else
             `CHECK_RW(address_array[addr_idx], stim_array[i], (gen_exp_ret), _be, 1'b1)
+            $display("do: %h", data_out);
          end
       end
    end
