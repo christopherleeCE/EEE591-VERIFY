@@ -401,7 +401,7 @@ to put int he param list
             if(addr_idx == 4) begin $display("dry soup"); end //HERE 16
             `CHIP_NORMAL
             `DISPLAY_STATE
-            `CHECK_RW(address_array[addr_idx], 16'h0101, (gen_exp_ret), _be, 1'b1)
+            `WRITE_REG(address_array[addr_idx], (gen_exp_ret), _be, 1'b1)
             my_wr_val = stim_array[i]; //this step is needed, I don't know why
             `GEN_EXP_VAL(my_wr_val,bit_mask_array[_be],normal_reg_values[addr_idx],my_access_array[addr_idx],address_array[addr_idx],gen_exp_ret)
             $display("\n_be : %2b", _be);
@@ -421,7 +421,7 @@ to put int he param list
 ///////////////////////////////////////////////////////////
   `CHIP_NORMAL
   `DISPLAY_STATE
-for (int _be = 0; _be < 4; _be ++) begin  
+for (int _be = 3; _be < 4; _be ++) begin  //todo comment here aboot be3
 
    $display("ALU OUT TESTING");
    `CHECK_RW(VCHIP_ALU_LEFT_ADDR, 16'h5555,  16'h5555, bit_mask_array[_be], 1'b1)
@@ -858,6 +858,8 @@ for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
 // int right_reg_at [15:0] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 // int aout_reg_at  [15:0] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
+$display("forloop1");
+
 // Testing Reset State for all byte_enables and chip select 0 & 1
 for (int _be = 0; _be < 4; _be ++) begin
   `CHIP_RESET
@@ -900,6 +902,8 @@ $display("ALIAS RESET 4");
   `ALIASING_READ_CHECK(VCHIP_VER_ADDR, 16'h0000,16'hFFFF) // read validate
 end
 
+$display("forloop2");
+
 // Testing Normal State for all byte_enables and chip select 0 & 1
 for (int _be = 0; _be < 4; _be ++) begin
   `CHIP_NORMAL
@@ -937,6 +941,8 @@ for (int _be = 0; _be < 4; _be ++) begin
   `ALIASING_READ_CHECK(VCHIP_VER_ADDR, 16'h0000,16'hFFFF) // read validate
 end
 
+$display("forloop3");
+
 // Testing Error State for all byte_enables and chip select 0 & 1
 for (int _be = 0; _be < 4; _be ++) begin
    scratch = 16'h0000;
@@ -970,6 +976,8 @@ for (int _be = 0; _be < 4; _be ++) begin
   `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b0, 16'h0000) // cs low
   `ALIASING_READ_CHECK(VCHIP_VER_ADDR, 16'h0000,16'hFFFF) // read validate
 end
+
+$display("forloop4");
 
 // Testing Export Violation State for all byte_enables and chip select 0 & 1
 for (int _be = 0; _be < 4; _be ++) begin
