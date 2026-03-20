@@ -1,3 +1,10 @@
+///////////////////////////////////////////
+// Christopher Lee; Nick Marta; Andy Cox V
+// EEE598: Digital Verification & Test
+// Dr. Steven Millman
+// Spring 2026
+// 20 MAR 2026
+
 `timescale 1ns/1ps
 // performed in 0 time
 
