@@ -989,6 +989,59 @@ end
       end
    end
 
+
+
+
+
+   $display("calling `CHIP_NORMAL...");
+   `CHIP_NORMAL
+   `DISPLAY_STATE
+   for (int _be = 0; _be < 4; _be ++) begin
+      for (int i = 0; i < 4; i++) begin
+         `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
+      end
+   end
+$display("calling `CHIP_NORMAL...");
+   `CHIP_NORMAL
+   `DISPLAY_STATE
+   for (int _be = 0; _be < 4; _be ++) begin
+      for (int i = 0; i < 4; i++) begin
+         `CHECK_RW(VCHIP_ALU_RIGHT_ADDR, stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
+      end
+   end
+
+$display("calling `CHIP_NORMAL...");
+   `CHIP_NORMAL
+   `DISPLAY_STATE
+   for (int _be = 0; _be < 4; _be ++) begin
+      for (int i = 0; i < 4; i++) begin
+     `CHIP_NORMAL
+     `CHECK_RW(VCHIP_CMD_ADDR, 16'h0001, (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
+     `CHECK_RW(VCHIP_CMD_ADDR, stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
+      end
+   end
+
+$display("calling `CHIP_NORMAL...");
+   `CHIP_NORMAL
+   `DISPLAY_STATE
+   for (int _be = 0; _be < 4; _be ++) begin
+      for (int i = 0; i < 4; i++) begin
+     `CHECK_RW(VCHIP_CMD_ADDR, 16'h0001, (stim_array[i] & bit_mask_array[_be]), _be, 1'b1) //may be wrong here 
+     `CHECK_RW(VCHIP_CMD_ADDR, stim_array[i], (16'h0000), _be, 1'b0)
+      end
+   end
+
+
+$display("calling `CHIP_NORMAL...");
+   `CHIP_NORMAL
+   `DISPLAY_STATE
+   for (int _be = 0; _be < 4; _be ++) begin
+      for (int i = 0; i < 4; i++) begin
+         `CHECK_RW(VCHIP_CON_ADDR, stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
+      end
+   end
+
+
    $finish();
 end 
 
