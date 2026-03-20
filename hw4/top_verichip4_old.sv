@@ -223,7 +223,7 @@ end
    wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output   \
 
 
-module top_verichip4 ();
+module top_verichip4_old ();
 
 //TODO remove FAIL in debug output
 
@@ -410,7 +410,13 @@ to put int he param list
             $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
             //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
             $display("%h", stim_array[i]);
-            `CHECK_RW(address_array[addr_idx], stim_array[i], (gen_exp_ret), _be, 1'b1)
+            if (address_array[addr_idx] == VCHIP_ALU_OUT_ADDR) begin
+            `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i],stim_array[i], bit_mask_array[_be], 1'b1)
+            `CHECK_RW(VCHIP_CMD_ADDR, 16'h8001,  16'h0001, 2'b11, 1'b1)
+            `CHECK_RW(address_array[addr_idx], stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
+            $display("ALU OUT");
+            $display("read in for loop: [data_out] = [%h]", data_out);
+            end
          end
       end
    end
@@ -773,8 +779,60 @@ for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
 
    end
 
+   $display("status int routines");
+   $display("===============================================");
+   export_disable = 0;
+
+   //status int sections
+
+   //get into rst state with int1 = 0
+   `DISPLAY_STATE
+   `CHIP_RESET
+   `DISPLAY_STATE
+   `READ_REG(VCHIP_STA_ADDR, 1'b1)
+   $display("rst, data_out: %h", data_out);
+   `CHECK_VAL(16'h0000) //check that int1 = 0 in rst state
+
+   $display("===============================================");
+
+   //get into nrm state
+   `DISPLAY_STATE
+   `CHIP_NORMAL
+
+   //check int1 = 0 initally
+   $display("nrm, data_out: %h", data_out);
+   `CHECK_VAL(16'h0001)
+   `DISPLAY_STATE
+
+   //get int1 = 1 in nrm state
+   `CHIP_ERROR(16'h0000, 1'b1)  //get in1 high, values dont matter
+   maroon = 1;
+   gold = 0;
+   wait(clk == 1);
+   wait(clk == 0);
+   wait(clk == 1);
+   wait(clk == 0);
+   `DISPLAY_STATE
+
+   //check int1 = 1
+   `READ_REG(VCHIP_STA_ADDR, 1'b1)
+   $display("nrm, data_out: %h", data_out);
+   `CHECK_VAL(16'h0101) //check that int1 = 0 in rst state
+
+   //clear int1
+   `WRITE_REG(VCHIP_STA_ADDR, 16'h0100, 2'b11, 1'b1)
+
+   //check int1 = 0
+   `READ_REG(VCHIP_STA_ADDR, 1'b1)
+   $display("nrm, data_out: %h", data_out);
+   `CHECK_VAL(16'h0001) //check that int1 = 0 in rst state
+
+   $display("===============================================");
+
+
+
    //TODO remove this plz :)
-  // $finish()
+   //$finish();
 
 ///////////////////////////////////////
 // ALIAS TESTING- for all states
@@ -960,6 +1018,59 @@ end
          `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
       end
    end
+
+
+
+
+
+   $display("calling `CHIP_NORMAL...");
+   `CHIP_NORMAL
+   `DISPLAY_STATE
+   for (int _be = 0; _be < 4; _be ++) begin
+      for (int i = 0; i < 4; i++) begin
+         `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
+      end
+   end
+$display("calling `CHIP_NORMAL...");
+   `CHIP_NORMAL
+   `DISPLAY_STATE
+   for (int _be = 0; _be < 4; _be ++) begin
+      for (int i = 0; i < 4; i++) begin
+         `CHECK_RW(VCHIP_ALU_RIGHT_ADDR, stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
+      end
+   end
+
+$display("calling `CHIP_NORMAL...");
+   `CHIP_NORMAL
+   `DISPLAY_STATE
+   for (int _be = 0; _be < 4; _be ++) begin
+      for (int i = 0; i < 4; i++) begin
+     `CHIP_NORMAL
+     `CHECK_RW(VCHIP_CMD_ADDR, 16'h0001, (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
+     `CHECK_RW(VCHIP_CMD_ADDR, stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
+      end
+   end
+
+$display("calling `CHIP_NORMAL...");
+   `CHIP_NORMAL
+   `DISPLAY_STATE
+   for (int _be = 0; _be < 4; _be ++) begin
+      for (int i = 0; i < 4; i++) begin
+     `CHECK_RW(VCHIP_CMD_ADDR, 16'h0001, (stim_array[i] & bit_mask_array[_be]), _be, 1'b1) //may be wrong here 
+     `CHECK_RW(VCHIP_CMD_ADDR, stim_array[i], (16'h0000), _be, 1'b0)
+      end
+   end
+
+
+$display("calling `CHIP_NORMAL...");
+   `CHIP_NORMAL
+   `DISPLAY_STATE
+   for (int _be = 0; _be < 4; _be ++) begin
+      for (int i = 0; i < 4; i++) begin
+         `CHECK_RW(VCHIP_CON_ADDR, stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
+      end
+   end
+
 
    $finish();
 end 
