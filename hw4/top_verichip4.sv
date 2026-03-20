@@ -344,17 +344,7 @@ bit_mask_array = {16'h0000, 16'h00FF, 16'hFF00, 16'hFFFF};
 // $display("nick notes out reg: %h", gen_exp_ret);
 
 $display("calling finish");
-/* TODO DELETE B4 SUBMISSION HE DOESNT LIKE THE BLOCKING COMMENTS
-issues: 
-in genreal, the current my_reg_val is hardcoded to beef, obv we need it to have the contents of the register, mayhaps we get it organically, or mayhaps we just peek into the reg
-using dot operators, if we do that we may be able to automate it, this issue only shows up if the reg has a inst all RW,
-my explenation may also be incorrect
 
-in vers, the be logic is bad, we are in reset state, trying to write to a RO register, with be = 0, the curent logic
-says expected is 0, but the correct exp is the rstvals, h0210, issue is in check_rw , or the bitwise logic in th param list
-maybe we add the _be to the gen macro params, and do the masking there, assuming the correct logic is a bit too complicated
-to put int he param list
-*/
 
 ///////////////////////////////////////////////////////////////////////////////////// 
 //cs = 1
@@ -362,6 +352,7 @@ to put int he param list
    $display("\n \n \n");
    `DISPLAY_STATE
     
+    //rst non aliased testing
    $display("calling `CHIP_RESET...");
    `CHIP_RESET
    `DISPLAY_STATE
@@ -392,6 +383,7 @@ to put int he param list
    $display("\n \n \n");
    `DISPLAY_STATE
 
+   //normal non aliased testing
    $display("calling `CHIP_NORMAL...");
    `CHIP_NORMAL
    `DISPLAY_STATE
@@ -419,11 +411,11 @@ to put int he param list
 
 ////////////////////////////////////////////////////////
 // READ all four values from ALU OUT IN Normal Mode
-// needs an aextra step to load value in
+// needs an extra step to load value in
 ///////////////////////////////////////////////////////////
   `CHIP_NORMAL
   `DISPLAY_STATE
-for (int _be = 3; _be < 4; _be ++) begin  //todo comment here aboot be3
+for (int _be = 3; _be < 4; _be ++) begin  //byte enable set to 3 for entire loop so full value gets written into ALU OUT
 
    $display("ALU OUT TESTING");
    `CHECK_RW(VCHIP_ALU_LEFT_ADDR, 16'h5555,  16'h5555, bit_mask_array[_be], 1'b1)
@@ -466,50 +458,48 @@ end
 /////////////////////////////////////////////////////////////////////
 // ERROR/////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
+error_reg_values [0:6] = {16'h0210, 16'h0002, 16'h0000, 16'h0000, 16'h0000, 16'h0000, 16'h0000};
 
 
+$display("\n \n \n");
+`DISPLAY_STATE 
 
+//error state non aliased testing
 
-   error_reg_values [0:6] = {16'h0210, 16'h0002, 16'h0000, 16'h0000, 16'h0000, 16'h0000, 16'h0000};
-
-
-   $display("\n \n \n");
-   `DISPLAY_STATE 
-
-   $display("calling `CHIP_ER...");
-   scratch = 16'h0001;
-   `CHIP_ERROR(scratch,1'b0)
-   `DISPLAY_STATE
-   for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
-      $display("\naddr_idx = %0d (%s)", addr_idx, reg_names[addr_idx]);
-      $display("==================================================");
-      for (int _be = 0; _be < 4; _be ++) begin
-         for (int i = 0; i < 4; i++) begin
-            if(addr_idx == 4) begin $display("dry soup"); end //HERE 16
-            `CHIP_ERROR(scratch,1'b0) //set intiial reset vlaue to 1
-            `DISPLAY_STATE
-            my_wr_val = 16'h0001; //this step is needed, I don't know why
+$display("calling `CHIP_ER...");
+scratch = 16'h0001;
+`CHIP_ERROR(scratch,1'b0)
+`DISPLAY_STATE
+for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
+   $display("\naddr_idx = %0d (%s)", addr_idx, reg_names[addr_idx]);
+   $display("==================================================");
+   for (int _be = 0; _be < 4; _be ++) begin
+      for (int i = 0; i < 4; i++) begin
+         if(addr_idx == 4) begin $display("dry soup"); end //HERE 16
+         `CHIP_ERROR(scratch,1'b0) //set intiial reset vlaue to 1
+         `DISPLAY_STATE
+         my_wr_val = 16'h0001; //this step is needed, I don't know why
+         `GEN_EXP_VAL(my_wr_val,bit_mask_array[2'b11],error_reg_values[addr_idx],my_access_array[addr_idx],address_array[addr_idx],gen_exp_ret)
+         $display("\n_be : %2b", _be);
+         $display("nick notes my_wr_val %h", my_wr_val);
+         $display("nick notes gen_exp_ret: %h", gen_exp_ret);
+         $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
+         //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
+         $display("%h", stim_array[i]);
+         if (address_array[addr_idx] == VCHIP_CMD_ADDR) begin
+            $display("if triggred");
+            my_wr_val = 16'h800C; //acount for the cm reg value being 800c to enter error state
             `GEN_EXP_VAL(my_wr_val,bit_mask_array[2'b11],error_reg_values[addr_idx],my_access_array[addr_idx],address_array[addr_idx],gen_exp_ret)
-            $display("\n_be : %2b", _be);
-            $display("nick notes my_wr_val %h", my_wr_val);
-            $display("nick notes gen_exp_ret: %h", gen_exp_ret);
-            $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
-            //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
-            $display("%h", stim_array[i]);
-            if (address_array[addr_idx] == VCHIP_CMD_ADDR) begin
-               $display("if triggred");
-               my_wr_val = 16'h800C; //acount for the cm reg value being 800c to enter error state
-               `GEN_EXP_VAL(my_wr_val,bit_mask_array[2'b11],error_reg_values[addr_idx],my_access_array[addr_idx],address_array[addr_idx],gen_exp_ret)
-               `CHECK_RW(address_array[addr_idx], stim_array[i], gen_exp_ret, _be, 1'b1)
-            end
-
-             else
-            `CHECK_RW(address_array[addr_idx], stim_array[i], (gen_exp_ret), _be, 1'b1)
+            `CHECK_RW(address_array[addr_idx], stim_array[i], gen_exp_ret, _be, 1'b1)
          end
+
+            else
+         `CHECK_RW(address_array[addr_idx], stim_array[i], (gen_exp_ret), _be, 1'b1)
       end
    end
+end
 
-   error_reg_values [0:6] = {16'h0210, 16'h0102, 16'h0000, 16'h0000, 16'h0000, 16'h0000, 16'h0000};
+error_reg_values [0:6] = {16'h0210, 16'h0102, 16'h0000, 16'h0000, 16'h0000, 16'h0000, 16'h0000};
 //////////////////////////////////////////////////////////////////////////////////
 //////////ERROR state with interrupts enabled then cleared => NORMAL /////////////
 /////////////////////////////////////////////////////////////////////////////////
@@ -571,162 +561,18 @@ end
       
    expvi_reg_values [0:6] = {16'h0000, 16'h0008, 16'h0000, 16'h0000, 16'h0000, 16'h0000, 16'h0000};
 
-   //TODO maybe load regs with nonzero vals?
+
    $display("\n \n \n");
    `DISPLAY_STATE   
 
-   $display("calling `CHIP_EXP_VIO...");
-   `CHIP_EXP_VIO
-   `DISPLAY_STATE
-     for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
-      $display("\naddr_idx = %0d (%s)", addr_idx, reg_names[addr_idx]);
-      $display("==================================================");
-      for (int _be = 0; _be < 4; _be ++) begin
-         for (int i = 0; i < 4; i++) begin
-            if(addr_idx == 4) begin $display("dry soup"); end //HERE
-            `CHIP_EXP_VIO
-            `DISPLAY_STATE
-            my_wr_val = 16'h0000; //this step is needed, I don't know why
-            if (address_array[addr_idx] != VCHIP_VER_ADDR) begin
-               `GEN_EXP_VAL(my_wr_val,bit_mask_array[_be],expvi_reg_values[addr_idx],my_access_array[addr_idx],address_array[addr_idx],gen_exp_ret)
-            end else begin
-               gen_exp_ret = 16'h0000;
-            end
-            $display("\n_be : %2b", _be);
-            $display("nick notes my_wr_val %h", my_wr_val);
-            $display("nick notes gen_exp_ret: %h", gen_exp_ret);
-            $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
-            //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
-            $display("%h", stim_array[i]);
-            `CHECK_RW(address_array[addr_idx], stim_array[i], (gen_exp_ret), _be, 1'b1)
-         end
-      end
-   end
-   
+   //expvi non aliased testing
 
-
-   `CHIP_RESET
-
-   //todo all are zero but one?
-   //expvi_reg_values [0:6] = {};
-
-
-
-
-
-// ///////////////////////////////////////////////////////////////////////////////////// 
-// //cs = 0 -- Verichip is unselected; read all zeros
-// /////////////////////////////////////////////////////////////////////////////////////
-   $display("\n \n \n");
-   $display("cs %h", chip_select);   
-   $display("\n \n \n");
-   $display("cs %h", chip_select);   
-   
-   $display("\n \n \n");
-   `DISPLAY_STATE
-   $display("\n \n \n");
-   `DISPLAY_STATE
-
-for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
-   $display("calling `CHIP_RESET cs = 0");
-   `CHIP_RESET
-   `DISPLAY_STATE
-
-   $display("%0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
-   // Set ALU_LEFT to non-zero value.
-   `WRITE_REG(address_array[addr_idx], 16'hBEAF, 2'b11, 1'b1)
-   `READ_REG(address_array[addr_idx], 1'b1)
-   //`CHECK_ALU_LEFT(16'hBEAF)
-   $display("b4for");
-   // Check read write and byte enable combinations.
-   for (int _be = 0; _be < 4; _be ++) begin
-      for (int i = 0; i < 4; i++) begin
-            if(addr_idx == 4) begin $display("dry soup"); end //HERE
-            $display("\n_be : %2b", _be);
-            $display("nick notes my_wr_val %h", my_wr_val);
-            $display("nick notes gen_exp_ret: %h", gen_exp_ret);
-            $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
-            //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
-         `CHECK_RW(address_array[addr_idx], stim_array[i], 16'h0, _be, 1'b0)
-         //`CHECK_ALU_LEFT(16'hBEAF)
-      end
-   end
-
-   $display("\n \n \n");
-   `DISPLAY_STATE
-
-   $display("calling `CHIP_NORMAL...");
-   `CHIP_NORMAL
-   `DISPLAY_STATE
-
-   // Set ALU_LEFT to non-zero value.
-   `WRITE_REG(address_array[addr_idx], 16'h0001, 2'b11, 1'b1) //changed this from BEAF
-   `READ_REG(address_array[addr_idx], 1'b1)
-
-   // Check r/w all be and write combinations.
-   for (int _be = 0; _be < 4; _be ++) begin
-      for (int i = 0; i < 4; i++) begin
-            if(addr_idx == 4) begin $display("dry soup"); end //HERE
-            $display("\n_be : %2b", _be);
-            $display("nick notes my_wr_val %h", my_wr_val);
-            $display("nick notes gen_exp_ret: %h", gen_exp_ret);
-            $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
-            //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
-         `CHECK_RW(address_array[addr_idx], stim_array[i], 16'h0, _be, 1'b0)
-      end
-   end
-
-   $display("\n \n \n");
-   `DISPLAY_STATE 
-   $display("time: %d", $time);
-
-   export_disable <= 0;
-   
-   $display("calling `CHIP_ER...");
-   //not calling macro cus we need to get beaf into alu left, after reset occures
-      wait(clk == 1'b0);  
-      rst_b <= 1'b0;      
-      wait(clk == 1'b1);  
-      rst_b <= 1'b1;      
-      wait(clk == 1'b0);    
- 
-      //go into normal from reset 
-      maroon <= 1'b0;     
-      gold <= 1'b1;       
-      wait(clk == 1'b1);  
-      wait(clk == 1'b0);  
-                        
-      //set to a non-zero initial value                     
-      `WRITE_REG(address_array[addr_idx], 16'hBEAF, 2'b11, 1'b1)
-      `READ_REG(address_array[addr_idx], 1'b1)
-      //`CHECK_ALU_LEFT(16'hBEAF)
-                                                       
-      //write bad command to command reg to go into error   
-      `WRITE_REG(VCHIP_CMD_ADDR, 16'h800C, 2'b11, 1'b1)     
-      wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output   
-   
-   `DISPLAY_STATE
-
-   // Check all byte enable and write combinations.
-   for (int _be = 0; _be < 4; _be ++)
-      for (int i = 0; i < 4; i++) begin
-            if(addr_idx == 4) begin $display("dry soup"); end //HERE
-            $display("\n_be : %2b", _be);
-            $display("nick notes my_wr_val %h", my_wr_val);
-            $display("nick notes gen_exp_ret: %h", gen_exp_ret);
-            $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
-            //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
-         `CHECK_RW(address_array[addr_idx], stim_array[i], 16'h0, _be, 1'b0)
-         //`CHECK_ALU_LEFT(16'hBEAF)
-      end
-      
-   $display("\n \n \n");
-   `DISPLAY_STATE   
-
-
-   //all zeros, we are in cs = 0, garuentees genexpret = 0
-   expvi_reg_values [0:6] = {16'h0000, 16'h0000, 16'h0000, 16'h0000, 16'h0000, 16'h0000, 16'h0000};
-
+$display("calling `CHIP_EXP_VIO...");
+`CHIP_EXP_VIO
+`DISPLAY_STATE
+   for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
+   $display("\naddr_idx = %0d (%s)", addr_idx, reg_names[addr_idx]);
+   $display("==================================================");
    for (int _be = 0; _be < 4; _be ++) begin
       for (int i = 0; i < 4; i++) begin
          if(addr_idx == 4) begin $display("dry soup"); end //HERE
@@ -744,25 +590,168 @@ for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
          $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
          //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
          $display("%h", stim_array[i]);
-         $display("chiptune");
-         `CHECK_RW(address_array[addr_idx], stim_array[i], (gen_exp_ret), _be, 1'b0)
+         `CHECK_RW(address_array[addr_idx], stim_array[i], (gen_exp_ret), _be, 1'b1)
       end
    end
+end
+   
+   `CHIP_RESET
 
+
+
+
+
+
+
+// ///////////////////////////////////////////////////////////////////////////////////// 
+// //cs = 0 -- Verichip is unselected; read all zeros
+// /////////////////////////////////////////////////////////////////////////////////////
+$display("\n \n \n");
+$display("cs %h", chip_select);   
+$display("\n \n \n");
+$display("cs %h", chip_select);   
+
+//rst non aliased testing, with cs = 0
+
+$display("\n \n \n");
+`DISPLAY_STATE
+$display("\n \n \n");
+`DISPLAY_STATE
+
+for (int addr_idx = 0; addr_idx < 7; addr_idx ++) begin
+   $display("calling `CHIP_RESET cs = 0");
+   `CHIP_RESET
+   `DISPLAY_STATE
+
+   $display("%0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
+   // Set ALU_LEFT to non-zero value.
+   `WRITE_REG(address_array[addr_idx], 16'hBEAF, 2'b11, 1'b1)
+   `READ_REG(address_array[addr_idx], 1'b1)
+   
+//////////////////////////////////////////////////   
+// Check read write and byte enable combinations.
+//////////////////////////////////////////////////
+for (int _be = 0; _be < 4; _be ++) begin
+   for (int i = 0; i < 4; i++) begin
+         if(addr_idx == 4) begin $display("dry soup"); end //HERE
+         $display("\n_be : %2b", _be);
+         $display("nick notes my_wr_val %h", my_wr_val);
+         $display("nick notes gen_exp_ret: %h", gen_exp_ret);
+         $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
+         //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
+      `CHECK_RW(address_array[addr_idx], stim_array[i], 16'h0, _be, 1'b0)
+      
    end
+end
+
+$display("\n \n \n");
+`DISPLAY_STATE
+
+//nrm state non aliased testing, with cs = 0
+
+$display("calling `CHIP_NORMAL...");
+`CHIP_NORMAL
+`DISPLAY_STATE
+
+`WRITE_REG(address_array[addr_idx], 16'h0001, 2'b11, 1'b1) //changed this from BEAF
+`READ_REG(address_array[addr_idx], 1'b1)
+
+// Check r/w all be and write combinations.
+for (int _be = 0; _be < 4; _be ++) begin
+   for (int i = 0; i < 4; i++) begin
+         if(addr_idx == 4) begin $display("dry soup"); end //HERE
+         $display("\n_be : %2b", _be);
+         $display("nick notes my_wr_val %h", my_wr_val);
+         $display("nick notes gen_exp_ret: %h", gen_exp_ret);
+         $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
+         //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
+      `CHECK_RW(address_array[addr_idx], stim_array[i], 16'h0, _be, 1'b0)
+   end
+end
+
+
+
+$display("\n \n \n");
+`DISPLAY_STATE 
+$display("time: %d", $time);
+
+//err state non aliased testing cs = 0
+
+export_disable <= 0;
+
+$display("calling `CHIP_ER...");
+//not calling macro cus we need to get beaf into alu left, after reset occures
+wait(clk == 1'b0);  
+rst_b <= 1'b0;      
+wait(clk == 1'b1);  
+rst_b <= 1'b1;      
+wait(clk == 1'b0);    
+
+//go into normal from reset 
+maroon <= 1'b0;     
+gold <= 1'b1;       
+wait(clk == 1'b1);  
+wait(clk == 1'b0);  
+                  
+//set to a non-zero initial value                     
+`WRITE_REG(address_array[addr_idx], 16'hBEAF, 2'b11, 1'b1)
+`READ_REG(address_array[addr_idx], 1'b1)
+
+                                                   
+//write bad command to command reg to go into error   
+`WRITE_REG(VCHIP_CMD_ADDR, 16'h800C, 2'b11, 1'b1)     
+wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output   
+
+`DISPLAY_STATE
+
+// Check all byte enable and write combinations.
+for (int _be = 0; _be < 4; _be ++)
+   for (int i = 0; i < 4; i++) begin
+         if(addr_idx == 4) begin $display("dry soup"); end //HERE
+         $display("\n_be : %2b", _be);
+         $display("nick notes my_wr_val %h", my_wr_val);
+         $display("nick notes gen_exp_ret: %h", gen_exp_ret);
+         $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
+         //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
+      `CHECK_RW(address_array[addr_idx], stim_array[i], 16'h0, _be, 1'b0)
+      
+   end
+   
+$display("\n \n \n");
+`DISPLAY_STATE   
+
+
+//all zeros, we are in cs = 0, garuentees genexpret = 0
+expvi_reg_values [0:6] = {16'h0000, 16'h0000, 16'h0000, 16'h0000, 16'h0000, 16'h0000, 16'h0000};
+
+for (int _be = 0; _be < 4; _be ++) begin
+   for (int i = 0; i < 4; i++) begin
+      if(addr_idx == 4) begin $display("dry soup"); end //HERE
+      `CHIP_EXP_VIO
+      `DISPLAY_STATE
+      my_wr_val = 16'h0000; //this step is needed, I don't know why
+      if (address_array[addr_idx] != VCHIP_VER_ADDR) begin
+         `GEN_EXP_VAL(my_wr_val,bit_mask_array[_be],expvi_reg_values[addr_idx],my_access_array[addr_idx],address_array[addr_idx],gen_exp_ret)
+      end else begin
+         gen_exp_ret = 16'h0000;
+      end
+      $display("\n_be : %2b", _be);
+      $display("nick notes my_wr_val %h", my_wr_val);
+      $display("nick notes gen_exp_ret: %h", gen_exp_ret);
+      $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
+      //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
+      $display("%h", stim_array[i]);
+      $display("chiptune");
+      `CHECK_RW(address_array[addr_idx], stim_array[i], (gen_exp_ret), _be, 1'b0)
+   end
+end
+
+end
 
 
 ///////////////////////////////////////
 // ALIAS TESTING- for all states
 ///////////////////////////////////////
-// Write only valid data to respective registers.
-// int vers_reg_at  [15:0] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-// int stat_reg_at  [15:0] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-// int cmd_reg_at   [15:0] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-// int cfg_reg_at   [15:0] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-// int left_reg_at  [15:0] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-// int right_reg_at [15:0] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-// int aout_reg_at  [15:0] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 $display("forloop1");
 
@@ -809,8 +798,9 @@ $display("ALIAS RESET 4");
 end
 
 $display("forloop2");
-
+///////////////////////////////////////////////////////////////////
 // Testing Normal State for all byte_enables and chip select 0 & 1
+///////////////////////////////////////////////////////////////////
 for (int _be = 0; _be < 4; _be ++) begin
   `CHIP_NORMAL
   `DISPLAY_STATE
@@ -838,14 +828,9 @@ for (int _be = 0; _be < 4; _be ++) begin
   `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b0, 16'h0000) // cs low
   `ALIASING_READ_CHECK(VCHIP_CMD_ADDR, 16'h0000,16'hFFFF) // read validate
 
-   $display("fails here???");
-   $display("awc, cs1");
-  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b1, 16'h0000) // cs high
-     $display("awc, cs0");
-  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b0, 16'h0000) // cs low
-     $display("arc");
+  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b1, 16'h0308) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b0, 16'h0308) // cs low
   `ALIASING_READ_CHECK(VCHIP_STA_ADDR, 16'h0000,16'hFFFF) // read validate
-   $display("stop of fails here???");
 
   `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b1, 16'h0000) // cs high
   `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b0, 16'h0000) // cs low
@@ -853,8 +838,9 @@ for (int _be = 0; _be < 4; _be ++) begin
 end
 
 $display("forloop3");
-
+/////////////////////////////////////////////////////////////////
 // Testing Error State for all byte_enables and chip select 0 & 1
+/////////////////////////////////////////////////////////////////
 for (int _be = 0; _be < 4; _be ++) begin
    scratch = 16'h0000;
   `CHIP_ERROR(scratch,1'b0)
@@ -879,8 +865,8 @@ for (int _be = 0; _be < 4; _be ++) begin
   `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b0, 16'h0000) // cs low
   `ALIASING_READ_CHECK(VCHIP_CMD_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b1, 16'h0000) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b1, 16'h0008) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b0, 16'h0008) // cs low
   `ALIASING_READ_CHECK(VCHIP_STA_ADDR, 16'h0000,16'hFFFF) // read validate
 
   `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b1, 16'h0000) // cs high
@@ -889,8 +875,9 @@ for (int _be = 0; _be < 4; _be ++) begin
 end
 
 $display("forloop4");
-
+/////////////////////////////////////////////////////////////////////////////
 // Testing Export Violation State for all byte_enables and chip select 0 & 1
+//////////////////////////////////////////////////////////////////////////////
 for (int _be = 0; _be < 4; _be ++) begin
   `CHIP_EXP_VIO
   `DISPLAY_STATE
@@ -914,8 +901,8 @@ for (int _be = 0; _be < 4; _be ++) begin
   `ALIASING_WRITE_CHECK(VCHIP_CMD_ADDR,_be,1'b0, 16'h0000) // cs low
   `ALIASING_READ_CHECK(VCHIP_CMD_ADDR, 16'h0000,16'hFFFF) // read validate
 
-  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b1, 16'h0000) // cs high
-  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b0, 16'h0000) // cs low
+  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b1, 16'h0008) // cs high
+  `ALIASING_WRITE_CHECK(VCHIP_STA_ADDR,_be,1'b0, 16'h0008) // cs low
   `ALIASING_READ_CHECK(VCHIP_STA_ADDR, 16'h0000,16'hFFFF) // read validate
 
   `ALIASING_WRITE_CHECK(VCHIP_VER_ADDR,_be,1'b1, 16'h0000) // cs high
@@ -923,149 +910,151 @@ for (int _be = 0; _be < 4; _be ++) begin
   `ALIASING_READ_CHECK(VCHIP_VER_ADDR, 16'h0000,16'hFFFF) // read validate
 end
 
- $display("calling `CHIP_NORMAL...");
-   `CHIP_NORMAL
-   `DISPLAY_STATE
+$display("calling `CHIP_NORMAL...");
+`CHIP_NORMAL
+`DISPLAY_STATE
 
-   // Set ALU_LEFT to non-zero value.
-   `WRITE_REG(VCHIP_ALU_LEFT_ADDR, 16'hBEAF, 2'b11, 1'b1)
-   `READ_REG(VCHIP_ALU_LEFT_ADDR, 1'b1)
-   `CHECK_ALU_LEFT(16'hBEAF)
+// Set ALU_LEFT to non-zero value.
+`WRITE_REG(VCHIP_ALU_LEFT_ADDR, 16'hBEAF, 2'b11, 1'b1)
+`READ_REG(VCHIP_ALU_LEFT_ADDR, 1'b1)
+`CHECK_ALU_LEFT(16'hBEAF)
 
-   // Check r/w all be and write combinations.
-   for (int _be = 0; _be < 4; _be ++) begin
-      for (int i = 0; i < 4; i++) begin
-         `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], 16'h0, _be, 1'b0)
-         `CHECK_ALU_LEFT(16'hBEAF)
-      end
+// Check r/w all be and write combinations.
+for (int _be = 0; _be < 4; _be ++) begin
+   for (int i = 0; i < 4; i++) begin
+      `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], 16'h0, _be, 1'b0)
+      `CHECK_ALU_LEFT(16'hBEAF)
    end
-
-   
-   $display("calling `CHIP_NORMAL...");
-   `CHIP_NORMAL
-   `DISPLAY_STATE
-   for (int _be = 0; _be < 4; _be ++) begin
-      for (int i = 0; i < 4; i++) begin
-         `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
-      end
-   end
+end
 
 
- $display("status int routines");
-   $display("===============================================");
-   export_disable = 0;
+// Check r/w all be and write combinations
+$display("calling `CHIP_NORMAL...");
+`CHIP_NORMAL
+`DISPLAY_STATE
+for (int _be = 0; _be < 4; _be ++) begin
+   for (int i = 0; i < 4; i++) begin
+      `CHECK_RW(VCHIP_ALU_LEFT_ADDR, stim_array[i], (stim_array[i] & bit_mask_array[_be]), _be, 1'b1)
+end
+end
 
-   //status int sections
 
-   //get into rst state with int1 = 0
-   `DISPLAY_STATE
-   `CHIP_RESET
-   `DISPLAY_STATE
-   `READ_REG(VCHIP_STA_ADDR, 1'b1)
-   $display("rst, data_out: %h", data_out);
-   `CHECK_VAL(16'h0000) //check that int1 = 0 in rst state
+$display("status int routines");
+$display("===============================================");
+export_disable = 0;
 
-   $display("===============================================");
+//status int sections
 
-   //get into nrm state
-   `DISPLAY_STATE
-   `CHIP_NORMAL
+//get into rst state with int1 = 0
+`DISPLAY_STATE
+`CHIP_RESET
+`DISPLAY_STATE
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("rst, data_out: %h", data_out);
+`CHECK_VAL(16'h0000) //check that int1 = 0 in rst state
 
-   //check int1 = 0 initally
-   $display("nrm, data_out: %h", data_out);
-   `CHECK_VAL(16'h0001)
-   `DISPLAY_STATE
+$display("===============================================");
 
-   //get int1 = 1 in nrm state
-   `CHIP_ERROR(16'h0000, 1'b1)  //get in1 high, values dont matter
-   maroon = 1;
-   gold = 0;
-   wait(clk == 1);
-   wait(clk == 0);
-   wait(clk == 1);
-   wait(clk == 0);
-   `DISPLAY_STATE
+//get into nrm state
+`DISPLAY_STATE
+`CHIP_NORMAL
 
-   //check int1 = 1
-   `READ_REG(VCHIP_STA_ADDR, 1'b1)
-   $display("nrm, data_out: %h", data_out);
-   `CHECK_VAL(16'h0101) //check that int1 = 0 in rst state
+//check int1 = 0 initally
+$display("nrm, data_out: %h", data_out);
+`CHECK_VAL(16'h0001)
+`DISPLAY_STATE
 
-   //clear int1
-   `WRITE_REG(VCHIP_STA_ADDR, 16'h0100, 2'b11, 1'b1)
+//get int1 = 1 in nrm state
+`CHIP_ERROR(16'h0000, 1'b1)  //get in1 high, values dont matter
+maroon = 1;
+gold = 0;
+wait(clk == 1);
+wait(clk == 0);
+wait(clk == 1);
+wait(clk == 0);
+`DISPLAY_STATE
 
-   //check int1 = 0
-   `READ_REG(VCHIP_STA_ADDR, 1'b1)
-   $display("nrm, data_out: %h", data_out);
-   `CHECK_VAL(16'h0001) //check that int1 = 0 in rst state
+//check int1 = 1
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("nrm, data_out: %h", data_out);
+`CHECK_VAL(16'h0101) //check that int1 = 0 in rst state
 
-   $display("===============================================");
+//clear int1
+`WRITE_REG(VCHIP_STA_ADDR, 16'h0100, 2'b11, 1'b1)
 
-   //get into error state, int1 = 1
-   `DISPLAY_STATE
-   `CHIP_ERROR(16'h0000, 1'b1)
+//check int1 = 0
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("nrm, data_out: %h", data_out);
+`CHECK_VAL(16'h0001) //check that int1 = 0 in rst state
 
-   //check int1 = 1
-   `READ_REG(VCHIP_STA_ADDR, 1'b1)
-   $display("err, data_out: %h", data_out);
-   `CHECK_VAL(16'h0102) //check that int1 = 0 in rst state
+$display("===============================================");
 
-   //clear int1
-   `WRITE_REG(VCHIP_STA_ADDR, 16'h0100, 2'b11, 1'b1)
+//get into error state, int1 = 1
+`DISPLAY_STATE
+`CHIP_ERROR(16'h0000, 1'b1)
 
-   //check int1 = 0
-   `READ_REG(VCHIP_STA_ADDR, 1'b1)
-   $display("err, data_out: %h", data_out);
-   `CHECK_VAL(16'h0002) //check that int1 = 0 in rst state
+//check int1 = 1
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("err, data_out: %h", data_out);
+`CHECK_VAL(16'h0102) //check that int1 = 0 in rst state
 
-   $display("===============================================");
+//clear int1
+`WRITE_REG(VCHIP_STA_ADDR, 16'h0100, 2'b11, 1'b1)
 
-   `DISPLAY_STATE
+//check int1 = 0
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("err, data_out: %h", data_out);
+`CHECK_VAL(16'h0002) //check that int1 = 0 in rst state
 
-   //get int1 = 1 in nrm state
-   `CHIP_ERROR(16'h0000, 1'b1)  //get in1 high, values dont matter
-   maroon = 1;
-   gold = 0;
-   wait(clk == 1);
-   wait(clk == 0);
-   wait(clk == 1);
-   wait(clk == 0);
-   `DISPLAY_STATE
+$display("===============================================");
 
-   `READ_REG(VCHIP_STA_ADDR, 1'b1)
-   $display("err, data_out: %h", data_out);
-   `CHECK_VAL(16'h0101) //check that int1 = 0 in nrm state
+`DISPLAY_STATE
+///////////////////////////////
+//get int1 = 1 in normal state
+///////////////////////////////
+`CHIP_ERROR(16'h0000, 1'b1)  //get in1 high, values dont matter
+maroon = 1;
+gold = 0;
+wait(clk == 1);
+wait(clk == 0);
+wait(clk == 1);
+wait(clk == 0);
+`DISPLAY_STATE
 
-   //assert exp disable, wait 2clk to ensure its in reg
-   export_disable <= 1'b1; 
-   wait(clk == 1'b1); wait(clk == 1'b0);
-   wait(clk == 1'b1); wait(clk == 1'b0);
-                        
-   //get into expvio
-   `WRITE_REG(VCHIP_CMD_ADDR, 16'h8008, 2'b11, 1'b1)                                  
-   wait(clk == 1'b1); wait(clk == 1'b0);
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("err, data_out: %h", data_out);
+`CHECK_VAL(16'h0101) //check that int1 = 0 in nrm state
 
-   `READ_REG(VCHIP_STA_ADDR, 1'b1)
-   $display("expvi, data_out: %h", data_out);
-   `CHECK_VAL(16'h0308)
+//assert exp disable, wait 2clk to ensure its in reg
+export_disable <= 1'b1; 
+wait(clk == 1'b1); wait(clk == 1'b0);
+wait(clk == 1'b1); wait(clk == 1'b0);
+                     
+//get into expvio
+`WRITE_REG(VCHIP_CMD_ADDR, 16'h8008, 2'b11, 1'b1)                                  
+wait(clk == 1'b1); wait(clk == 1'b0);
 
-   //clear int2
-   `WRITE_REG(VCHIP_STA_ADDR, 16'h0200, 2'b11, 1'b1)
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("expvi, data_out: %h", data_out);
+`CHECK_VAL(16'h0308)
 
-   `READ_REG(VCHIP_STA_ADDR, 1'b1)
-   $display("expvi, data_out: %h", data_out);
-   `CHECK_VAL(16'h0108)
+//clear int2
+`WRITE_REG(VCHIP_STA_ADDR, 16'h0200, 2'b11, 1'b1)
 
-   //clear int1
-   `WRITE_REG(VCHIP_STA_ADDR, 16'h0100, 2'b11, 1'b1)
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("expvi, data_out: %h", data_out);
+`CHECK_VAL(16'h0108)
 
-   `READ_REG(VCHIP_STA_ADDR, 1'b1)
-   $display("expvi, data_out: %h", data_out);
-   `CHECK_VAL(16'h0008)
+//clear int1
+`WRITE_REG(VCHIP_STA_ADDR, 16'h0100, 2'b11, 1'b1)
 
-   $display("===============================================");
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("expvi, data_out: %h", data_out);
+`CHECK_VAL(16'h0008)
 
-   $finish();
+$display("===============================================");
+
+$finish();
 end 
 
 verichip4 verichip (.clk           ( clk            ),    // system clock
