@@ -1,7 +1,7 @@
 # 
 # vlog *.sv
 # Questa Intel Starter FPGA Edition-64 vlog 2024.3 Compiler 2024.09 Sep 10 2024
-# Start time: 01:35:35 on Mar 20,2026
+# Start time: 01:53:10 on Mar 20,2026
 # vlog top_verichip4.sv top_verichip4_old.sv verichip4.sv 
 # -- Compiling module top_verichip4
 # -- Compiling module top_verichip4_old
@@ -10,12 +10,12 @@
 # Top level modules:
 # 	top_verichip4
 # 	top_verichip4_old
-# End time: 01:35:36 on Mar 20,2026, Elapsed time: 0:00:01
+# End time: 01:53:10 on Mar 20,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # 
 # vsim -voptargs=+acc work.top_verichip4 
 # vsim -voptargs="+acc" work.top_verichip4 
-# Start time: 01:35:36 on Mar 20,2026
+# Start time: 01:53:10 on Mar 20,2026
 # ** Note: (vsim-3813) Design is being optimized due to module recompilation...
 # ** Warning: (vopt-10908) Some optimizations are turned off because the +acc switch is in effect.
 # ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
@@ -3539,128 +3539,96 @@
 #  
 # 
 # state: normal
-# 
-#  
-#  
-# 
-# state: normal
 # calling `CHIP_NORMAL...
 # state: normal
-# calling `CHIP_NORMAL...
-# state: normal
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 #  
 #  
 # 
 # state: normal
-# time:                44905
-# 
-#  
-#  
-# 
-# state: normal
-# time:                44905
-# calling `CHIP_ER...
+# time:                44885
 # calling `CHIP_ER...
 # state: err0r
-# state: err0r
 # 
 # _be : 00
 # nick notes my_wr_val 0000
@@ -3753,6 +3721,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 00
@@ -3760,6 +3729,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 00
@@ -3767,6 +3737,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 00
@@ -3774,6 +3745,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
 # 0000
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -3781,6 +3753,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -3788,6 +3761,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -3795,6 +3769,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -3802,6 +3777,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
 # 0000
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -3809,6 +3785,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -3816,6 +3793,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -3823,6 +3801,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -3830,6 +3809,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
 # 0000
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -3837,6 +3817,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -3844,6 +3825,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -3851,6 +3833,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -3858,6 +3841,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 0 (vers)
 # 0000
+# chiptune
 # calling `CHIP_RESET cs = 0
 # state: reset
 # 4 (stat)
@@ -3947,128 +3931,96 @@
 #  
 # 
 # state: normal
-# 
-#  
-#  
-# 
-# state: normal
 # calling `CHIP_NORMAL...
 # state: normal
-# calling `CHIP_NORMAL...
-# state: normal
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 #  
 #  
 # 
 # state: normal
-# time:                47685
-# 
-#  
-#  
-# 
-# state: normal
-# time:                47685
-# calling `CHIP_ER...
+# time:                47605
 # calling `CHIP_ER...
 # state: err0r
-# state: err0r
 # 
 # _be : 00
 # nick notes my_wr_val 0000
@@ -4158,130 +4110,130 @@
 # 
 # _be : 00
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
 # ffff
-# Bad read: [data_out, expected] = [0000, 0008]
+# chiptune
 # state: expvi
 # 
 # _be : 00
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
 # aaaa
-# Bad read: [data_out, expected] = [0000, 0008]
+# chiptune
 # state: expvi
 # 
 # _be : 00
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
 # 5555
-# Bad read: [data_out, expected] = [0000, 0008]
+# chiptune
 # state: expvi
 # 
 # _be : 00
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
 # 0000
-# Bad read: [data_out, expected] = [0000, 0008]
+# chiptune
 # state: expvi
 # 
 # _be : 01
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
 # ffff
-# Bad read: [data_out, expected] = [0000, 0008]
+# chiptune
 # state: expvi
 # 
 # _be : 01
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
 # aaaa
-# Bad read: [data_out, expected] = [0000, 0008]
+# chiptune
 # state: expvi
 # 
 # _be : 01
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
 # 5555
-# Bad read: [data_out, expected] = [0000, 0008]
+# chiptune
 # state: expvi
 # 
 # _be : 01
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
 # 0000
-# Bad read: [data_out, expected] = [0000, 0008]
+# chiptune
 # state: expvi
 # 
 # _be : 10
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
 # ffff
-# Bad read: [data_out, expected] = [0000, 0008]
+# chiptune
 # state: expvi
 # 
 # _be : 10
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
 # aaaa
-# Bad read: [data_out, expected] = [0000, 0008]
+# chiptune
 # state: expvi
 # 
 # _be : 10
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
 # 5555
-# Bad read: [data_out, expected] = [0000, 0008]
+# chiptune
 # state: expvi
 # 
 # _be : 10
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
 # 0000
-# Bad read: [data_out, expected] = [0000, 0008]
+# chiptune
 # state: expvi
 # 
 # _be : 11
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
 # ffff
-# Bad read: [data_out, expected] = [0000, 0008]
+# chiptune
 # state: expvi
 # 
 # _be : 11
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
 # aaaa
-# Bad read: [data_out, expected] = [0000, 0008]
+# chiptune
 # state: expvi
 # 
 # _be : 11
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
 # 5555
-# Bad read: [data_out, expected] = [0000, 0008]
+# chiptune
 # state: expvi
 # 
 # _be : 11
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 4 (stat)
 # 0000
-# Bad read: [data_out, expected] = [0000, 0008]
+# chiptune
 # calling `CHIP_RESET cs = 0
 # state: reset
 # 8 (cmd)
@@ -4289,88 +4241,83 @@
 # 
 # _be : 00
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 00
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 00
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 00
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 01
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 01
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 01
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 01
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 10
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 10
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 10
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 10
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 11
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 11
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 11
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 11
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
-# 
-#  
-#  
-# 
-# state: expvi
 # 
 #  
 #  
@@ -4378,200 +4325,173 @@
 # state: expvi
 # calling `CHIP_NORMAL...
 # state: normal
-# calling `CHIP_NORMAL...
-# state: normal
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 #  
 #  
 # 
 # state: normal
-# time:                50465
-# 
-#  
-#  
-# 
-# state: normal
-# time:                50465
-# calling `CHIP_ER...
+# time:                50325
 # calling `CHIP_ER...
 # state: err0r
-# state: err0r
 # 
 # _be : 00
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
-# nick notes address and reg name: 8 (cmd)
-# 
-# _be : 00
-# nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 00
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 00
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
+# nick notes address and reg name: 8 (cmd)
+# 
+# _be : 00
+# nick notes my_wr_val 0000
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 01
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 01
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 01
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 01
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 10
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 10
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 10
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 10
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 11
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 11
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 11
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 # _be : 11
 # nick notes my_wr_val 0000
-# nick notes gen_exp_ret: 0008
+# nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 
 #  
@@ -4585,6 +4505,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 00
@@ -4592,6 +4513,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 00
@@ -4599,6 +4521,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 00
@@ -4606,6 +4529,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 0000
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -4613,6 +4537,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -4620,6 +4545,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -4627,6 +4553,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -4634,6 +4561,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 0000
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -4641,6 +4569,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -4648,6 +4577,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -4655,6 +4585,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -4662,6 +4593,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 0000
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -4669,6 +4601,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -4676,6 +4609,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -4683,6 +4617,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -4690,6 +4625,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 8 (cmd)
 # 0000
+# chiptune
 # calling `CHIP_RESET cs = 0
 # state: reset
 # c (cfg)
@@ -4779,128 +4715,96 @@
 #  
 # 
 # state: normal
-# 
-#  
-#  
-# 
-# state: normal
 # calling `CHIP_NORMAL...
 # state: normal
-# calling `CHIP_NORMAL...
-# state: normal
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 #  
 #  
 # 
 # state: normal
-# time:                53245
-# 
-#  
-#  
-# 
-# state: normal
-# time:                53245
-# calling `CHIP_ER...
+# time:                53045
 # calling `CHIP_ER...
 # state: err0r
-# state: err0r
 # 
 # _be : 00
 # nick notes my_wr_val 0000
@@ -4993,6 +4897,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 00
@@ -5000,6 +4905,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 00
@@ -5007,6 +4913,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 00
@@ -5014,6 +4921,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
 # 0000
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -5021,6 +4929,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -5028,6 +4937,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -5035,6 +4945,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -5042,6 +4953,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
 # 0000
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -5049,6 +4961,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -5056,6 +4969,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -5063,6 +4977,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -5070,6 +4985,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
 # 0000
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -5077,6 +4993,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -5084,6 +5001,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -5091,6 +5009,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -5098,6 +5017,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: c (cfg)
 # 0000
+# chiptune
 # calling `CHIP_RESET cs = 0
 # state: reset
 # 10 (left)
@@ -5203,13 +5123,6 @@
 #  
 # 
 # state: normal
-# 
-#  
-#  
-# 
-# state: normal
-# calling `CHIP_NORMAL...
-# state: normal
 # calling `CHIP_NORMAL...
 # state: normal
 # dry soup
@@ -5313,17 +5226,9 @@
 #  
 # 
 # state: normal
-# time:                56025
-# 
-#  
-#  
-# 
-# state: normal
-# time:                56025
-# calling `CHIP_ER...
+# time:                55765
 # calling `CHIP_ER...
 # state: err0r
-# state: err0r
 # dry soup
 # 
 # _be : 00
@@ -5433,6 +5338,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 10 (left)
 # ffff
+# chiptune
 # dry soup
 # state: expvi
 # 
@@ -5441,6 +5347,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 10 (left)
 # aaaa
+# chiptune
 # dry soup
 # state: expvi
 # 
@@ -5449,6 +5356,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 10 (left)
 # 5555
+# chiptune
 # dry soup
 # state: expvi
 # 
@@ -5457,6 +5365,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 10 (left)
 # 0000
+# chiptune
 # dry soup
 # state: expvi
 # 
@@ -5465,6 +5374,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 10 (left)
 # ffff
+# chiptune
 # dry soup
 # state: expvi
 # 
@@ -5473,6 +5383,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 10 (left)
 # aaaa
+# chiptune
 # dry soup
 # state: expvi
 # 
@@ -5481,6 +5392,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 10 (left)
 # 5555
+# chiptune
 # dry soup
 # state: expvi
 # 
@@ -5489,6 +5401,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 10 (left)
 # 0000
+# chiptune
 # dry soup
 # state: expvi
 # 
@@ -5497,6 +5410,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 10 (left)
 # ffff
+# chiptune
 # dry soup
 # state: expvi
 # 
@@ -5505,6 +5419,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 10 (left)
 # aaaa
+# chiptune
 # dry soup
 # state: expvi
 # 
@@ -5513,6 +5428,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 10 (left)
 # 5555
+# chiptune
 # dry soup
 # state: expvi
 # 
@@ -5521,6 +5437,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 10 (left)
 # 0000
+# chiptune
 # dry soup
 # state: expvi
 # 
@@ -5529,6 +5446,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 10 (left)
 # ffff
+# chiptune
 # dry soup
 # state: expvi
 # 
@@ -5537,6 +5455,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 10 (left)
 # aaaa
+# chiptune
 # dry soup
 # state: expvi
 # 
@@ -5545,6 +5464,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 10 (left)
 # 5555
+# chiptune
 # dry soup
 # state: expvi
 # 
@@ -5553,6 +5473,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 10 (left)
 # 0000
+# chiptune
 # calling `CHIP_RESET cs = 0
 # state: reset
 # 14 (right)
@@ -5642,128 +5563,96 @@
 #  
 # 
 # state: normal
-# 
-#  
-#  
-# 
-# state: normal
 # calling `CHIP_NORMAL...
 # state: normal
-# calling `CHIP_NORMAL...
-# state: normal
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 #  
 #  
 # 
 # state: normal
-# time:                58805
-# 
-#  
-#  
-# 
-# state: normal
-# time:                58805
-# calling `CHIP_ER...
+# time:                58485
 # calling `CHIP_ER...
 # state: err0r
-# state: err0r
 # 
 # _be : 00
 # nick notes my_wr_val 0000
@@ -5856,6 +5745,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 00
@@ -5863,6 +5753,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 00
@@ -5870,6 +5761,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 00
@@ -5877,6 +5769,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
 # 0000
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -5884,6 +5777,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -5891,6 +5785,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -5898,6 +5793,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -5905,6 +5801,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
 # 0000
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -5912,6 +5809,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -5919,6 +5817,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -5926,6 +5825,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -5933,6 +5833,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
 # 0000
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -5940,6 +5841,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -5947,6 +5849,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -5954,6 +5857,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -5961,6 +5865,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 14 (right)
 # 0000
+# chiptune
 # calling `CHIP_RESET cs = 0
 # state: reset
 # 18 (aout)
@@ -6050,128 +5955,96 @@
 #  
 # 
 # state: normal
-# 
-#  
-#  
-# 
-# state: normal
 # calling `CHIP_NORMAL...
 # state: normal
-# calling `CHIP_NORMAL...
-# state: normal
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 00
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 01
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 10
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 # _be : 11
 # nick notes my_wr_val 0000
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
-#  Bad read: [data_out, expected] = [0000, 0001]
 # 
 #  
 #  
 # 
 # state: normal
-# time:                61585
-# 
-#  
-#  
-# 
-# state: normal
-# time:                61585
-# calling `CHIP_ER...
+# time:                61205
 # calling `CHIP_ER...
 # state: err0r
-# state: err0r
 # 
 # _be : 00
 # nick notes my_wr_val 0000
@@ -6264,6 +6137,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 00
@@ -6271,6 +6145,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 00
@@ -6278,6 +6153,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 00
@@ -6285,6 +6161,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
 # 0000
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -6292,6 +6169,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -6299,6 +6177,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -6306,6 +6185,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 01
@@ -6313,6 +6193,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
 # 0000
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -6320,6 +6201,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -6327,6 +6209,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -6334,6 +6217,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 10
@@ -6341,6 +6225,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
 # 0000
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -6348,6 +6233,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
 # ffff
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -6355,6 +6241,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
 # aaaa
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -6362,6 +6249,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
 # 5555
+# chiptune
 # state: expvi
 # 
 # _be : 11
@@ -6369,6 +6257,7 @@
 # nick notes gen_exp_ret: 0000
 # nick notes address and reg name: 18 (aout)
 # 0000
+# chiptune
 # forloop1
 # state: reset
 # state: reset
@@ -6400,8 +6289,24 @@
 # ALIAS RESET 4
 # forloop2
 # state: normal
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
 # state: normal
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
 # state: normal
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
+# ALIASING_WRITE_CHECK
 # Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
@@ -6765,6 +6670,7 @@
 # Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
+# ALIASING_WRITE_CHECK
 # Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
@@ -7128,9 +7034,29 @@
 # Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
+# ALIASING_READ_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
 # state: normal
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
 # state: normal
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
 # state: normal
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
+# ALIASING_WRITE_CHECK
 # Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
@@ -7494,6 +7420,7 @@
 # Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
+# ALIASING_WRITE_CHECK
 # Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
@@ -7857,9 +7784,29 @@
 # Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
+# ALIASING_READ_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
 # state: normal
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
 # state: normal
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
 # state: normal
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
+# ALIASING_WRITE_CHECK
 # Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
@@ -8223,6 +8170,7 @@
 # Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
+# ALIASING_WRITE_CHECK
 # Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
@@ -8586,9 +8534,29 @@
 # Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
+# ALIASING_READ_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
 # state: normal
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
 # state: normal
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
 # state: normal
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
+# ALIASING_WRITE_CHECK
 # Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
@@ -8952,6 +8920,7 @@
 # Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
+# ALIASING_WRITE_CHECK
 # Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
@@ -9315,6 +9284,10 @@
 # Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
 # alias write Bad read: [data_out, expected] = [0308, 0000]
+# ALIASING_READ_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_WRITE_CHECK
+# ALIASING_READ_CHECK
 # forloop3
 # 1
 # state: expvi
@@ -15168,7 +15141,7 @@
 # expvi, data_out: 0108
 # expvi, data_out: 0008
 # ===============================================
-# ** Note: $finish    : top_verichip4.sv(1158)
-#    Time: 2779005 ns  Iteration: 1  Instance: /top_verichip4
-# End time: 01:35:57 on Mar 20,2026, Elapsed time: 0:00:21
+# ** Note: $finish    : top_verichip4.sv(1082)
+#    Time: 2778585 ns  Iteration: 1  Instance: /top_verichip4
+# End time: 01:53:29 on Mar 20,2026, Elapsed time: 0:00:19
 # Errors: 0, Warnings: 1
