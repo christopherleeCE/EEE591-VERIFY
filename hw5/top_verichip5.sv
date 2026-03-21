@@ -19,7 +19,19 @@
          $display("state: expvi");       \
    end
 
-
+`define CHECK_STATE(expected_state) \
+   if(verichip.state != expected_state) begin   \
+         $write("Wrong state, expected state: %p, actual: ", expected_state);    \
+   end if(verichip.state == 0) begin       \
+         $display("reset");       \
+   end else if(verichip.state == 1) begin       \
+         $display("normal");       \
+   end else if(verichip.state == 2) begin       \
+         $display("err0r");       \
+   end else if(verichip.state == 8) begin       \
+         $display("expvi");       \
+   end
+   
 `define SET_WRITE(addr,val,bytes,cs)   \
    rw_ <= 1'b0;                     \
    chip_select <= cs;               \
@@ -101,7 +113,7 @@
 // Write 16'h0000 to the address of interest and validate an aliased write does not affect reg value for cs = 0 and cs = 1
 // expecting 16'h0000 also covers export violation so a new macro does not have to be made
 // NOTE, aliased registers have 0xFFFF writen to them to check that no bit fields in ALU left go from 0 => 1
-`define ALIASING_WRITE_CHECK(addr,bytes = 2'b11,cs,exp_val) //TODO need to havea  for loop for all byte enables\
+`define ALIASING_WRITE_CHECK(addr,bytes = 2'b11,cs,exp_val) \
 for (int ii = 0 ; ii < 128 ; ++ii) begin  \
       // Do not check/overrite known good registers/addresses \
       if((ii != VCHIP_ALU_OUT_ADDR) && (ii != VCHIP_ALU_RIGHT_ADDR) && (ii != VCHIP_ALU_LEFT_ADDR) && (ii != VCHIP_CON_ADDR) && (ii != VCHIP_CMD_ADDR) && (ii != VCHIP_STA_ADDR) && (ii != VCHIP_VER_ADDR)) begin  \
@@ -116,7 +128,6 @@ for (int ii = 0 ; ii < 128 ; ++ii) begin  \
       end                                          \
 end                                              
 
-//TODO at addr = 0 reg_val is completly bypassed, look into l8r
 `define GEN_EXP_VAL(wr_val, bit_enable, reg_val, access_array, reg_addr, out_reg) \
 //$display("%h %h %p %h", wr_val, reg_val, access_array, out_reg);  \
 //$display("reg_addr = %d | cmp result %d", reg_addr, reg_addr != 7'h0); \
@@ -138,7 +149,7 @@ if(reg_addr != 0) begin                    \
 end                                          \
 else begin                                    \
    //$display("else execd");                      \
-   out_reg = 16'h0210;     //TODO maybe remove if? and put reg_val manually \
+   out_reg = 16'h0210;     \
 end                                    
 
 // waits for the clock to be 0 and then asserts reset, then waits for 
@@ -225,16 +236,16 @@ end
    wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output   \
 
    `define RESET_STATE_CHECK(stim,M,G,exp_vio,bad_cmd) \
-   `CHIP_RESET          \
-    maroon <= M;     \
-    gold <= G;       \
+      `CHIP_RESET      \
+      maroon <= M;     \
+      gold <= G;       \
+     `DISPLAY_STATE    \
     
-    
 
 
-module top_verichip4 ();
+module top_verichip5 ();
 
-//TODO remove FAIL in debug output
+
 
 localparam RO = 2'b0;
 localparam W1C = 2'b1;
@@ -308,7 +319,6 @@ end
 reg [15:0] bit_mask_array [4];
 
 //aa stands for access array
-// TODO: Not all bits are init 0, version register have init 1 at position 9 and 4.
 int vers_reg_aa  [15:0] = {RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO};
 int stat_reg_aa  [15:0] = {RO, RO, RO, RO, RO, RO, W1C,W1C,RO, RO, RO, RO, RO, RO, RO, RO};
 int cmd_reg_aa   [15:0] = {W1C,RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RO, RW, RW, RW, RW};
@@ -337,8 +347,13 @@ logic [15:0] scratch;
 initial begin
    `CLEAR_ALL
    `CHIP_RESET
-
-
+   `CHECK_STATE(0)
+   `CHIP_NORMAL
+   `CHECK_STATE(0)
+   `CHIP_ERROR(16'h0000,1'b0)
+   `CHECK_STATE(0)
+   `CHIP_EXP_VIO
+   `CHECK_STATE(0)
 
 $display("calling finish");
 
