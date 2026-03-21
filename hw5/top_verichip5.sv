@@ -235,12 +235,34 @@ end
    `WRITE_REG(VCHIP_CMD_ADDR, 16'h8008, 2'b11, 1'b1)                                   \
    wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output   \
 
-   `define RESET_STATE_CHECK(stim,M,G,exp_vio,bad_cmd) \
+   //TODO are we trying to generate simuatnouse situations, we cant do that with E and B, and maybe even M and E etc
+   `define RESET_STATE_CHECK(exp_state,M,G,E,B) \
       `CHIP_RESET      \
-      maroon <= M;     \
-      gold <= G;       \
-     `DISPLAY_STATE    \
-    
+      if(E) begin `GEN_EXP_VIO end \
+      if(M) begin `GEN_BAD_CMD end \
+      maroon = M;     \
+      gold = G;       \
+     //`DISPLAY_STATE    \
+     wait(clk == 0); wait(clk == 1); wait(clk == 0); \
+     `CHECK_STATE(exp_state)
+
+   `define GEN_BAD_CMD \
+   `WRITE_REG(VCHIP_CMD_ADDR, 16'h800C, 2'b11, 1'b1)     \
+   wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output   
+
+
+   `define GEN_EXP_VIO  \
+   //assert exp disable, wait 2clk to ensure its in reg  \
+   export_disable <= 1'b1;                            \
+   wait(clk == 0); wait(clk == 1); wait(clk == 0);    \
+                                                      \
+   //get into expvio                                  \
+   `WRITE_REG(VCHIP_CMD_ADDR, 16'h8008, 2'b11, 1'b1)  \
+   wait(clk == 0); wait(clk == 1); wait(clk == 0);    \
+                                                      \
+   `READ_REG(VCHIP_STA_ADDR, 1'b1)                    \
+   $display("expvi, data_out: %h", data_out);         \
+   `CHECK_VAL(16'h0308)             
 
 
 module top_verichip5 ();
@@ -354,6 +376,121 @@ initial begin
    `CHECK_STATE(0)
    `CHIP_EXP_VIO
    `CHECK_STATE(0)
+
+   $display("status int routines");
+$display("===============================================");
+export_disable = 0;
+
+//status int sections
+
+//get into rst state with int1 = 0
+`DISPLAY_STATE
+`CHIP_RESET
+`DISPLAY_STATE
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("rst, data_out: %h", data_out);
+`CHECK_VAL(16'h0000) //check that int1 = 0 in rst state
+
+$display("===============================================");
+
+//get into nrm state
+`DISPLAY_STATE
+`CHIP_NORMAL
+
+//check int1 = 0 initally
+$display("nrm, data_out: %h", data_out);
+`CHECK_VAL(16'h0001)
+`DISPLAY_STATE
+
+//get int1 = 1 in nrm state
+`CHIP_ERROR(16'h0000, 1'b1)  //get in1 high, values dont matter
+maroon = 1;
+gold = 0;
+wait(clk == 1);
+wait(clk == 0);
+wait(clk == 1);
+wait(clk == 0);
+`DISPLAY_STATE
+
+//check int1 = 1
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("nrm, data_out: %h", data_out);
+`CHECK_VAL(16'h0101) //check that int1 = 0 in rst state
+
+//clear int1
+`WRITE_REG(VCHIP_STA_ADDR, 16'h0100, 2'b11, 1'b1)
+
+//check int1 = 0
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("nrm, data_out: %h", data_out);
+`CHECK_VAL(16'h0001) //check that int1 = 0 in rst state
+
+$display("===============================================");
+
+//get into error state, int1 = 1
+`DISPLAY_STATE
+`CHIP_ERROR(16'h0000, 1'b1)
+
+//check int1 = 1
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("err, data_out: %h", data_out);
+`CHECK_VAL(16'h0102) //check that int1 = 0 in rst state
+
+//clear int1
+`WRITE_REG(VCHIP_STA_ADDR, 16'h0100, 2'b11, 1'b1)
+
+//check int1 = 0
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("err, data_out: %h", data_out);
+`CHECK_VAL(16'h0002) //check that int1 = 0 in rst state
+
+$display("===============================================");
+
+`DISPLAY_STATE
+///////////////////////////////
+//get int1 = 1 in normal state
+///////////////////////////////
+`CHIP_ERROR(16'h0000, 1'b1)  //get in1 high, values dont matter
+maroon = 1;
+gold = 0;
+wait(clk == 1);
+wait(clk == 0);
+wait(clk == 1);
+wait(clk == 0);
+`DISPLAY_STATE
+
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("err, data_out: %h", data_out);
+`CHECK_VAL(16'h0101) //check that int1 = 0 in nrm state
+
+//assert exp disable, wait 2clk to ensure its in reg
+export_disable <= 1'b1; 
+wait(clk == 1'b1); wait(clk == 1'b0);
+wait(clk == 1'b1); wait(clk == 1'b0);
+                     
+//get into expvio
+`WRITE_REG(VCHIP_CMD_ADDR, 16'h8008, 2'b11, 1'b1)                                  
+wait(clk == 1'b1); wait(clk == 1'b0);
+
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("expvi, data_out: %h", data_out);
+`CHECK_VAL(16'h0308)
+
+//clear int2
+`WRITE_REG(VCHIP_STA_ADDR, 16'h0200, 2'b11, 1'b1)
+
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("expvi, data_out: %h", data_out);
+`CHECK_VAL(16'h0108)
+
+//clear int1
+`WRITE_REG(VCHIP_STA_ADDR, 16'h0100, 2'b11, 1'b1)
+
+`READ_REG(VCHIP_STA_ADDR, 1'b1)
+$display("expvi, data_out: %h", data_out);
+`CHECK_VAL(16'h0008)
+
+$display("===============================================");
 
 $display("calling finish");
 
