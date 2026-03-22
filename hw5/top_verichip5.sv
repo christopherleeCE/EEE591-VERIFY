@@ -392,6 +392,7 @@ initial begin
    `STATE_MASTER(8,0,0,1,0)
    `CHIP_RESET
    `STATE_MASTER(0,0,0,0,0)
+
 //ERROR
    `CLEAR_ALL
    `CHIP_ERROR(0, 1)
@@ -405,9 +406,39 @@ initial begin
    `CHIP_ERROR(0, 1)
    `STATE_MASTER(2,0,0,0,1)
    `CHIP_ERROR(0, 1)
+
+   `CHIP_ERROR(0, 1)
+   export_disable = 1'b0;
+   wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
+
+   //try get into expvio                                  
+   `WRITE_REG(VCHIP_CMD_ADDR, 16'h800A, 2'b11, 1'b1)  
+   wait(clk == 0); wait(clk == 1); wait(clk == 0);    
+                                                      
+   `READ_REG(VCHIP_STA_ADDR, 1'b1)                    
+   $display("expvi, data_out: %h", data_out);
+   wait(clk == 0); wait(clk == 1); wait(clk == 0); 
+   maroon = 0; gold = 0;                            
+   `CHECK_STATE(2)
+
+      `CHIP_ERROR(0, 1)
+      export_disable = 1'b1;
+      wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
+
+      //try get into expvio                                  
+      `WRITE_REG(VCHIP_CMD_ADDR, 16'h800A, 2'b11, 1'b1)  
+      wait(clk == 0); wait(clk == 1); wait(clk == 0);    
+                                                         
+      `READ_REG(VCHIP_STA_ADDR, 1'b1)                    
+      $display("expvi, data_out: %h", data_out);
+      wait(clk == 0); wait(clk == 1); wait(clk == 0); 
+      maroon = 0; gold = 0;                            
+      `CHECK_STATE(2)
+
    `STATE_MASTER(2,0,0,1,0)
    `CHIP_RESET
    `STATE_MASTER(0,0,0,0,0)
+   
 //EXP_VIO
    `CLEAR_ALL
    `CHIP_EXP_VIO
@@ -419,8 +450,65 @@ initial begin
    `CHIP_EXP_VIO
    `STATE_MASTER(8,1,1,0,0)
    `CHIP_EXP_VIO
+
+    export_disable = 1'b0;
+   wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
+
+   //try get into expvio                                  
+   `WRITE_REG(VCHIP_CMD_ADDR, 16'h800A, 2'b11, 1'b1)  
+   wait(clk == 0); wait(clk == 1); wait(clk == 0);    
+                                                      
+   `READ_REG(VCHIP_STA_ADDR, 1'b1)                    
+   $display("expvi, data_out: %h", data_out);
+   wait(clk == 0); wait(clk == 1); wait(clk == 0); 
+   maroon = 0; gold = 0;                            
+   `CHECK_STATE(8)
+
+      `CHIP_EXP_VIO
+      export_disable = 1'b1;
+      wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
+
+      //try get into expvio                                  
+      `WRITE_REG(VCHIP_CMD_ADDR, 16'h800A, 2'b11, 1'b1)  
+      wait(clk == 0); wait(clk == 1); wait(clk == 0);    
+                                                         
+      `READ_REG(VCHIP_STA_ADDR, 1'b1)                    
+      $display("expvi, data_out: %h", data_out);
+      wait(clk == 0); wait(clk == 1); wait(clk == 0); 
+      maroon = 0; gold = 0;                            
+      `CHECK_STATE(8)
+   export_disable = 1'b0;
+   wait(clk == 0); wait(clk == 1); wait(clk == 0); 
    `STATE_MASTER(8,0,0,0,1)
+
    `CHIP_EXP_VIO
+   export_disable = 1'b0;
+   wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
+
+   //try get into expvio                                  
+   `WRITE_REG(VCHIP_CMD_ADDR, 16'h800A, 2'b11, 1'b1)  
+   wait(clk == 0); wait(clk == 1); wait(clk == 0);    
+                                                      
+   `READ_REG(VCHIP_STA_ADDR, 1'b1)                    
+   $display("expvi, data_out: %h", data_out);
+   wait(clk == 0); wait(clk == 1); wait(clk == 0); 
+   maroon = 0; gold = 0;                            
+   `CHECK_STATE(8)
+
+      `CHIP_EXP_VIO
+      export_disable = 1'b1;
+      wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
+
+      //try get into expvio                                  
+      `WRITE_REG(VCHIP_CMD_ADDR, 16'h800A, 2'b11, 1'b1)  
+      wait(clk == 0); wait(clk == 1); wait(clk == 0);    
+                                                         
+      `READ_REG(VCHIP_STA_ADDR, 1'b1)                    
+      $display("expvi, data_out: %h", data_out);
+      wait(clk == 0); wait(clk == 1); wait(clk == 0); 
+      maroon = 0; gold = 0;                            
+      `CHECK_STATE(8)
+
    `STATE_MASTER(8,0,0,1,0)
    `CHIP_RESET //check if reset gets you out of exp_vio
    `STATE_MASTER(0,0,0,0,0)
