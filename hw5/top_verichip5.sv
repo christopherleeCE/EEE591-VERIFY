@@ -1,10 +1,3 @@
-///////////////////////////////////////////
-// Christopher Lee; Nick Marta; Andy Cox V
-// EEE598: Digital Verification & Test
-// Dr. Steven Millman
-// Spring 2026
-// 20 MAR 2026
-
 `timescale 1ns/1ps
 // performed in 0 time
 
@@ -404,6 +397,25 @@ initial begin
    `CHIP_ERROR(0, 1)
    `STATE_MASTER(2,1,1,0,0)
    `CHIP_ERROR(0, 1)
+   
+    export_disable = 1'b0;
+   wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
+
+    export_disable = 1'b1;
+   wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
+
+   export_disable = 1'b0;
+   wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
+   //try get into expvio                                  
+   `WRITE_REG(VCHIP_CMD_ADDR, 16'h800A, 2'b11, 1'b1)  
+   wait(clk == 0); wait(clk == 1); wait(clk == 0);    
+                                                      
+   `READ_REG(VCHIP_STA_ADDR, 1'b1)                    
+   $display("expvi, data_out: %h", data_out);
+   wait(clk == 0); wait(clk == 1); wait(clk == 0); 
+   maroon = 0; gold = 0;                            
+   `CHECK_STATE(2)
+
    `STATE_MASTER(2,0,0,0,1)
    `CHIP_ERROR(0, 1)
 
@@ -540,3 +552,4 @@ verichip5 verichip (.clk           ( clk            ),    // system clock
 
 
 endmodule
+
