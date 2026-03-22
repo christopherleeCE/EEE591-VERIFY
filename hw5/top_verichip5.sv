@@ -361,7 +361,7 @@ initial begin
    //on posedge, not on the next posedge, but the one after
 
 
-
+//RESET
    `CLEAR_ALL
    `CHIP_RESET
    `STATE_MASTER(0,0,0,0,0)
@@ -375,14 +375,55 @@ initial begin
    `STATE_MASTER(0,0,0,0,1)
    `CHIP_RESET
    `STATE_MASTER(0,0,0,1,0)
-   `CHIP_RESET
-   `CHIP_NORMAL
-   `CHECK_STATE(1)
 
-   ///////////////////////////////
-   //ERROR STATE                //
-   ///////////////////////////////
-   // `CHIP_ERROR(16'h0000,1'b0)
+//NORMAL
+   `CLEAR_ALL
+   `CHIP_NORMAL
+   `STATE_MASTER(1,0,0,0,0)
+   `CHIP_NORMAL
+   `STATE_MASTER(1,0,1,0,0)
+   `CHIP_NORMAL
+   `STATE_MASTER(1,1,0,0,0)
+   `CHIP_NORMAL
+   `STATE_MASTER(1,1,1,0,0)
+   `CHIP_NORMAL
+   `STATE_MASTER(2,0,0,0,1)
+   `CHIP_NORMAL
+   `STATE_MASTER(8,0,0,1,0)
+   `CHIP_RESET
+   `STATE_MASTER(0,0,0,0,0)
+//ERROR
+   `CLEAR_ALL
+   `CHIP_ERROR(0, 1)
+   `STATE_MASTER(2,0,0,0,0)
+   `CHIP_ERROR(0, 1)
+   `STATE_MASTER(2,0,1,0,0)
+   `CHIP_ERROR(0, 1)
+   `STATE_MASTER(1,1,0,0,0)
+   `CHIP_ERROR(0, 1)
+   `STATE_MASTER(2,1,1,0,0)
+   `CHIP_ERROR(0, 1)
+   `STATE_MASTER(2,0,0,0,1)
+   `CHIP_ERROR(0, 1)
+   `STATE_MASTER(2,0,0,1,0)
+   `CHIP_RESET
+   `STATE_MASTER(0,0,0,0,0)
+//EXP_VIO
+   `CLEAR_ALL
+   `CHIP_EXP_VIO
+   `STATE_MASTER(8,0,0,0,0)
+   `CHIP_EXP_VIO
+   `STATE_MASTER(8,0,1,0,0)
+   `CHIP_EXP_VIO
+   `STATE_MASTER(8,1,0,0,0)
+   `CHIP_EXP_VIO
+   `STATE_MASTER(8,1,1,0,0)
+   `CHIP_EXP_VIO
+   `STATE_MASTER(8,0,0,0,1)
+   `CHIP_EXP_VIO
+   `STATE_MASTER(8,0,0,1,0)
+   `CHIP_RESET //check if reset gets you out of exp_vio
+   `STATE_MASTER(0,0,0,0,0)
    
 
 $display("calling finish");
