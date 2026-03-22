@@ -1,4 +1,4 @@
-module verichip5(input logic clk,                       // system clock
+module verichip4(input logic clk,                       // system clock
                  input logic rst_b,                     // chip reset
                  input logic export_disable,            // disable features
                  output logic interrupt_1,              // first interrupt
