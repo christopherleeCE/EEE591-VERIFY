@@ -237,8 +237,11 @@ end
    `WRITE_REG(VCHIP_CMD_ADDR, 16'h8008, 2'b11, 1'b1)                                   \
    wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output   \
 
-   //TODO are we trying to generate simuatnouse situations, we cant do that with E and B, and maybe even M and E etc
-   //TODO CHANGE THIS NAME PLZ LOL
+   // STATE_MASTERRR -- Controls state of the machine
+   // exp_state = Expected state
+   // M = Maroon, G = Gold signals
+   // E = Boolean to generate export violation signal
+   // B = Boolean to generate bad command signal
    `define STATE_MASTER(exp_state,M,G,E,B) \
       if(E) begin `GEN_EXP_VIO end \
       if(B) begin `GEN_BAD_CMD end \
@@ -250,13 +253,11 @@ end
      `CHECK_STATE(exp_state)
 
    //called on neg edge, appears on next pos edge
-   //called on pos edge, appears on next pos edge
    `define GEN_BAD_CMD \
    `WRITE_REG(VCHIP_CMD_ADDR, 16'h800C, 2'b11, 1'b1)     \
    wait(clk == 1'b1); wait(clk == 1'b0); //min wait to see state change debug output   
 
 
-   //on negedge, not on the next posedge, but the one after
    //on posedge, not on the next posedge, but the one after
    `define GEN_EXP_VIO  \
    //assert exp disable, wait 2clk to ensure its in reg  \
@@ -361,51 +362,59 @@ initial begin
    //on negedge, not on the next posedge, but the one after
    //on posedge, not on the next posedge, but the one after
 
-
+//////////////////////////////////////
 //RESET
+/////////////////
+/////////////////////
    `CLEAR_ALL
    `CHIP_RESET
-   `STATE_MASTER(0,0,0,0,0)
+   `STATE_MASTER(0,0,0,0,0) // M = 0, G = 0
    `CHIP_RESET
-   `STATE_MASTER(1,0,1,0,0)
+   `STATE_MASTER(1,0,1,0,0) // M = 0, G = 1
    `CHIP_RESET
-   `STATE_MASTER(0,1,0,0,0)
+   `STATE_MASTER(0,1,0,0,0) // M = 1, G = 0
    `CHIP_RESET
-   `STATE_MASTER(0,1,1,0,0)
+   `STATE_MASTER(0,1,1,0,0) // M = 1, G = 1
    `CHIP_RESET
-   `STATE_MASTER(0,0,0,0,1)
+   `STATE_MASTER(0,0,0,0,1) // M = 0, G = 0, trigger bad_cmd 
    `CHIP_RESET
-   `STATE_MASTER(0,0,0,1,0)
+   `STATE_MASTER(0,0,0,1,0) // M = 0, G = 0, trigger export exp_vio
+   `CHIP_RESET
+   `STATE_MASTER(0,0,0,0,0) // assert rst
+   
 
 //NORMAL
    `CLEAR_ALL
    `CHIP_NORMAL
-   `STATE_MASTER(1,0,0,0,0)
+   `STATE_MASTER(1,0,0,0,0) // M = 0, G = 0
    `CHIP_NORMAL
-   `STATE_MASTER(1,0,1,0,0)
+   `STATE_MASTER(1,0,1,0,0) // M = 0, G = 1
    `CHIP_NORMAL
-   `STATE_MASTER(1,1,0,0,0)
+   `STATE_MASTER(1,1,0,0,0) // M = 1, G = 0
    `CHIP_NORMAL
-   `STATE_MASTER(1,1,1,0,0)
+   `STATE_MASTER(1,1,1,0,0) // M = 1, G = 1
    `CHIP_NORMAL
-   `STATE_MASTER(2,0,0,0,1)
+   `STATE_MASTER(2,0,0,0,1) // M = 0, G = 0, trigger bad_cmd 
    `CHIP_NORMAL
-   `STATE_MASTER(8,0,0,1,0)
+   `STATE_MASTER(8,0,0,1,0) // M = 0, G = 0, trigger export exp_vio
    `CHIP_RESET
-   `STATE_MASTER(0,0,0,0,0)
+   `STATE_MASTER(0,0,0,0,0) // assert rst
 
 //ERROR
    `CLEAR_ALL
    `CHIP_ERROR(0, 1)
-   `STATE_MASTER(2,0,0,0,0)
+   `STATE_MASTER(2,0,0,0,0) // M = 0, G = 0
    `CHIP_ERROR(0, 1)
-   `STATE_MASTER(2,0,1,0,0)
+   `STATE_MASTER(2,0,1,0,0) // M = 0, G = 1
    `CHIP_ERROR(0, 1)
-   `STATE_MASTER(1,1,0,0,0)
+   `STATE_MASTER(1,1,0,0,0) // M = 1, G = 0
    `CHIP_ERROR(0, 1)
-   `STATE_MASTER(2,1,1,0,0)
+   `STATE_MASTER(2,1,1,0,0) // M = 1, G = 1
    `CHIP_ERROR(0, 1)
    
+   //////////////////////////////////
+   // M = 0, G = 0, trigger bad_cmd 
+   //////////////////////////////////
     export_disable = 1'b0;
    wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
 
@@ -458,8 +467,10 @@ initial begin
    `STATE_MASTER(2,0,0,1,0)
    `CHIP_RESET
    `STATE_MASTER(0,0,0,0,0)
-   
-//EXP_VIO
+
+////////////////////////////////////////   
+// M = 0, G = 0, trigger export exp_vio
+////////////////////////////////////////
    `CLEAR_ALL
    `CHIP_EXP_VIO
    `STATE_MASTER(8,0,0,0,0)
@@ -534,14 +545,12 @@ initial begin
    `STATE_MASTER(0,0,0,0,0)
    
 
-$display("calling finish");
+   $display("calling finish");
+   $finish();
 
-
-
-$finish();
 end 
 
-verichip5 verichip (.clk           ( clk            ),    // system clock
+verichip5 verichip (.clk          ( clk            ),    // system clock
                    .rst_b         ( rst_b          ),    // chip reset
                    .export_disable( export_disable ),    // disable features
                    .interrupt_1   ( interrupt_1    ),    // first interrupt
