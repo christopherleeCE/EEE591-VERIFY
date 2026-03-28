@@ -270,7 +270,20 @@ end
                                                       \
    `READ_REG(VCHIP_STA_ADDR, 1'b1)                    \
    $display("expvi, data_out: %h", data_out);
-          
+
+   `define LI_AOUT(val) \
+      `CHECK_RW(VCHIP_ALU_LEFT_ADDR,val,val,2'b11,1'b1)           \
+      `CHECK_RW(VCHIP_ALU_RIGHT_ADDR,16'b0,16'b0,2'b11,1'b1)      \
+      `CHECK_RW(VCHIP_CMD_ADDR,16'h8001,16'h0001,2'b11,1'b1)  \
+      `READ_REG(VCHIP_ALU_OUT_ADDR,1'b1)                          \
+      `CHECK_VAL(val)
+
+   `define DRIVE_CMD(left_val,right_val,opcode,expval) \
+      `CHECK_RW(VCHIP_ALU_LEFT_ADDR,left_val,left_val,2'b11,1'b1)           \
+      `CHECK_RW(VCHIP_ALU_RIGHT_ADDR,right_val,right_val,2'b11,1'b1)      \
+      `CHECK_RW(VCHIP_CMD_ADDR,opcode,(opcode-16'h8000),2'b11,1'b1)  \
+      `READ_REG(VCHIP_ALU_OUT_ADDR,1'b1)                          \
+      `CHECK_VAL(expval)   
 
 
 module top_verichip6 ();
@@ -340,212 +353,46 @@ begin
       #5 clk <= 1'b0;
    end
 end
-/////////////////////////////////////////////////////////////////////////////////////
-// need to test all byte enables, do it with a for loop and a case statement
-// test writing registers, test address 50 and ensure nothing is written to ALU_left,
-// which is address 10
-///////////////////////////////////////////////////////////////////////////////////// 
-
 
 initial begin
 
-   export_disable = 0;
-
-
-   wait(clk == 0); wait(clk == 1);
-   wait(clk == 0); wait(clk == 1);
-   // wait(clk == 0);
-   // $display("`GBC called%t", $time);
-   // `GEN_BAD_CMD //called on neg edge, appears on next pos edge
-   //$display("`GEV called%t", $time);
-   //`GEN_EXP_VIO
-   //on negedge, not on the next posedge, but the one after
-   //on posedge, not on the next posedge, but the one after
-
-//////////////////////////////////////
-//RESET
-/////////////////
-/////////////////////
    `CLEAR_ALL
    `CHIP_RESET
-   `STATE_MASTER(0,0,0,0,0) // M = 0, G = 0
-   `CHIP_RESET
-   `STATE_MASTER(1,0,1,0,0) // M = 0, G = 1
-   `CHIP_RESET
-   `STATE_MASTER(0,1,0,0,0) // M = 1, G = 0
-   `CHIP_RESET
-   `STATE_MASTER(0,1,1,0,0) // M = 1, G = 1
-   `CHIP_RESET
-   `STATE_MASTER(0,0,0,0,1) // M = 0, G = 0, trigger bad_cmd 
-   `CHIP_RESET
-   `STATE_MASTER(0,0,0,1,0) // M = 0, G = 0, trigger export exp_vio
-   `CHIP_RESET
-   `STATE_MASTER(0,0,0,0,0) // assert rst
-   
-
-//NORMAL
-   `CLEAR_ALL
    `CHIP_NORMAL
-   `STATE_MASTER(1,0,0,0,0) // M = 0, G = 0
-   `CHIP_NORMAL
-   `STATE_MASTER(1,0,1,0,0) // M = 0, G = 1
-   `CHIP_NORMAL
-   `STATE_MASTER(1,1,0,0,0) // M = 1, G = 0
-   `CHIP_NORMAL
-   `STATE_MASTER(1,1,1,0,0) // M = 1, G = 1
-   `CHIP_NORMAL
-   `STATE_MASTER(2,0,0,0,1) // M = 0, G = 0, trigger bad_cmd 
-   `CHIP_NORMAL
-   `STATE_MASTER(8,0,0,1,0) // M = 0, G = 0, trigger export exp_vio
-   `CHIP_RESET
-   `STATE_MASTER(0,0,0,0,0) // assert rst
 
-//ERROR
-   `CLEAR_ALL
-   `CHIP_ERROR(0, 1)
-   `STATE_MASTER(2,0,0,0,0) // M = 0, G = 0
-   `CHIP_ERROR(0, 1)
-   `STATE_MASTER(2,0,1,0,0) // M = 0, G = 1
-   `CHIP_ERROR(0, 1)
-   `STATE_MASTER(1,1,0,0,0) // M = 1, G = 0
-   `CHIP_ERROR(0, 1)
-   `STATE_MASTER(2,1,1,0,0) // M = 1, G = 1
-   `CHIP_ERROR(0, 1)
-   
-   //////////////////////////////////
-   // M = 0, G = 0, trigger bad_cmd 
-   //////////////////////////////////
-    export_disable = 1'b0;
-   wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
+   // NO OP TEST NORMAL
+   `LI_AOUT(16'h0000)
+   `DRIVE_CMD(16'h0000,16'h5555,16'h8000,16'h0000)
+   `LI_AOUT(16'h5555)
+   `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8000,16'h5555)
+   `LI_AOUT(16'hAAAA)
+   `DRIVE_CMD(16'h5555,16'hFFFF,16'h8000,16'hAAAA)
+   `LI_AOUT(16'hFFFF)
+   `DRIVE_CMD(16'hAAAA,16'h0000,16'h8000,16'hFFFF)
 
-    export_disable = 1'b1;
-   wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
+   // ALU ADD
+   `LI_AOUT(16'h0000)
+   `DRIVE_CMD(16'h0000,16'h5555,16'h8001,16'h5555)
+   `LI_AOUT(16'h5555)
+   `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8001,16'hAAA9)
+   `LI_AOUT(16'hAAAA)
+   `DRIVE_CMD(16'h5555,16'hFFFF,16'h8001,16'h5554)
+   `LI_AOUT(16'hFFFF)
+   `DRIVE_CMD(16'hAAAA,16'h0000,16'h8001,16'hAAAA)
 
-   export_disable = 1'b0;
-   wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
-   //try get into expvio                                  
-   `WRITE_REG(VCHIP_CMD_ADDR, 16'h800A, 2'b11, 1'b1)  
-   wait(clk == 0); wait(clk == 1); wait(clk == 0);    
-                                                      
-   `READ_REG(VCHIP_STA_ADDR, 1'b1)                    
-   $display("expvi, data_out: %h", data_out);
-   wait(clk == 0); wait(clk == 1); wait(clk == 0); 
-   maroon = 0; gold = 0;                            
-   `CHECK_STATE(2)
 
-   `STATE_MASTER(2,0,0,0,1)
-   `CHIP_ERROR(0, 1)
+   // ALU SUB
+   `LI_AOUT(16'h0020)
+   `DRIVE_CMD(16'h5555,16'h5555,16'h8002,16'h0000)
+   `LI_AOUT(16'hAAAA)
+   `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8002,16'h5555)
+   `LI_AOUT(16'hAAAA)
+   `DRIVE_CMD(16'h0000,16'hFFFF,16'h8002,16'h0001)
+   `LI_AOUT(16'hFFFF)
+   `DRIVE_CMD(16'hAAAA,16'h0000,16'h8002,16'hAAAA)
 
-   `CHIP_ERROR(0, 1)
-   export_disable = 1'b0;
-   wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
 
-   //try get into expvio                                  
-   `WRITE_REG(VCHIP_CMD_ADDR, 16'h800A, 2'b11, 1'b1)  
-   wait(clk == 0); wait(clk == 1); wait(clk == 0);    
-                                                      
-   `READ_REG(VCHIP_STA_ADDR, 1'b1)                    
-   $display("expvi, data_out: %h", data_out);
-   wait(clk == 0); wait(clk == 1); wait(clk == 0); 
-   maroon = 0; gold = 0;                            
-   `CHECK_STATE(2)
 
-      `CHIP_ERROR(0, 1)
-      export_disable = 1'b1;
-      wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
-
-      //try get into expvio                                  
-      `WRITE_REG(VCHIP_CMD_ADDR, 16'h800A, 2'b11, 1'b1)  
-      wait(clk == 0); wait(clk == 1); wait(clk == 0);    
-                                                         
-      `READ_REG(VCHIP_STA_ADDR, 1'b1)                    
-      $display("expvi, data_out: %h", data_out);
-      wait(clk == 0); wait(clk == 1); wait(clk == 0); 
-      maroon = 0; gold = 0;                            
-      `CHECK_STATE(2)
-
-   `STATE_MASTER(2,0,0,1,0)
-   `CHIP_RESET
-   `STATE_MASTER(0,0,0,0,0)
-
-////////////////////////////////////////   
-// M = 0, G = 0, trigger export exp_vio
-////////////////////////////////////////
-   `CLEAR_ALL
-   `CHIP_EXP_VIO
-   `STATE_MASTER(8,0,0,0,0)
-   `CHIP_EXP_VIO
-   `STATE_MASTER(8,0,1,0,0)
-   `CHIP_EXP_VIO
-   `STATE_MASTER(8,1,0,0,0)
-   `CHIP_EXP_VIO
-   `STATE_MASTER(8,1,1,0,0)
-   `CHIP_EXP_VIO
-
-    export_disable = 1'b0;
-   wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
-
-   //try get into expvio                                  
-   `WRITE_REG(VCHIP_CMD_ADDR, 16'h800A, 2'b11, 1'b1)  
-   wait(clk == 0); wait(clk == 1); wait(clk == 0);    
-                                                      
-   `READ_REG(VCHIP_STA_ADDR, 1'b1)                    
-   $display("expvi, data_out: %h", data_out);
-   wait(clk == 0); wait(clk == 1); wait(clk == 0); 
-   maroon = 0; gold = 0;                            
-   `CHECK_STATE(8)
-
-      `CHIP_EXP_VIO
-      export_disable = 1'b1;
-      wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
-
-      //try get into expvio                                  
-      `WRITE_REG(VCHIP_CMD_ADDR, 16'h800A, 2'b11, 1'b1)  
-      wait(clk == 0); wait(clk == 1); wait(clk == 0);    
-                                                         
-      `READ_REG(VCHIP_STA_ADDR, 1'b1)                    
-      $display("expvi, data_out: %h", data_out);
-      wait(clk == 0); wait(clk == 1); wait(clk == 0); 
-      maroon = 0; gold = 0;                            
-      `CHECK_STATE(8)
-   export_disable = 1'b0;
-   wait(clk == 0); wait(clk == 1); wait(clk == 0); 
-   `STATE_MASTER(8,0,0,0,1)
-
-   `CHIP_EXP_VIO
-   export_disable = 1'b0;
-   wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
-
-   //try get into expvio                                  
-   `WRITE_REG(VCHIP_CMD_ADDR, 16'h800A, 2'b11, 1'b1)  
-   wait(clk == 0); wait(clk == 1); wait(clk == 0);    
-                                                      
-   `READ_REG(VCHIP_STA_ADDR, 1'b1)                    
-   $display("expvi, data_out: %h", data_out);
-   wait(clk == 0); wait(clk == 1); wait(clk == 0); 
-   maroon = 0; gold = 0;                            
-   `CHECK_STATE(8)
-
-      `CHIP_EXP_VIO
-      export_disable = 1'b1;
-      wait(clk == 1'b0); wait(clk == 1'b1); wait(clk == 1'b0);
-
-      //try get into expvio                                  
-      `WRITE_REG(VCHIP_CMD_ADDR, 16'h800A, 2'b11, 1'b1)  
-      wait(clk == 0); wait(clk == 1); wait(clk == 0);    
-                                                         
-      `READ_REG(VCHIP_STA_ADDR, 1'b1)                    
-      $display("expvi, data_out: %h", data_out);
-      wait(clk == 0); wait(clk == 1); wait(clk == 0); 
-      maroon = 0; gold = 0;                            
-      `CHECK_STATE(8)
-
-   `STATE_MASTER(8,0,0,1,0)
-   `CHIP_RESET //check if reset gets you out of exp_vio
-   `STATE_MASTER(0,0,0,0,0)
-   
-
-   $display("calling finish");
    $finish();
 
 end 
