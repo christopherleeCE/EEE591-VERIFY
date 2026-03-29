@@ -378,11 +378,11 @@ initial begin
 
    for (int i = 0; i < 2; i ++) begin
    if (i == 0) begin
-      export_disable <= 0;
+      export_disable <= 1;
    end
 
    else begin
-      export_disable <= 1;
+      export_disable <= 0;
    end
 
    // NO OP TEST NORMAL
