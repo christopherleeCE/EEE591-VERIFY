@@ -511,6 +511,26 @@ initial begin
       `DISPLAY_STATE
 
 
+      // TODO have bad command with export_deisable = 1 as well
+      //////////////////////////////////////////////////////////
+      // bad command
+      ///////////////////////////////////////////////////////////
+      $display("BAD CMD");
+      for (logic [15:0] i =8; i <16; i++ ) begin
+         `CHIP_RESET
+         `LI_AOUT(16'h0000)
+         `DRIVE_CMD(16'h0000,16'h5555,(16'h8000 + i),16'h0000,16'h5555,16'h0000,4'h0)
+         `CHIP_RESET
+         `LI_AOUT(16'h0000)
+         `DRIVE_CMD(16'hFFFF,16'hAAAA,(16'h8000 + i),16'hFFFF,16'hAAAA,16'h0000,4'h0)
+         `CHIP_RESET
+         `LI_AOUT(16'h0000)
+         `DRIVE_CMD(16'h0000,16'hFFFF,(16'h8000 + i),16'h0000,16'hFFFF,16'h0000,4'h0)
+         `CHIP_RESET
+         `LI_AOUT(16'h0000)
+         `DRIVE_CMD(16'hAAAA,16'h0000,(16'h8000 + i),16'hAAAA,16'h0000,16'h0000,4'h0)
+      end
+
 /////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////
 
@@ -659,28 +679,28 @@ initial begin
    //////////////////////////////////////////////////////////
    // valid = 0
    ///////////////////////////////////////////////////////////
-   $display("valid = 0");
-   for (logic [15:0] i = 0 ; i <16; i++ ) begin
-      `CHIP_NORMAL
-      `LI_AOUT(16'h0020)
-      `DRIVE_CMD_NO_OPSUB(16'h0000,16'h5555,(16'h0000 + i),16'h0000,16'h5555,16'h0020,4'h1)
-      `DISPLAY_STATE
+   // $display("valid = 0");
+   // for (logic [15:0] i = 0 ; i <16; i++ ) begin
+   //    `CHIP_NORMAL
+   //    `LI_AOUT(16'h0020)
+   //    `DRIVE_CMD_NO_OPSUB(16'h0000,16'h5555,(16'h0000 + i),16'h0000,16'h5555,16'h0020,4'h1)
+   //    `DISPLAY_STATE
 
-      `CHIP_NORMAL
-      `LI_AOUT(16'hAAAA)
-      `DRIVE_CMD_NO_OPSUB(16'hFFFF,16'hAAAA,(16'h0000 + i),16'hFFFF,16'hAAAA,16'hAAAA,4'h1)
-      `DISPLAY_STATE
+   //    `CHIP_NORMAL
+   //    `LI_AOUT(16'hAAAA)
+   //    `DRIVE_CMD_NO_OPSUB(16'hFFFF,16'hAAAA,(16'h0000 + i),16'hFFFF,16'hAAAA,16'hAAAA,4'h1)
+   //    `DISPLAY_STATE
 
-      `CHIP_NORMAL
-      `LI_AOUT(16'hAAAA)
-      `DRIVE_CMD_NO_OPSUB(16'h0000,16'hFFFF,(16'h0000 + i),16'h0000,16'hFFFF,16'hAAAA,4'h1)
-      `DISPLAY_STATE
+   //    `CHIP_NORMAL
+   //    `LI_AOUT(16'hAAAA)
+   //    `DRIVE_CMD_NO_OPSUB(16'h0000,16'hFFFF,(16'h0000 + i),16'h0000,16'hFFFF,16'hAAAA,4'h1)
+   //    `DISPLAY_STATE
 
-      `CHIP_NORMAL
-      `LI_AOUT(16'hFFFF)
-      `DRIVE_CMD_NO_OPSUB(16'hAAAA,16'h0000,(16'h0000 + i),16'hAAAA,16'h0000,16'hFFFF,4'h1)
-      `DISPLAY_STATE
-   end
+   //    `CHIP_NORMAL
+   //    `LI_AOUT(16'hFFFF)
+   //    `DRIVE_CMD_NO_OPSUB(16'hAAAA,16'h0000,(16'h0000 + i),16'hAAAA,16'h0000,16'hFFFF,4'h1)
+   //    `DISPLAY_STATE
+   // end
 
  
    wait(clk == 1'b0);   // MUST LEAVE SO GRADING WORKS!

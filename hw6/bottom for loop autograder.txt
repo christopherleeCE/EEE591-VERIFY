@@ -1,0 +1,115 @@
+   // TODO have bad command with export_deisable = 1 as well
+   //////////////////////////////////////////////////////////
+   // bad command
+   ///////////////////////////////////////////////////////////
+   $display("BAD CMD");
+   for (logic [15:0] i =8; i <16; i++ ) begin
+      `CHIP_NORMAL
+      `LI_AOUT(16'h0020)
+      `DRIVE_CMD(16'h0000,16'h5555,(16'h8000 + i),16'h0000,16'h5555,16'h0020,4'h2)
+      `CHIP_NORMAL
+      `LI_AOUT(16'hAAAA)
+      `DRIVE_CMD(16'hFFFF,16'hAAAA,(16'h8000 + i),16'hFFFF,16'hAAAA,16'hAAAA,4'h2)
+      `CHIP_NORMAL
+      `LI_AOUT(16'hAAAA)
+      `DRIVE_CMD(16'h0000,16'hFFFF,(16'h8000 + i),16'h0000,16'hFFFF,16'hAAAA,4'h2)
+      `CHIP_NORMAL
+      `LI_AOUT(16'hFFFF)
+      `DRIVE_CMD(16'hAAAA,16'h0000,(16'h8000 + i),16'hAAAA,16'h0000,16'hFFFF,4'h2)
+   end
+
+   //////////////////////////////////////////////////////////
+   // valid = 0
+   ///////////////////////////////////////////////////////////
+   $display("valid = 0");
+   for (logic [15:0] i = 0 ; i <16; i++ ) begin
+      `CHIP_NORMAL
+      `LI_AOUT(16'h0020)
+      `DRIVE_CMD_NO_OPSUB(16'h0000,16'h5555,(16'h0000 + i),16'h0000,16'h5555,16'h0020,4'h1)
+      `DISPLAY_STATE
+
+      `CHIP_NORMAL
+      `LI_AOUT(16'hAAAA)
+      `DRIVE_CMD_NO_OPSUB(16'hFFFF,16'hAAAA,(16'h0000 + i),16'hFFFF,16'hAAAA,16'hAAAA,4'h1)
+      `DISPLAY_STATE
+
+      `CHIP_NORMAL
+      `LI_AOUT(16'hAAAA)
+      `DRIVE_CMD_NO_OPSUB(16'h0000,16'hFFFF,(16'h0000 + i),16'h0000,16'hFFFF,16'hAAAA,4'h1)
+      `DISPLAY_STATE
+
+      `CHIP_NORMAL
+      `LI_AOUT(16'hFFFF)
+      `DRIVE_CMD_NO_OPSUB(16'hAAAA,16'h0000,(16'h0000 + i),16'hAAAA,16'h0000,16'hFFFF,4'h1)
+      `DISPLAY_STATE
+   end
+
+
+12 00
+14 01 (bottom)
+15 10 (top)
+16 11
+
+========== cwlee22 homework06 ==========
+
+Total:  3
+hw06_verichip6_Compiles = (1,1)
+hw06_verichip6_NoCwarns = (1,1)
+hw06_verichip6_NoRwarns = (1,1)
+hw06_verichip6_Correct = (0,27)
+
+reset state check failed: 0000000011111111
+normal state check failed: 0000000011111111
+overflow violation check failed: 0011
+track same violation check failed: 0000000001001100
+track export check failed: 0000000000000000
+track valid check failed: 0000000000000000
+
+========== cwlee22 homework06 ==========
+
+========== cwlee22 homework06 ==========
+
+Total:  3
+hw06_verichip6_Compiles = (1,1)
+hw06_verichip6_NoCwarns = (1,1)
+hw06_verichip6_NoRwarns = (1,1)
+hw06_verichip6_Correct = (0,27)
+
+reset state check failed: 0000000011111111
+normal state check failed: 0000000011111111
+overflow violation check failed: 0011
+track same violation check failed: 0000000010001100
+track export check failed: 0000000000000000
+
+========== cwlee22 homework06 ==========
+
+========== cwlee22 homework06 ==========
+
+Total:  3
+hw06_verichip6_Compiles = (1,1)
+hw06_verichip6_NoCwarns = (1,1)
+hw06_verichip6_NoRwarns = (1,1)
+hw06_verichip6_Correct = (0,27)
+
+reset state check failed: 0000000011111111
+overflow violation check failed: 0011
+track same violation check failed: 0000000001110100
+track export check failed: 0000000000000000
+track valid check failed: 0000000000000000
+
+========== cwlee22 homework06 ==========
+
+========== cwlee22 homework06 ==========
+
+Total:  3
+hw06_verichip6_Compiles = (1,1)
+hw06_verichip6_NoCwarns = (1,1)
+hw06_verichip6_NoRwarns = (1,1)
+hw06_verichip6_Correct = (0,27)
+
+reset state check failed: 0000000011111111
+overflow violation check failed: 0011
+track same violation check failed: 0000000010110100
+track export check failed: 0000000000000000
+
+========== cwlee22 homework06 ==========
