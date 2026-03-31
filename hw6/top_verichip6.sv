@@ -23,7 +23,7 @@
 `define CHECK_STATE(expected_state) \
    `READ_REG(VCHIP_STA_ADDR,1)      \
    if(data_out[3:0] != expected_state) begin   \
-         $write("Wrong state, expected state: %p, actual: ", expected_state);    \
+         $write("Bad state, expected state: %p, actual: ", expected_state);    \
    end if(data_out[3:0] == 4'h0) begin       \
          $display("reset");       \
    end else if(data_out[3:0] == 4'h1) begin       \
@@ -299,7 +299,23 @@ end
                                                                   \
       `CHECK_STATE(exp_state)                                     \
 
-
+   `define DRIVE_CMD_NO_OPSUB(left_val,right_val,opcode,expval_l, expval_r, expval_o, exp_state) \
+      `CHECK_RW(VCHIP_ALU_LEFT_ADDR,left_val,left_val,2'b11,1'b1)           \
+      `CHECK_RW(VCHIP_ALU_RIGHT_ADDR,right_val,right_val,2'b11,1'b1)      \
+      `CHECK_RW(VCHIP_CMD_ADDR,opcode,opcode,2'b11,1'b1)  \
+      wait(clk == 0); wait(clk == 1); wait(clk == 0); wait(clk == 1); wait(clk == 0); \
+                                                               \
+                                                                  \
+      `READ_REG(VCHIP_ALU_LEFT_ADDR,1'b1)                          \
+      `CHECK_VAL(expval_l)                                          \
+                                                                     \
+      `READ_REG(VCHIP_ALU_RIGHT_ADDR,1'b1)                          \
+      `CHECK_VAL(expval_r)                                          \
+                                                                     \
+      `READ_REG(VCHIP_ALU_OUT_ADDR,1'b1)                          \
+      `CHECK_VAL(expval_o)                                          \
+                                                                  \
+      `CHECK_STATE(exp_state)                                     \
 
 
 
@@ -375,158 +391,142 @@ initial begin
 
    export_disable = 0;
 
+   $display("Begining of rst section");
+
+   `CLEAR_ALL
+   `CHIP_RESET
+   `DISPLAY_STATE
+
+   // <RESET STATE> currently gets "reset state check failed: 0000000011111111"
+      //////////////////////////////////////////////////////////
+      //ALU NOP
+      ///////////////////////////////////////////////////////////
+      $display("NOP");
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'h0000,16'h5555,16'h8000,16'h0000,16'h5555,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8000,16'hFFFF,16'hAAAA,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'h5555,16'hFFFF,16'h8000,16'h5555,16'hFFFF,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'hAAAA,16'h0000,16'h8000,16'hAAAA,16'h0000,16'h0000,4'h0)
+      `DISPLAY_STATE
+
+      //////////////////////////////////////////////////////////
+      //ALU ADD
+      ///////////////////////////////////////////////////////////
+      $display("ADD");
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'h0000,16'h5555,16'h8001,16'h0000,16'h5555,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8001,16'hFFFF,16'hAAAA,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'h5555,16'hFFFF,16'h8001,16'h5555,16'hFFFF,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'hAAAA,16'h0000,16'h8001,16'hAAAA,16'h0000,16'h0000,4'h0)
+      `DISPLAY_STATE
+
+      //////////////////////////////////////////////////////////
+      //ALU SUB
+      ///////////////////////////////////////////////////////////
+      $display("SUB");
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'h5555,16'h5555,16'h8002,16'h5555,16'h5555,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8002,16'hFFFF,16'hAAAA,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'h0000,16'hFFFF,16'h8002,16'h0000,16'hFFFF,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'hAAAA,16'h0000,16'h8002,16'hAAAA,16'h0000,16'h0000,4'h0)
+      `DISPLAY_STATE
+
+      //////////////////////////////////////////////////////////
+      //ALU MOVE LEFT
+      ///////////////////////////////////////////////////////////
+      $display("MOVE LEFT");
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'h5555,16'h5555,16'h8003,16'h5555,16'h5555,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8003,16'hFFFF,16'hAAAA,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'h0000,16'hFFFF,16'h8003,16'h0000,16'hFFFF,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'hAAAA,16'h0000,16'h8003,16'hAAAA,16'h0000,16'h0000,4'h0)
+      `DISPLAY_STATE
+
+      //////////////////////////////////////////////////////////
+      //ALU MOVE RIGHT
+      ///////////////////////////////////////////////////////////
+      $display("MOVE RIGHT");
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'h5555,16'h5555,16'h8004,16'h5555,16'h5555,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8004,16'hFFFF,16'hAAAA,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'h0000,16'hFFFF,16'h8004,16'h0000,16'hFFFF,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'hAAAA,16'h0000,16'h8004,16'hAAAA,16'h0000,16'h0000,4'h0)
+      `DISPLAY_STATE
+
+      //////////////////////////////////////////////////////////
+      //SWAP
+      ///////////////////////////////////////////////////////////
+      $display("SWAP");
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'h5555,16'h5555,16'h8005,16'h5555,16'h5555,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8005,16'hFFFF,16'hAAAA,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'h0000,16'hFFFF,16'h8005,16'h0000,16'hFFFF,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'hAAAA,16'h0000,16'h8005,16'hAAAA,16'h0000,16'h0000,4'h0)
+      `DISPLAY_STATE
+
+      //////////////////////////////////////////////////////////
+      //ALU SHIFT LEFT 
+      ///////////////////////////////////////////////////////////
+      $display("SHIFT LEFT");
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'h5555,16'h0000,16'h8006,16'h5555,16'h0000,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8006,16'hFFFF,16'hAAAA,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'h0000,16'hFFFF,16'h8006,16'h0000,16'hFFFF,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'hAAAA,16'h0001,16'h8006,16'hAAAA,16'h0001,16'h0000,4'h0)
+      `DISPLAY_STATE
+
+      //////////////////////////////////////////////////////////
+      //ALU SHIFT RIGHT 
+      ///////////////////////////////////////////////////////////
+      $display("SHIFT RIGHT");
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'h5555,16'h0000,16'h8007,16'h5555,16'h0000,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8007,16'hFFFF,16'hAAAA,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'h0000,16'hFFFF,16'h8007,16'h0000,16'hFFFF,16'h0000,4'h0)
+      `LI_AOUT(16'h0000)
+      `DRIVE_CMD(16'hAAAA,16'h0001,16'h8007,16'hAAAA,16'h0001,16'h0000,4'h0)
+      `DISPLAY_STATE
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+   $display("Begining of nrm section");
+
    `CLEAR_ALL
    `CHIP_RESET
    `CHIP_NORMAL
    `DISPLAY_STATE
-
-   // <RESET STATE>
-      //////////////////////////////////////////////////////////
-      //ALU NOP
-      ///////////////////////////////////////////////////////////
-      // `LI_AOUT(16'h0000)
-      // `DRIVE_CMD(16'h0000,16'h5555,16'h8000,16'h0000,16'h5555,16'h0000,4'h1)
-      // `LI_AOUT(16'h5555)
-      // `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8000,16'hFFFF,16'hAAAA,16'h5555,4'h1)
-      // `LI_AOUT(16'hAAAA)
-      // `DRIVE_CMD(16'h5555,16'hFFFF,16'h8000,16'h5555,16'hFFFF,16'hAAAA,4'h1)
-      // `LI_AOUT(16'hFFFF)
-      // `DRIVE_CMD(16'hAAAA,16'h0000,16'h8000,16'hAAAA,16'h0000,16'hFFFF,4'h1)
-      // `DISPLAY_STATE
-
-   //    //////////////////////////////////////////////////////////
-   //    //ALU ADD
-   //    ///////////////////////////////////////////////////////////
-   //    `LI_AOUT(16'h0000)
-   //    `DRIVE_CMD(16'h0000,16'h5555,16'h8001,16'h0000,16'h5555,16'h5555,4'h1)
-   //    `LI_AOUT(16'h5555)
-   //    `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8001,16'hFFFF,16'hAAAA,16'hAAA9,4'h1)
-   //    `LI_AOUT(16'hAAAA)
-   //    `DRIVE_CMD(16'h5555,16'hFFFF,16'h8001,16'h5555,16'hFFFF,16'h5554,4'h1)
-   //    `LI_AOUT(16'hFFFF)
-   //    `DRIVE_CMD(16'hAAAA,16'h0000,16'h8001,16'hAAAA,16'h0000,16'hAAAA,4'h1)
-   //    `DISPLAY_STATE
-
-   //    //////////////////////////////////////////////////////////
-   //    //ALU SUB
-   //    ///////////////////////////////////////////////////////////
-   //    `LI_AOUT(16'h0020)
-   //    `DRIVE_CMD(16'h5555,16'h5555,16'h8002,16'h5555,16'h5555,16'h0000,4'h1)
-   //    `LI_AOUT(16'hAAAA)
-   //    `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8002,16'hFFFF,16'hAAAA,16'h5555,4'h1)
-   //    `LI_AOUT(16'hAAAA)
-   //    `DRIVE_CMD(16'h0000,16'hFFFF,16'h8002,16'h0000,16'hFFFF,16'h0001,4'h1)
-   //    `LI_AOUT(16'hFFFF)
-   //    `DRIVE_CMD(16'hAAAA,16'h0000,16'h8002,16'hAAAA,16'h0000,16'hAAAA,4'h1)
-   //    `DISPLAY_STATE
-
-   //    //////////////////////////////////////////////////////////
-   //    //ALU MOVE LEFT
-   //    ///////////////////////////////////////////////////////////
-   //    `LI_AOUT(16'h0020)
-   //    `DRIVE_CMD(16'h5555,16'h5555,16'h8003,16'h0020,16'h5555,16'h0020,4'h1)
-   //       `DISPLAY_STATE
-
-   //    `LI_AOUT(16'hAAAA)
-   //    `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8003,16'hAAAA,16'hAAAA,16'hAAAA,4'h1)
-   //    `DISPLAY_STATE
-
-   //    `LI_AOUT(16'hAAAA)
-   //    `DRIVE_CMD(16'h0000,16'hFFFF,16'h8003,16'hAAAA,16'hFFFF,16'hAAAA,4'h1)
-
-   //    `LI_AOUT(16'hFFFF)
-   //    `DRIVE_CMD(16'hAAAA,16'h0000,16'h8003,16'hFFFF,16'h0000,16'hFFFF,4'h1)
-   //       `DISPLAY_STATE
-
-   //    //////////////////////////////////////////////////////////
-   //    //ALU MOVE RIGHT
-   //    ///////////////////////////////////////////////////////////
-   //    `LI_AOUT(16'h0020)
-   //    `DRIVE_CMD(16'h5555,16'h5555,16'h8004,16'h5555,16'h0020,16'h0020,4'h1)
-   //       `DISPLAY_STATE
-
-   //    `LI_AOUT(16'hAAAA)
-   //    `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8004,16'hFFFF,16'hAAAA,16'hAAAA,4'h1)
-   //    `DISPLAY_STATE
-
-   //    `LI_AOUT(16'hAAAA)
-   //    `DRIVE_CMD(16'h0000,16'hFFFF,16'h8004,16'h0000,16'hAAAA,16'hAAAA,4'h1)
-
-   //    `LI_AOUT(16'hFFFF)
-   //    `DRIVE_CMD(16'hAAAA,16'h0000,16'h8004,16'hAAAA,16'hFFFF,16'hFFFF,4'h1)
-   //       `DISPLAY_STATE
-
-   //    //////////////////////////////////////////////////////////
-   //    //SWAP
-   //    ///////////////////////////////////////////////////////////
-   //    $display("swap");;
-   //    `LI_AOUT(16'h0020)
-   //    `DRIVE_CMD(16'h5555,16'h5555,16'h8005,16'h5555,16'h5555,16'h0020,4'h1)
-   //       `DISPLAY_STATE
-
-   //    `LI_AOUT(16'hAAAA)
-   //    `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8005,16'hAAAA,16'hFFFF,16'hAAAA,4'h1)
-   //    `DISPLAY_STATE
-
-   //    `LI_AOUT(16'hAAAA)
-   //    `DRIVE_CMD(16'h0000,16'hFFFF,16'h8005,16'hFFFF,16'h0000,16'hAAAA,4'h1)
-
-   //    `LI_AOUT(16'hFFFF)
-   //    `DRIVE_CMD(16'hAAAA,16'h0000,16'h8005,16'h0000,16'hAAAA,16'hFFFF,4'h1)
-   //       `DISPLAY_STATE
-
-   //    //////////////////////////////////////////////////////////
-   //    //ALU SHIFT LEFT 
-   //    ///////////////////////////////////////////////////////////
-   //    $display("SHIFT LEFT");
-   //    `LI_AOUT(16'h0020)
-   //    `DRIVE_CMD(16'h5555,16'h0000,16'h8006,16'h5555,16'h0000,16'h5555,4'h1)
-   //       `DISPLAY_STATE
-
-   //    $display("2");
-   //    `LI_AOUT(16'hAAAA)
-   //    `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8006,16'hFFFF,16'hAAAA,(16'hFFFF<<16'hAAAA),4'h1)
-   //    `DISPLAY_STATE
-
-   //    $display("3");
-   //    `LI_AOUT(16'hAAAA)
-   //    `DISPLAY_STATE
-   //    `DRIVE_CMD(16'h0000,16'hFFFF,16'h8006,16'h0000,16'hFFFF,(16'h0000<<16'hFFFF),4'h1)
-
-   //    $display("4");
-   //    `LI_AOUT(16'hFFFF)
-   //    `DRIVE_CMD(16'hAAAA,16'h0001,16'h8006,16'hAAAA,16'h0001,(16'hAAAA<<16'h0001),4'h1)
-   //       `DISPLAY_STATE
-
-   //    //////////////////////////////////////////////////////////
-   //    //ALU SHIFT RIGHT 
-   //    ///////////////////////////////////////////////////////////
-   //    $display("SHIFT LEFT");
-   //    `LI_AOUT(16'h0020)
-   //    `DRIVE_CMD(16'h5555,16'h0000,16'h8007,16'h5555,16'h0000,16'h5555,4'h1)
-   //       `DISPLAY_STATE
-
-   //    $display("2");
-   //    `LI_AOUT(16'hAAAA)
-   //    `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8007,16'hFFFF,16'hAAAA,(16'hFFFF>>16'hAAAA),4'h1)
-   //    `DISPLAY_STATE
-
-   //    $display("3");
-   //    `LI_AOUT(16'hAAAA)
-   //    `DISPLAY_STATE
-   //    `DRIVE_CMD(16'h0000,16'hFFFF,16'h8007,16'h0000,16'hFFFF,(16'h0000>>16'hFFFF),4'h1)
-
-   //    $display("4");
-   //    `LI_AOUT(16'hFFFF)
-   //    `DRIVE_CMD(16'hAAAA,16'h0001,16'h8007,16'hAAAA,16'h0001,(16'hAAAA>>16'h0001),4'h1)
-   //       `DISPLAY_STATE
-   //    end
 
 
    // <NORMAL STATE>
       //////////////////////////////////////////////////////////
       //ALU NOP
       ///////////////////////////////////////////////////////////
+      $display("NOP");
       `LI_AOUT(16'h0000)
       `DRIVE_CMD(16'h0000,16'h5555,16'h8000,16'h0000,16'h5555,16'h0000,4'h1)
       `LI_AOUT(16'h5555)
@@ -540,6 +540,7 @@ initial begin
       //////////////////////////////////////////////////////////
       //ALU ADD
       ///////////////////////////////////////////////////////////
+      $display("ADD");
       `LI_AOUT(16'h0000)
       `DRIVE_CMD(16'h0000,16'h5555,16'h8001,16'h0000,16'h5555,16'h5555,4'h1)
       `LI_AOUT(16'h5555)
@@ -553,7 +554,9 @@ initial begin
       //////////////////////////////////////////////////////////
       //ALU SUB
       ///////////////////////////////////////////////////////////
+      $display("SUB");
       `LI_AOUT(16'h0020)
+      `READ_REG(VCHIP_ALU_OUT_ADDR, 1'b1)
       `DRIVE_CMD(16'h5555,16'h5555,16'h8002,16'h5555,16'h5555,16'h0000,4'h1)
       `LI_AOUT(16'hAAAA)
       `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8002,16'hFFFF,16'hAAAA,16'h5555,4'h1)
@@ -566,57 +569,44 @@ initial begin
       //////////////////////////////////////////////////////////
       //ALU MOVE LEFT
       ///////////////////////////////////////////////////////////
+      $display("MOVE LEFT");
       `LI_AOUT(16'h0020)
       `DRIVE_CMD(16'h5555,16'h5555,16'h8003,16'h0020,16'h5555,16'h0020,4'h1)
-         `DISPLAY_STATE
-
       `LI_AOUT(16'hAAAA)
       `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8003,16'hAAAA,16'hAAAA,16'hAAAA,4'h1)
-      `DISPLAY_STATE
-
       `LI_AOUT(16'hAAAA)
       `DRIVE_CMD(16'h0000,16'hFFFF,16'h8003,16'hAAAA,16'hFFFF,16'hAAAA,4'h1)
-
       `LI_AOUT(16'hFFFF)
       `DRIVE_CMD(16'hAAAA,16'h0000,16'h8003,16'hFFFF,16'h0000,16'hFFFF,4'h1)
-         `DISPLAY_STATE
+      `DISPLAY_STATE
 
       //////////////////////////////////////////////////////////
       //ALU MOVE RIGHT
       ///////////////////////////////////////////////////////////
+      $display("MOVE RIGHT");
       `LI_AOUT(16'h0020)
       `DRIVE_CMD(16'h5555,16'h5555,16'h8004,16'h5555,16'h0020,16'h0020,4'h1)
-         `DISPLAY_STATE
-
       `LI_AOUT(16'hAAAA)
       `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8004,16'hFFFF,16'hAAAA,16'hAAAA,4'h1)
-      `DISPLAY_STATE
-
       `LI_AOUT(16'hAAAA)
       `DRIVE_CMD(16'h0000,16'hFFFF,16'h8004,16'h0000,16'hAAAA,16'hAAAA,4'h1)
-
       `LI_AOUT(16'hFFFF)
       `DRIVE_CMD(16'hAAAA,16'h0000,16'h8004,16'hAAAA,16'hFFFF,16'hFFFF,4'h1)
-         `DISPLAY_STATE
+      `DISPLAY_STATE
 
       //////////////////////////////////////////////////////////
       //SWAP
       ///////////////////////////////////////////////////////////
-      $display("swap");;
+      $display("SWAP");;
       `LI_AOUT(16'h0020)
       `DRIVE_CMD(16'h5555,16'h5555,16'h8005,16'h5555,16'h5555,16'h0020,4'h1)
-         `DISPLAY_STATE
-
       `LI_AOUT(16'hAAAA)
       `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8005,16'hAAAA,16'hFFFF,16'hAAAA,4'h1)
-      `DISPLAY_STATE
-
       `LI_AOUT(16'hAAAA)
       `DRIVE_CMD(16'h0000,16'hFFFF,16'h8005,16'hFFFF,16'h0000,16'hAAAA,4'h1)
-
       `LI_AOUT(16'hFFFF)
       `DRIVE_CMD(16'hAAAA,16'h0000,16'h8005,16'h0000,16'hAAAA,16'hFFFF,4'h1)
-         `DISPLAY_STATE
+      `DISPLAY_STATE
 
       //////////////////////////////////////////////////////////
       //ALU SHIFT LEFT 
@@ -624,71 +614,46 @@ initial begin
       $display("SHIFT LEFT");
       `LI_AOUT(16'h0020)
       `DRIVE_CMD(16'h5555,16'h0000,16'h8006,16'h5555,16'h0000,16'h5555,4'h1)
-         `DISPLAY_STATE
-
-      $display("2");
       `LI_AOUT(16'hAAAA)
       `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8006,16'hFFFF,16'hAAAA,(16'hFFFF<<16'hAAAA),4'h1)
-      `DISPLAY_STATE
-
-      $display("3");
       `LI_AOUT(16'hAAAA)
-      `DISPLAY_STATE
       `DRIVE_CMD(16'h0000,16'hFFFF,16'h8006,16'h0000,16'hFFFF,(16'h0000<<16'hFFFF),4'h1)
-
-      $display("4");
       `LI_AOUT(16'hFFFF)
       `DRIVE_CMD(16'hAAAA,16'h0001,16'h8006,16'hAAAA,16'h0001,(16'hAAAA<<16'h0001),4'h1)
-         `DISPLAY_STATE
+      `DISPLAY_STATE
 
       //////////////////////////////////////////////////////////
       //ALU SHIFT RIGHT 
       ///////////////////////////////////////////////////////////
-      $display("SHIFT LEFT");
+      $display("SHIFT RIGHT");
       `LI_AOUT(16'h0020)
       `DRIVE_CMD(16'h5555,16'h0000,16'h8007,16'h5555,16'h0000,16'h5555,4'h1)
-         `DISPLAY_STATE
-
-      $display("2");
       `LI_AOUT(16'hAAAA)
       `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8007,16'hFFFF,16'hAAAA,(16'hFFFF>>16'hAAAA),4'h1)
-      `DISPLAY_STATE
-
-      $display("3");
       `LI_AOUT(16'hAAAA)
-      `DISPLAY_STATE
       `DRIVE_CMD(16'h0000,16'hFFFF,16'h8007,16'h0000,16'hFFFF,(16'h0000>>16'hFFFF),4'h1)
-
-      $display("4");
       `LI_AOUT(16'hFFFF)
       `DRIVE_CMD(16'hAAAA,16'h0001,16'h8007,16'hAAAA,16'h0001,(16'hAAAA>>16'h0001),4'h1)
-         `DISPLAY_STATE
+      `DISPLAY_STATE
 
    // TODO have bad command with export_deisable = 1 as well
    //////////////////////////////////////////////////////////
    // bad command
    ///////////////////////////////////////////////////////////
    $display("BAD CMD");
-   for (int i =8; i <16; i++ ) begin
-   `CHIP_NORMAL
-   `LI_AOUT(16'h0020)
-   `DRIVE_CMD(16'h0000,16'h5555,(16'h8000 + i),16'h0000,16'h5555,16'h0020,4'h2)
-   `DISPLAY_STATE
-
-   `CHIP_NORMAL
-   `LI_AOUT(16'hAAAA)
-   `DRIVE_CMD(16'hFFFF,16'hAAAA,(16'h8000 + i),16'hFFFF,16'hAAAA,16'hAAAA,4'h2)
-   `DISPLAY_STATE
-
-   `CHIP_NORMAL
-   `LI_AOUT(16'hAAAA)
-   `DRIVE_CMD(16'h0000,16'hFFFF,(16'h8000 + i),16'h0000,16'hFFFF,16'hAAAA,4'h2)
-   `DISPLAY_STATE
-
-   `CHIP_NORMAL
-   `LI_AOUT(16'hFFFF)
-   `DRIVE_CMD(16'hAAAA,16'h0000,(16'h8000 + i),16'hAAAA,16'h0000,16'hFFFF,4'h2)
-   `DISPLAY_STATE
+   for (logic [15:0] i =8; i <16; i++ ) begin
+      `CHIP_NORMAL
+      `LI_AOUT(16'h0020)
+      `DRIVE_CMD(16'h0000,16'h5555,(16'h8000 + i),16'h0000,16'h5555,16'h0020,4'h2)
+      `CHIP_NORMAL
+      `LI_AOUT(16'hAAAA)
+      `DRIVE_CMD(16'hFFFF,16'hAAAA,(16'h8000 + i),16'hFFFF,16'hAAAA,16'hAAAA,4'h2)
+      `CHIP_NORMAL
+      `LI_AOUT(16'hAAAA)
+      `DRIVE_CMD(16'h0000,16'hFFFF,(16'h8000 + i),16'h0000,16'hFFFF,16'hAAAA,4'h2)
+      `CHIP_NORMAL
+      `LI_AOUT(16'hFFFF)
+      `DRIVE_CMD(16'hAAAA,16'h0000,(16'h8000 + i),16'hAAAA,16'h0000,16'hFFFF,4'h2)
    end
 
    //////////////////////////////////////////////////////////
@@ -696,25 +661,25 @@ initial begin
    ///////////////////////////////////////////////////////////
    $display("valid = 0");
    for (logic [15:0] i = 0 ; i <16; i++ ) begin
-   `CHIP_NORMAL
-   `LI_AOUT(16'h0020)
-   `DRIVE_CMD(16'h0000,16'h5555,(16'h0000 + i),16'h0000,16'h5555,16'h0020,4'h2)
-   `DISPLAY_STATE
+      `CHIP_NORMAL
+      `LI_AOUT(16'h0020)
+      `DRIVE_CMD_NO_OPSUB(16'h0000,16'h5555,(16'h0000 + i),16'h0000,16'h5555,16'h0020,4'h1)
+      `DISPLAY_STATE
 
-   `CHIP_NORMAL
-   `LI_AOUT(16'hAAAA)
-   `DRIVE_CMD(16'hFFFF,16'hAAAA,(16'h0000 + i),16'hFFFF,16'hAAAA,16'hAAAA,4'h2)
-   `DISPLAY_STATE
+      `CHIP_NORMAL
+      `LI_AOUT(16'hAAAA)
+      `DRIVE_CMD_NO_OPSUB(16'hFFFF,16'hAAAA,(16'h0000 + i),16'hFFFF,16'hAAAA,16'hAAAA,4'h1)
+      `DISPLAY_STATE
 
-   `CHIP_NORMAL
-   `LI_AOUT(16'hAAAA)
-   `DRIVE_CMD(16'h0000,16'hFFFF,(16'h0000 + i),16'h0000,16'hFFFF,16'hAAAA,4'h2)
-   `DISPLAY_STATE
+      `CHIP_NORMAL
+      `LI_AOUT(16'hAAAA)
+      `DRIVE_CMD_NO_OPSUB(16'h0000,16'hFFFF,(16'h0000 + i),16'h0000,16'hFFFF,16'hAAAA,4'h1)
+      `DISPLAY_STATE
 
-   `CHIP_NORMAL
-   `LI_AOUT(16'hFFFF)
-   `DRIVE_CMD(16'hAAAA,16'h0000,(16'h0000 + i),16'hAAAA,16'h0000,16'hFFFF,4'h2)
-   `DISPLAY_STATE
+      `CHIP_NORMAL
+      `LI_AOUT(16'hFFFF)
+      `DRIVE_CMD_NO_OPSUB(16'hAAAA,16'h0000,(16'h0000 + i),16'hAAAA,16'h0000,16'hFFFF,4'h1)
+      `DISPLAY_STATE
    end
 
  
