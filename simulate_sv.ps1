@@ -36,12 +36,12 @@ run ${time}us; quit -f
 
 vsim -c -do $do
 
+Write-Host "`n`ngrep 'bad'" -ForegroundColor Magenta -NoNewline
+Select-String -Path sim.log -Pattern "bad" | Out-String | Write-Host -ForegroundColor Red
 Write-Host "`n`ngrep 'error'" -ForegroundColor Magenta -NoNewline
 Select-String -Path sim.log -Pattern "error" | Out-String | Write-Host -ForegroundColor Cyan
 Write-Host "grep 'warning'" -ForegroundColor Magenta -NoNewline
 Select-String -Path sim.log -Pattern "warning" | Out-String | Write-Host -ForegroundColor Cyan
-Write-Host "`n`ngrep 'bad'" -ForegroundColor Magenta -NoNewline
-Select-String -Path sim.log -Pattern "bad" | Out-String | Write-Host -ForegroundColor Red
 
 $timer.Stop()
 Write-Host ("Total runtime: {0}" -f $timer.Elapsed)
