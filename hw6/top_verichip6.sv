@@ -359,6 +359,7 @@ localparam VCHIP_ALU_SWA   = 16'h0005;
 localparam VCHIP_ALU_SHL   = 16'h0006;
 localparam VCHIP_ALU_SHR   = 16'h0007;
 
+logic pp = 0;
 
 string reg_names[7] = {
    "vers",
@@ -415,6 +416,7 @@ initial begin
       ///////////////////////////////////////////////////////////
       $display("ADD");
   //`LI_AOUT(16'h0001)
+
       `DRIVE_CMD(16'h0001,16'h5555,16'h8001,16'h0001,16'h5555,16'h0000,4'h0)
      // `LI_AOUT(16'h0000)
       `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8001,16'hFFFF,16'hAAAA,16'h0000,4'h0)
@@ -553,19 +555,20 @@ initial begin
       //ALU NOP
       ///////////////////////////////////////////////////////////
       $display("NOP");
-      `LI_AOUT(16'h0005)
-      `DRIVE_CMD(16'h0000,16'h5555,16'h8000,16'h0000,16'h5555,((export_disable) ? (16'h0000) : (16'h0001) ),4'h1)
+      `CHIP_NORMAL
+      `LI_AOUT(16'h0001)
+      `DRIVE_CMD(16'h0000,16'h5555,16'h8000,16'h0000,16'h5555,((export_disable) ? (16'h0001) : (16'h0001) ),4'h1)
       `CHIP_NORMAL
       `LI_AOUT(16'h0001)
       $display("1");
-      `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8000,16'hFFFF,16'hAAAA,((export_disable) ? (16'h0000) : (16'h0001) ),4'h1)
+      `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8000,16'hFFFF,16'hAAAA,((export_disable) ? (16'h0001) : (16'h0001) ),4'h1)
       `CHIP_NORMAL
       `LI_AOUT(16'h0001)
       $display("2");
-      `DRIVE_CMD(16'h5555,16'hFFFF,16'h8000,16'h5555,16'hFFFF,((export_disable) ? (16'h0000) : (16'h0001) ),4'h1)
+      `DRIVE_CMD(16'h5555,16'hFFFF,16'h8000,16'h5555,16'hFFFF,((export_disable) ? (16'h0001) : (16'h0001) ),4'h1)
       `CHIP_NORMAL
       `LI_AOUT(16'h0001)
-      `DRIVE_CMD(16'hAAAA,16'h0000,16'h8000,16'hAAAA,16'h0000,((export_disable) ? (16'h0000) : (16'h0001) ),4'h1)
+      `DRIVE_CMD(16'hAAAA,16'h0000,16'h8000,16'hAAAA,16'h0000,((export_disable) ? (16'h0001) : (16'h0001) ),4'h1)
       `CHIP_NORMAL
       `DISPLAY_STATE
 
@@ -573,21 +576,28 @@ initial begin
       //ALU ADD
       ///////////////////////////////////////////////////////////
       $display("ADD");
+      if (export_disable == 1) begin
+         pp = 1;
+      end 
       `CHIP_NORMAL
       `LI_AOUT(16'h0001)
-      `DRIVE_CMD(16'h0000,16'h5555,16'h8001,16'h0000,16'h5555,((export_disable) ? (16'h0000) : (16'h5555) ),4'h1)
+      `DRIVE_CMD(16'h0000,16'h5555,16'h8001,16'h0000,16'h5555,((export_disable) ? (16'h5555) : (16'h5555) ),4'h1)
       `CHIP_NORMAL
       `LI_AOUT(16'h0001)
       `CHIP_NORMAL
-      `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8001,16'hFFFF,16'hAAAA,((export_disable) ? (16'h0000) : (16'hAAA9) ),4'h1)
+      `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8001,16'hFFFF,16'hAAAA,((export_disable) ? (16'hAAA9) : (16'hAAA9) ),4'h1)
+      `DISPLAY_STATE
       `CHIP_NORMAL
       `LI_AOUT(16'h0001)
-      `DRIVE_CMD(16'h5555,16'hFFFF,16'h8001,16'h5555,16'hFFFF,((export_disable) ? (16'h0000) : (16'h5554) ),4'h1)
+      `DRIVE_CMD(16'h5555,16'hFFFF,16'h8001,16'h5555,16'hFFFF,((export_disable) ? (16'h5554) : (16'h5554) ),4'h1)
       `CHIP_NORMAL
       `LI_AOUT(16'h0001)
-      `DRIVE_CMD(16'hAAAA,16'h0000,16'h8001,16'hAAAA,16'h0000,((export_disable) ? (16'h0000) : (16'hAAAA) ),4'h1)
+      `DRIVE_CMD(16'hAAAA,16'h0000,16'h8001,16'hAAAA,16'h0000,((export_disable) ? (16'hAAAA) : (16'hAAAA) ),4'h1)
       `CHIP_NORMAL
       `DISPLAY_STATE
+      `DRIVE_CMD(16'h7FFF,16'h0002,16'h8001,16'h7FFF,16'h0002,((export_disable) ? (16'h8001) : (16'h8001) ),4'h1)
+      `DISPLAY_STATE
+      `CHIP_NORMAL
 
       //////////////////////////////////////////////////////////
       //ALU SUB NORMAL
@@ -595,16 +605,17 @@ initial begin
       $display("SUB");
       // `LI_AOUT(16'h0001)
       `READ_REG(VCHIP_ALU_OUT_ADDR, 1'b1)
-      `DRIVE_CMD(16'h5555,16'h0001,16'h8002,16'h5555,16'h0001,((export_disable) ? (16'h0000) : (16'h0000) ),4'h1)
+      `DRIVE_CMD(16'h5555,16'h0001,16'h8002,16'h5555,16'h0001,((export_disable) ? (16'h5554) : (16'h5554) ),4'h1)
       `CHIP_NORMAL
       `LI_AOUT(16'h0001)
-      `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8002,16'hFFFF,16'hAAAA,((export_disable) ? (16'h0000) : (16'h5555) ),4'h1)
+      `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8002,16'hFFFF,16'hAAAA,((export_disable) ? (16'h5555) : (16'h5555) ),4'h1)
       `CHIP_NORMAL
       // `LI_AOUT(16'h0001)
-      `DRIVE_CMD(16'h0001,16'hFFFF,16'h8002,16'h0000,16'hFFFF,((export_disable) ? (16'h0000) : (16'h0001) ),4'h1)
+      `DRIVE_CMD(16'h0005,16'hFFFF,16'h8002,16'h0005,16'hFFFF,((export_disable) ? (16'h0006) : (16'h0006) ),4'h1)
+      `DISPLAY_STATE
       `CHIP_NORMAL
       // `LI_AOUT(16'h0001)
-      `DRIVE_CMD(16'hAAAA,16'h5555,16'h8002,16'hAAAA,16'h0000,((export_disable) ? (16'h0000) : (16'hAAAA) ),4'h1)
+      `DRIVE_CMD(16'hAAAA,16'h5555,16'h8002,16'hAAAA,16'h0000,((export_disable) ? (16'hAAAA) : (16'hAAAA) ),4'h1)
       `CHIP_NORMAL
       `DISPLAY_STATE
       `CHIP_NORMAL
