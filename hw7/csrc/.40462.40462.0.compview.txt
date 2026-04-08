@@ -1,0 +1,9 @@
+{"vcs1":{"timestamp_begin":1775511502.252050206, "rt":37.96, "ut":3.63, "st":1.01}}
+{"vcselab":{"timestamp_begin":1775511540.298520567, "rt":8.77, "ut":0.43, "st":0.18}}
+{"link":{"timestamp_begin":1775511549.310233791, "rt":33.66, "ut":0.27, "st":1.90}}
+{"SNPS_VCS_INTERNAL_ROOT_START_TIME": 1775511501.276061084}
+{"VCS_COMP_START_TIME": 1775511501.276061084}
+{"VCS_COMP_END_TIME": 1775511588.248072845}
+{"VCS_USER_OPTIONS": "+lint=PCWM +lint=UV +lint=IRIMW +lint=FIAAS +lint=CAWM-L +lint=ERASM-L +warn=all -sverilog +vcs+lic+wait +libext+.v -full64 +v2k -timescale=1ps/1ps -LDFLAGS -Wl,--no-as-needed -debug_access+all -cm line+cond+tgl+fsm -cm_hier cm_hier.txt -cm_fsmcfg fsm_config.txt -ld gcc -top top_verichip7 -o simv_verichip7 verichip7_cov.sv top_verichip7.sv verichip7.sv verichip7_binds.sv"}
+{"vcs1": {"peak_mem": 375648}}
+{"stitch_vcselab": {"peak_mem": 239408}}

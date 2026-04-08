@@ -1,0 +1,8 @@
+<Command name="schRTLInfo"  delimiter="."  >
+<RTLBlock >
+<RTLInfo   name="state_0"  type="2"  fileName="verichip7.sv"  >
+    <Seg beginLine="95"  endLine="155"  />
+  </RTLInfo>
+<Instance name="top_verichip7.verichip"  />
+</RTLBlock>
+</Command>
