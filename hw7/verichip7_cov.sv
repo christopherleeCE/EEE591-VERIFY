@@ -68,22 +68,69 @@ cx_colors: cross cp_gold, cp_maroon;
 endgroup
 colors colors_i = new();
 
+
 covergroup alu_regs @ ( negedge clk);
 cp_alu_left: coverpoint alu_left { bins range[4] = {[0:$]}; }
 cp_alu_right: coverpoint alu_right { bins range[4] = {[0:$]}; }
-cp_cmd: coverpoint cmd;
-cp_valid: coverpoint valid
-{
-bins not_valid = { 0 };
-bins valid = { 1 };
-}
-cp_state: coverpoint state;
+cp_cmd: coverpoint cmd {bins non = { VCHIP_CMD_NON };
+            bins add = { VCHIP_CMD_ADD };
+            bins sub = { VCHIP_CMD_SUB };
+            bins mvl = { VCHIP_CMD_MVL };
+            bins mvr = { VCHIP_CMD_MVR };
+            bins swa = { VCHIP_CMD_SWA };
+            bins shl = { VCHIP_CMD_SHL };
+            bins shr = { VCHIP_CMD_SHR };
+            bins undefined = { [8:15] };}
+cp_valid: coverpoint valid {bins not_valid = { 0 };
+                bins valid = { 1 };}
+
+cp_norm_valid: coverpoint valid {bins not_valid = { 0 };
+                bins valid = { 1 };}
+cp_reset_valid: coverpoint valid {bins not_valid = { 0 };
+                bins valid = { 1 };}
+cp_state: coverpoint state{bins reset = { VCHIP_STATE_RESET };
+                bins normal = { VCHIP_STATE_NORM };
+                bins error = { VCHIP_STATE_ERR };
+                bins exp_vio = { VCHIP_STATE_EXP };}
+cx_norm_cmd_valid: cross cp_cmd, cp_norm_valid;
+cx_reset_cmd_valid: cross cp_cmd, cp_reset_valid;
 cx_cmd_valid: cross cp_cmd, cp_valid;
 cx_cmd_valid_state: cross cp_cmd, cp_valid,cp_state;
 cx_alu_lr: cross cp_alu_left, cp_alu_right;
 endgroup // alu_regs
 
+alu_regs alu_regs_i = new();
 
+covergroup inters @(negedge clk);
+cp_int1: coverpoint interrupt_1;
+cp_int2: coverpoint interrupt_2;
+cx_ints: cross cp_int1, cp_int2;
+endgroup
+inters inters_i = new();
+
+covergroup bus_interface @(posedge clk);
+cp_cs: coverpoint chip_select {bins non_selected = {0};
+                               bins selected = {1};}
+cp_rw: coverpoint rw_ {bins write = {0};
+                       bins read = {1};}
+cp_bytes: coverpoint byte_en{bins neither = {0};
+                             bins byte0 = {1};
+                             bins byte1 = {2};
+                             bins both = {3};}
+cp_data_in: coverpoint data_in{bins range[8] = {[0:$]};}
+cp_address: coverpoint address{bins ver = {VCHIP_ADDR_VER};
+                               bins sta = {VCHIP_ADDR_STA};
+                               bins cmd = {VCHIP_ADDR_CMD};
+                               bins con = {VCHIP_ADDR_CON};
+                               bins lft = {VCHIP_ADDR_LFT};
+                               bins rgt = {VCHIP_ADDR_RGT};
+                               bins alu = {VCHIP_ADDR_ALU};}
+
+cx_cs_rw_be: cross cp_cs, cp_rw, cp_bytes;
+cx_cs_rw_add: cross cp_cs, cp_rw, cp_address;
+endgroup
+
+bus_interface bus_interface_i = new();
 //cp_state: coverpoint state
 //{
 //bins reset = { VCHIP_STATE_RESET };
@@ -104,6 +151,5 @@ endgroup // alu_regs
 //bins undefined = { [8:15] };
 //}
 
-alu_regs alu_regs_i = new();
 
 endmodule // verichip7_cov
