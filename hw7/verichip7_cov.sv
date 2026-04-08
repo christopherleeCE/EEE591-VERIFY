@@ -60,5 +60,50 @@ localparam VCHIP_LAST_EXP_CMD = 2;
 
 // Your covergroups go here!
 
-endmodule // verichip7_cov
 
+covergroup colors @ ( posedge clk);
+cp_gold: coverpoint gold;
+cp_maroon: coverpoint maroon;
+cx_colors: cross cp_gold, cp_maroon;
+endgroup
+colors colors_i = new();
+
+covergroup alu_regs @ ( negedge clk);
+cp_alu_left: coverpoint alu_left { bins range[4] = {[0:$]}; }
+cp_alu_right: coverpoint alu_right { bins range[4] = {[0:$]}; }
+cp_cmd: coverpoint cmd;
+cp_valid: coverpoint valid
+{
+bins not_valid = { 0 };
+bins valid = { 1 };
+}
+cp_state: coverpoint state;
+cx_cmd_valid: cross cp_cmd, cp_valid;
+cx_cmd_valid_state: cross cp_cmd, cp_valid,cp_state;
+cx_alu_lr: cross cp_alu_left, cp_alu_right;
+endgroup // alu_regs
+
+
+//cp_state: coverpoint state
+//{
+//bins reset = { VCHIP_STATE_RESET };
+//bins normal = { VCHIP_STATE_NORM };
+//bins error = { VCHIP_STATE_ERR };
+//bins exp_vio = { VCHIP_STATE_EXP };
+//}
+//cp_cmd: coverpoint cmd
+//{
+//bins non = { VCHIP_CMD_NON };
+//bins add = { VCHIP_CMD_ADD };
+//bins sub = { VCHIP_CMD_SUB };
+//bins mvl = { VCHIP_CMD_MVL };
+//bins mvr = { VCHIP_CMD_MVR };
+//bins swa = { VCHIP_CMD_SWA };
+//bins shl = { VCHIP_CMD_SHL };
+//bins shr = { VCHIP_CMD_SHR };
+//bins undefined = { [8:15] };
+//}
+
+alu_regs alu_regs_i = new();
+
+endmodule // verichip7_cov
