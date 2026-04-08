@@ -1,0 +1,32 @@
+{
+    "std": [
+        "std",
+        "reYIK",
+        "module",
+        1
+    ],
+    "verichip7_cov": [
+        "verichip7_cov",
+        "na3KP",
+        "module",
+        2
+    ],
+    "top_verichip7": [
+        "top_verichip7",
+        "myeYS",
+        "module",
+        3
+    ],
+    "verichip7": [
+        "verichip7",
+        "MZZEu",
+        "module",
+        4
+    ],
+    "...MASTER...": [
+        "SIM",
+        "amcQw",
+        "module",
+        5
+    ]
+}

@@ -1,0 +1,248 @@
+global coverage_group 0 verichip7_cov::colors __coverage_colors unused_colors_loop_label verichip7_cov 0 1 0 0 0  ( 0 
+)
+ 1 1
+ 0 69 /afs/asu.edu/users/n/m/a/nmarta/eee598sdm/homework07/verichip7_cov.sv
+ 64 0 0 0 0 0 0 0 0  1
+0
+26 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0 0
+ 0
+ 0 0
+ 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+0
+0
+0
+64
+0
+ 0
+
+2
+0
+1
+0
+ 7 cp_gold 65 0 0 0 0 0 31 colors::verichip7_cov_colors_fn 31 colors::verichip7_cov_colors_fn 0 0 0 0 0 0 0 0 0 0 0 -1 0 0 -1 0 0 0 -1 2 1 0 0 0 0 2 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 9 cp_maroon 66 0 0 0 0 0 33 colors::verichip7_cov_colors_fn_0 33 colors::verichip7_cov_colors_fn_0 0 0 0 0 0 0 0 0 0 0 0 -1 0 0 -1 0 0 0 -1 2 1 0 0 0 0 2 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 9 cx_colors 0 67 0 0 -1 0 0 0 0 2 0 1 -1 0 0 0
+ 0
+ 0
+ 0
+ 0 0
+ 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+end_coverage_group
+global coverage_group 0 verichip7_cov::alu_regs __coverage_alu_regs unused_alu_regs_loop_label verichip7_cov 0 1 0 0 0  ( 0 
+)
+ 0 71 0 0 0 0 0 0 0 0  1
+0
+26 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0 0
+ 0
+ 0 0
+ 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+0
+0
+0
+64
+0
+ 0
+
+5
+0
+3
+0
+ 11 cp_alu_left 72 0 0 0 0 0 35 alu_regs::verichip7_cov_alu_regs_fn 35 alu_regs::verichip7_cov_alu_regs_fn 0 0 0 0 0 0 0 0 0 0 0 -1 0 0 -1 0 0 0 -1 2 16 0 0 0 0 2 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 1 1 1 1 0 1 1 5 range 72 0 0 1 0 0 0 0 0 0 0 0 0 0 37 alu_regs::verichip7_cov_alu_regs_fn_0 0 -1 0 0 -1 0 0 1 1 1 37 alu_regs::verichip7_cov_alu_regs_fn_1 0 37 alu_regs::verichip7_cov_alu_regs_fn_2 0 0 0 0 0
+ 0
+
+ 12 cp_alu_right 73 0 0 0 0 0 37 alu_regs::verichip7_cov_alu_regs_fn_3 37 alu_regs::verichip7_cov_alu_regs_fn_3 0 0 0 0 0 0 0 0 0 0 0 -1 0 0 -1 0 0 0 -1 2 16 0 0 0 0 2 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 1 1 1 1 0 1 1 5 range 73 0 0 1 0 0 0 0 0 0 0 0 0 0 37 alu_regs::verichip7_cov_alu_regs_fn_0 0 -1 0 0 -1 0 0 1 1 1 37 alu_regs::verichip7_cov_alu_regs_fn_1 0 37 alu_regs::verichip7_cov_alu_regs_fn_2 0 0 0 0 0
+ 0
+
+ 6 cp_cmd 74 0 0 0 0 0 37 alu_regs::verichip7_cov_alu_regs_fn_4 37 alu_regs::verichip7_cov_alu_regs_fn_4 0 0 0 0 0 0 0 0 0 0 0 -1 0 0 -1 0 0 0 -1 2 4 0 0 0 0 2 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 8 cp_valid 76 0 0 0 0 0 37 alu_regs::verichip7_cov_alu_regs_fn_5 37 alu_regs::verichip7_cov_alu_regs_fn_5 0 0 0 0 0 0 0 0 0 0 0 -1 0 0 -1 0 0 0 -1 2 1 0 0 0 0 2 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 2 1 1 0 0 1 1 9 not_valid 77 0 0 1 0 0 0 0 0 0 0 0 0 0 -1 0 0 -1 0 0 1 1 1 37 alu_regs::verichip7_cov_alu_regs_fn_6 0 0 0 0 0 0 0
+ 0
+ 1 1 0 0 1 1 5 valid 78 0 0 1 0 0 0 0 0 0 0 0 0 0 -1 0 0 -1 0 0 1 1 1 37 alu_regs::verichip7_cov_alu_regs_fn_7 0 0 0 0 0 0 0
+ 0
+
+ 8 cp_state 80 0 0 0 0 0 37 alu_regs::verichip7_cov_alu_regs_fn_8 37 alu_regs::verichip7_cov_alu_regs_fn_8 0 0 0 0 0 0 0 0 0 0 0 -1 0 0 -1 0 0 0 -1 2 4 0 0 0 0 2 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 12 cx_cmd_valid 0 81 0 0 -1 0 0 0 0 2 2 3 -1 0 0 0
+ 0
+ 0
+ 0
+ 0 0
+ 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 18 cx_cmd_valid_state 0 82 0 0 -1 0 0 0 0 3 2 3 4 -1 0 0 0
+ 0
+ 0
+ 0
+ 0 0
+ 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 9 cx_alu_lr 0 83 0 0 -1 0 0 0 0 2 0 1 -1 0 0 0
+ 0
+ 0
+ 0
+ 0 0
+ 0 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+end_coverage_group

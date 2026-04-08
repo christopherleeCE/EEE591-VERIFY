@@ -1,0 +1,135 @@
+0
+55
++itf+/usr/local/synopsys/vcs_2022.06/linux64/lib/vcsdp_lite.tab
++libext+.v
++lint=CAWM-L
++lint=ERASM-L
++lint=FIAAS
++lint=IRIMW
++lint=PCWM
++lint=UV
++v2k
++vcs+lic+wait
++vcsd1
++vpi
++warn=all
+-Mamsrun=
+-Masflags=
+-Mcc=gcc
+-Mcfl= -pipe -fPIC -O -I/usr/local/synopsys/vcs_2022.06/include
+-Mcplusplus=g++
+-Mcrt0=
+-Mcrtn=
+-Mcsrc=
+-Mexternalobj=
+-Mldflags= -Wl,--no-as-needed -rdynamic
+-Mloader=gcc
+-Mobjects= /usr/local/synopsys/vcs_2022.06/linux64/lib/libvirsim.so /usr/local/synopsys/vcs_2022.06/linux64/lib/liberrorinf.so /usr/local/synopsys/vcs_2022.06/linux64/lib/libsnpsmalloc.so /usr/local/synopsys/vcs_2022.06/linux64/lib/libvfs.so
+-Mout=simv_verichip7
+-Msaverestoreobj=/usr/local/synopsys/vcs_2022.06/linux64/lib/vcs_save_restore_new.o
+-Msyslibs=/usr/local/synopsys/verdi_2022.06/verdi/T-2022.06-SP2-1//share/PLI/VCS/LINUX64/pli.a -ldl
+-Mvcsaceobjs=
+-Mxcflags= -pipe -fPIC -I/usr/local/synopsys/vcs_2022.06/include
+-Mxllcflags=
+-P
+-cm
+-cm_fsmcfg
+-cm_hier
+-debug_access+all
+-fsdb
+-full64
+-gen_obj
+-o simv_verichip7
+-picarchive
+-sverilog
+-timescale=1ps/1ps
+-top
+/usr/local/synopsys/vcs_2022.06/linux64/bin/vcs1
+line+cond+tgl+fsm
+cm_hier.txt
+fsm_config.txt
+top_verichip7
+simv_verichip7
+/usr/local/synopsys/verdi_2022.06/verdi/T-2022.06-SP2-1//share/PLI/VCS/LINUX64/verdi.tab
+verichip7_cov.sv
+top_verichip7.sv
+verichip7.sv
+verichip7_binds.sv
+59
+XDG_SESSION_ID=30641
+XDG_RUNTIME_DIR=/run/user/3213219
+VMR_MODE_FLAG=64
+VERDI_HOME=/usr/local/synopsys/verdi_2022.06/verdi/T-2022.06-SP2-1/
+VENDOR=unknown
+VCS_PATHMAP_PRELOAD_DONE=1
+VCS_MX_HOME_INTERNAL=1
+VCS_MODE_FLAG=64
+VCS_HOME=/usr/local/synopsys/vcs_2022.06/
+VCS_EXEC_DONE=1
+VCS_DEPTH=0
+VCS_ARG_ADDED_FOR_TMP=1
+VCS_ARCH=linux64
+UNAME=/bin/uname
+TOOL_HOME=/usr/local/synopsys/vcs_2022.06/linux64
+SYNOPSYS=/usr/local/synopsys/starrc_2015.06/linux64/syn/
+STROOT=/usr/local/synopsys/sentaurus_2022.12/sentaurus/U-2022.12-SP1
+SSH_TTY=/dev/pts/8
+SSH_CONNECTION=68.104.144.244 60393 129.219.4.23 22
+SSH_CLIENT=68.104.144.244 60393 22
+SNPS_VCS_CLANG_PATH=/usr/local/synopsys/vcs_2022.06//linux64/clang
+SNPS_INTERNAL_VCS_LINUX_OS=linux
+SIM_ENGINE=synopsys
+SIMUCAD_LICENSE_FILE=27050@enlicense7.eas.asu.edu
+SFLM_FLEXLM=1
+SCRNAME=vcs
+SCRIPT_NAME=vcs
+REMOTEHOST=68.104.144.244
+QT_PLUGIN_PATH=/usr/lib64/kde4/plugins:/usr/lib/kde4/plugins
+QT_GRAPHICSSYSTEM_CHECKED=1
+QTLIB=/usr/lib64/qt-3.3/lib
+QTINC=/usr/lib64/qt-3.3/include
+QTDIR=/usr/lib64/qt-3.3
+OVA_UUM=0
+OS_LDFLAGS=
+OSTYPE=linux
+MMSIM=/usr/local/cadence/MMSIM141
+MGLS_LICENSE_FILE=1717@enlicense4.eas.asu.edu
+MFLAGS=
+MAKELEVEL=1
+MAKEFLAGS=
+LESSOPEN=||/usr/bin/lesspipe.sh %s
+LC_ALL=C
+KRB5CCNAME=KEYRING:persistent:3213219
+KDEDIRS=/usr
+IC=/usr/local/cadence/IC617
+HPEESOF_DIR=/usr/local/agilent/ADS2016_01
+HOSTTYPE=x86_64-linux
+GROUP=nmarta
+CDS_Netlisting_Mode=Analog
+CDS_LOAD_ENV=addCWD
+CDS_LIC_FILE=5280@enlicense4.eas.asu.edu
+CDS_INST_DIR=/usr/local/cadence
+CDS_IBM=/usr/local/cadence/IC617
+CDS=/usr/local/cadence
+CDK_DIR=/usr/local/cadence/NCSU/ncsu-cdk-1.6.0.beta
+ANSOFTHOME=/usr/local/AnsysEM/AnsysEM15.0
+AGILEESOFD_LICENSE_FILE=28000@enlicense7.eas.asu.edu
+ADS_DIR=/usr/local/agilent/ADS2016_01
+0
+0
+8
+1768125154 verichip7_binds.sv
+1768125200 verichip7.sv
+1775277660 top_verichip7.sv
+1775616810 verichip7_cov.sv
+1674718883 /usr/local/synopsys/vcs_2022.06//include/cm_vcsd.tab
+1673520352 /usr/local/synopsys/verdi_2022.06/verdi/T-2022.06-SP2-1//share/PLI/VCS/LINUX64/verdi.tab
+1768125133 cm_hier.txt
+1674705950 /usr/local/synopsys/vcs_2022.06/linux64/lib/vcsdp_lite.tab
+4
+1674707991 /usr/local/synopsys/vcs_2022.06/linux64/lib/libvirsim.so
+1674707009 /usr/local/synopsys/vcs_2022.06/linux64/lib/liberrorinf.so
+1674706922 /usr/local/synopsys/vcs_2022.06/linux64/lib/libsnpsmalloc.so
+1674707006 /usr/local/synopsys/vcs_2022.06/linux64/lib/libvfs.so
+1775618404 simv_verichip7.daidir
+-1 partitionlib

@@ -14,7 +14,7 @@ SYNS = $(patsubst top%,syn%.log,$(TOP))
 ############################################
 
 VCS_CC ?= gcc
-COMPILER := vlog
+COMPILER := vcs
 
 VERILOG_LINT_FLAGS :=  +lint=PCWM         \
                        +lint=UV           \

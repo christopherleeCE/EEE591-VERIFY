@@ -1,0 +1,4 @@
+\$unit::top_verichip7.sv::verichip7.sv...@3008216865 00
+top_verichip700
+top_verichip7.verichip230
+top_verichip7.verichip.verichip7_cov00
