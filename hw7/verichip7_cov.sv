@@ -84,11 +84,11 @@ cp_cmd: coverpoint cmd {bins non = { VCHIP_CMD_NON };
 cp_valid: coverpoint valid {bins not_valid = { 0 };
                 bins valid = { 1 };}
 
-cp_norm_valid: coverpoint valid {bins not_valid = { 0 };
+cp_norm_valid: coverpoint valid iff ( state == VCHIP_STATE_NORM ) {bins not_valid = { 0 };
                 bins valid = { 1 };}
-cp_reset_valid: coverpoint valid {bins not_valid = { 0 };
+cp_reset_valid: coverpoint valid iff ( state == VCHIP_STATE_RESET ) {bins not_valid = { 0 };
                 bins valid = { 1 };}
-cp_state: coverpoint state{bins reset = { VCHIP_STATE_RESET };
+cp_state: coverpoint state {bins reset = { VCHIP_STATE_RESET };
                 bins normal = { VCHIP_STATE_NORM };
                 bins error = { VCHIP_STATE_ERR };
                 bins exp_vio = { VCHIP_STATE_EXP };}
@@ -118,7 +118,7 @@ cp_bytes: coverpoint byte_en{bins neither = {0};
                              bins byte1 = {2};
                              bins both = {3};}
 cp_data_in: coverpoint data_in{bins range[8] = {[0:$]};}
-cp_address: coverpoint address{bins ver = {VCHIP_ADDR_VER};
+cp_address: coverpoint address iff (rw_ && chip_select == 1){bins ver = {VCHIP_ADDR_VER};
                                bins sta = {VCHIP_ADDR_STA};
                                bins cmd = {VCHIP_ADDR_CMD};
                                bins con = {VCHIP_ADDR_CON};
