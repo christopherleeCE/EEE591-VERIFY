@@ -1,3 +1,10 @@
+///////////////////////////////////////////
+// Christopher Lee; Nick Marta; Andy Cox V
+// EEE598: Digital Verification & Test
+// Dr. Steven Millman
+// Spring 2026
+// 10 APR 2026
+
 module verichip7_cov (input logic clk,                       // system clock
                       input logic rst_b,                     // chip reset
                       input logic export_disable,            // disable features
