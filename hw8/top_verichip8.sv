@@ -447,9 +447,9 @@ logic [15:0] expvi_reg_values [0:6];
 logic [15:0] scratch;
 
 initial begin
-   `include "hw4.sv"
-   `include "hw5.sv"
-   `include "hw6.sv"
+   `include "hw4.vh"
+   `include "hw5.vh"
+   `include "hw6.vh"
 
    wait(clk == 1'b0);   // MUST LEAVE SO GRADING WORKS!
    wait(clk == 1'b1);
