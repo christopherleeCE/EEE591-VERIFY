@@ -540,7 +540,7 @@ initial begin
       //////////////////////////////////////////////////////////
       // bad command
       ///////////////////////////////////////////////////////////
-      $display("BAD CMD");
+      $display("B4D_CMD");
       for (logic [15:0] i =8; i <16; i++ ) begin
          `CHIP_RESET
       //   `LI_AOUT(16'h0000)
@@ -742,7 +742,7 @@ initial begin
    //////////////////////////////////////////////////////////
    // bad command
    ///////////////////////////////////////////////////////////
-   $display("BAD CMD");
+   $display("B4D_CMD");
    for (logic [15:0] i =8; i <16; i++ ) begin
       `CHIP_NORMAL
       `LI_AOUT(16'h0001)

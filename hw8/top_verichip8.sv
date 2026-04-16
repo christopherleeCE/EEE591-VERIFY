@@ -447,6 +447,12 @@ logic [15:0] expvi_reg_values [0:6];
 logic [15:0] scratch;
 
 initial begin
+
+   `CLEAR_ALL
+   `CHIP_RESET
+   export_disable = 0;
+
+   `include "hw8.vh"
    `include "hw4.vh"
    `include "hw5.vh"
    `include "hw6.vh"
@@ -458,7 +464,7 @@ initial begin
    $finish();
 end 
 
-verichip8_binds verichip8_binds();
+//verichip8_binds verichip8_binds();
 verichip8 verichip (
    .clk           ( clk            ),    // system clock
    .rst_b         ( rst_b          ),    // chip reset

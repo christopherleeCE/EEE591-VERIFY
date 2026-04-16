@@ -126,7 +126,7 @@
    //////////////////////////////////////////////////////////
    // bad command
    ///////////////////////////////////////////////////////////
-   $display("BAD CMD");
+   $display("B4D_CMD");
    for (logic [15:0] i =8; i <16; i++ ) begin
       `CHIP_RESET
       // `LI_AOUT(16'h0000)
@@ -194,17 +194,31 @@
       `LI_AOUT(16'h0001)
       `DRIVE_CMD(16'h0000,16'h5555,16'h8001,16'h0000,16'h5555,((export_disable) ? (16'h5555) : (16'h5555) ),4'h1)
       `CHIP_NORMAL
+
       `LI_AOUT(16'h0001)
+      `DRIVE_CMD(16'hFFFF,16'hCFFF,16'h8001,16'hFFFF,16'hCFFF,16'hCFFE,4'h1)
       `CHIP_NORMAL
+
+      `LI_AOUT(16'h0001)
+      `DRIVE_CMD(16'hCFFF,16'hFFFF,16'h8001,16'hCFFF,16'hFFFF,16'hCFFE,4'h1)
+      `CHIP_NORMAL
+
+      `LI_AOUT(16'h0001)
+      `DRIVE_CMD(16'h8001,16'h8002,16'h8001,16'h8001,16'h8002,16'h0003,4'h2)
+      `CHIP_NORMAL
+
       `DRIVE_CMD(16'hFFFF,16'hAAAA,16'h8001,16'hFFFF,16'hAAAA,((export_disable) ? (16'hAAA9) : (16'hAAA9) ),4'h1)
       `DISPLAY_STATE
       `CHIP_NORMAL
+
       `LI_AOUT(16'h0001)
       `DRIVE_CMD(16'h5555,16'hFFFF,16'h8001,16'h5555,16'hFFFF,((export_disable) ? (16'h5554) : (16'h5554) ),4'h1)
       `CHIP_NORMAL
+
       `LI_AOUT(16'h0001)
       `DRIVE_CMD(16'hAAAA,16'h0000,16'h8001,16'hAAAA,16'h0000,((export_disable) ? (16'hAAAA) : (16'hAAAA) ),4'h1)
       `CHIP_NORMAL
+
       `DISPLAY_STATE
       `DRIVE_CMD(16'h7FFF,16'h0002,16'h8001,16'h7FFF,16'h0002,((export_disable) ? (16'h8001) : (16'h8001) ),4'h2)
       `DISPLAY_STATE
@@ -328,7 +342,7 @@
       //////////////////////////////////////////////////////////
       // bad command
       ///////////////////////////////////////////////////////////
-      $display("BAD CMD");
+      $display("B4D_CMD");
       for (logic [15:0] i =8; i <16; i++ ) begin
          `CHIP_NORMAL
          `LI_AOUT(16'h0001)
