@@ -15,20 +15,28 @@
 `CHECK_RW(VCHIP_ALU_OUT_ADDR, 16'hd000, 16'h0000, 2'b11, 1'b1)
 
 
-/////////////
-// alu_regs
-////////////
+//add, cp valid, state error
 `CLEAR_ALL
-`CHIP_ERROR(16'h0000,0)
-`CLEAR_ALL
-`CHIP_ERROR(16'h0001,0)
-`CLEAR_ALL
-`CHIP_ERROR(16'h0002,0)
-`CLEAR_ALL
-`CHIP_ERROR(16'h0003,0)
-`CLEAR_ALL
-`CHIP_ERROR(16'h0004,0)
-`CLEAR_ALL
-`CHIP_ERROR(16'h0005,0)
-`CLEAR_ALL
-`CHIP_ERROR(16'h0006,0)
+wait(clk == 1'b0);
+rst_b <= 1'b0;    
+wait(clk == 1'b1);
+rst_b <= 1'b1;    
+wait(clk == 1'b0);
+
+//go into normal from reset
+maroon <= 1'b0;   
+gold <= 1'b1;     
+wait(clk == 1'b1);
+wait(clk == 1'b0);
+
+//error with overflow
+`CHECK_RW(VCHIP_ALU_LEFT_ADDR, 16'h7FFF, 16'h7FFF, 2'b11, 1'b1)
+`CHECK_RW(VCHIP_ALU_RIGHT_ADDR, 16'h7FFF, 16'h7FFF, 2'b11, 1'b1)
+`DISPLAY_STATE
+`CHECK_RW(VCHIP_CMD_ADDR, 16'h8001, 16'h0001, 2'b11, 1'b1)
+`READ_REG(VCHIP_ALU_OUT_ADDR, 1'b1)
+`DISPLAY_STATE
+$display("cmd: %d", verichip.cmd);
+$display("valid: %d", verichip.valid);
+$display("data_out: %d", data_out);
+

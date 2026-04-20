@@ -3,8 +3,9 @@ set -e
 
 make clean
 make all
-grep error *.log
-grep warn *.log
-grep bad *.log
+
+grep -i --color=always error *.log || true
+grep -i --color=always warn *.log || true
+grep -i --color=always bad *.log || true
 
 exit 0
