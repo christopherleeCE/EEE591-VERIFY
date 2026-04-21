@@ -40,6 +40,12 @@
    address <= addr;                 \
    data_in <= 16'h0;
 
+`define SET_READ2(addr,cs)           \
+   rw_ <= 1'b1;                     \
+   chip_select <= cs;               \
+   address <= addr;                 \
+   data_in <= 16'h0;
+
 // sets everything to "active" values
 `define CLEAR_BUS                   \
    chip_select    <= 1'b0;          \
@@ -67,6 +73,12 @@
    wait(clk == 1'b0); \
    wait(clk == 1'b1);
 
+`define READ_REG2(addr,cs) \
+   wait(clk == 1'b1); \
+   `SET_READ2(addr,cs) \
+   wait(clk == 1'b0); \
+   wait(clk == 1'b1);
+
 //give it a value, if the data_out on the data bus is not that value, throw an error
 `define CHECK_VAL(exp_val)                                      \
   if (data_out != exp_val)                                      \
@@ -81,6 +93,12 @@
 `define CHECK_RW(addr,wval,exp_val,bytes,cs)    \
    `WRITE_REG(addr,wval,bytes,cs)               \
    `READ_REG(addr,cs)                           \
+   `CHECK_VAL(exp_val)
+
+`define CHECK_RW2(addr,wval,exp_val,bytes,cs)    \
+   `WRITE_REG(addr,wval,bytes,cs)               \
+   byte_en <= bytes;                             \
+   `READ_REG2(addr,cs)                           \
    `CHECK_VAL(exp_val)
 
 // Ensures that reading from addresses not linked to an address given regardless of cs value
@@ -464,7 +482,7 @@ initial begin
    $finish();
 end 
 
-//verichip8_binds verichip8_binds();
+verichip8_binds verichip8_binds();
 verichip8 verichip (
    .clk           ( clk            ),    // system clock
    .rst_b         ( rst_b          ),    // chip reset
