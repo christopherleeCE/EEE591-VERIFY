@@ -138,3 +138,30 @@ end
 `CHECK_RW2(VCHIP_ALU_OUT_ADDR, 16'hAAAA, 16'h0000, 2'b10, 1'b1)
 `CHECK_RW2(VCHIP_ALU_OUT_ADDR, 16'hFFFF, 16'h0000, 2'b10, 1'b1)
 
+$display("time %t", $realtime);
+export_disable <= 1'b1;
+`CHIP_NORMAL
+`DISPLAY_STATE
+
+`CHECK_RW(VCHIP_VER_ADDR, 16'h0000, 16'h8210, 2'b11, 1'b1)
+`CHECK_RW(VCHIP_STA_ADDR, 16'h0000, 16'h0001, 2'b11, 1'b1)
+`CHECK_RW(VCHIP_CMD_ADDR, 16'h0000, 16'h0000, 2'b11, 1'b1)
+`CHECK_RW(VCHIP_CON_ADDR, 16'h0300, 16'h0300, 2'b11, 1'b1)
+`CHECK_RW(VCHIP_ALU_LEFT_ADDR, 16'h0000, 16'h0000, 2'b11, 1'b1)
+`CHECK_RW(VCHIP_ALU_RIGHT_ADDR, 16'h0000, 16'h0000, 2'b11, 1'b1)
+`CHECK_RW(VCHIP_ALU_OUT_ADDR, 16'h0000, 16'h0000, 2'b11, 1'b1)
+
+$display("time %t", $realtime);
+`DISPLAY_STATE
+//`CHECK_RW(VCHIP_CMD_ADDR, 16'h8005, 16'h0000, 2'b11, 1'b1)
+`WRITE_REG(VCHIP_CMD_ADDR,16'h8005,2'b11,1'b1)
+// rw_ <= 1'b0;                     
+// chip_select <= 1'b1;               
+// byte_en <= 2'b11;                
+// address <= VCHIP_CMD_ADDR;                 
+// data_in <= 16'h8005;
+wait(clk == 0); wait(clk == 1); wait(clk == 0);
+wait(clk == 0); wait(clk == 1); wait(clk == 0);
+wait(clk == 0); wait(clk == 1); wait(clk == 0);
+$display("do: %d", data_out);
+`DISPLAY_STATE
