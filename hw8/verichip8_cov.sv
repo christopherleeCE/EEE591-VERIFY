@@ -118,13 +118,18 @@ cp_bytes: coverpoint byte_en{bins neither = {0};
                              bins byte1 = {2};
                              bins both = {3};}
 cp_data_in: coverpoint data_in{bins range[8] = {[0:$]};}
-cp_address: coverpoint address iff (rw_ && chip_select == 1){bins ver = {VCHIP_ADDR_VER};
-                               bins sta = {VCHIP_ADDR_STA};
-                               bins cmd = {VCHIP_ADDR_CMD};
-                               bins con = {VCHIP_ADDR_CON};
-                               bins lft = {VCHIP_ADDR_LFT};
-                               bins rgt = {VCHIP_ADDR_RGT};
-                               bins alu = {VCHIP_ADDR_ALU};}
+cp_address: coverpoint address iff ((((state == VCHIP_STATE_NORM) && 1'b1) ||
+                                    ((state == VCHIP_STATE_RESET) && 1'b1) ||
+                                    ((state == VCHIP_STATE_ERR) && rw_) ||
+                                    ((state == VCHIP_STATE_EXP) && rw_ && (address == VCHIP_ADDR_STA)))// && (chip_select == 1)){ cs=1 covered in cross
+                                    ){
+                                bins ver = {VCHIP_ADDR_VER};
+                                bins sta = {VCHIP_ADDR_STA};
+                                bins cmd = {VCHIP_ADDR_CMD};
+                                bins con = {VCHIP_ADDR_CON};
+                                bins lft = {VCHIP_ADDR_LFT};
+                                bins rgt = {VCHIP_ADDR_RGT};
+                                bins alu = {VCHIP_ADDR_ALU};}
 
 cx_cs_rw_be: cross cp_cs, cp_rw, cp_bytes;
 cx_cs_rw_add: cross cp_cs, cp_rw, cp_address;
