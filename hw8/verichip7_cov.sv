@@ -1,4 +1,4 @@
-module verichip8_cov (input logic clk,                       // system clock
+module verichip7_cov (input logic clk,                       // system clock
                       input logic rst_b,                     // chip reset
                       input logic export_disable,            // disable features
                       input logic interrupt_1,               // first interrupt
@@ -157,4 +157,4 @@ bus_interface bus_interface_i = new();
 //}
 
 
-endmodule // verichip8_cov
+endmodule // verichip7_cov

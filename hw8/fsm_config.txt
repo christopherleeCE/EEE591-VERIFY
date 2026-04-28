@@ -1,4 +1,4 @@
-MODULE = verichip8
+MODULE = verichip7
 CURRENT = state
 NEXT = next_state
 STATES = VCHIP_STATE_RESET, VCHIP_STATE_NORM,

@@ -360,7 +360,7 @@ end
 
 
 
-module top_verichip8 ();
+module top_verichip7 ();
 
 
 
@@ -482,8 +482,8 @@ initial begin
    $finish();
 end 
 
-verichip8_binds verichip8_binds();
-verichip8 verichip (
+verichip7_binds verichip7_binds();
+verichip7 verichip (
    .clk           ( clk            ),    // system clock
    .rst_b         ( rst_b          ),    // chip reset
    .export_disable( export_disable ),    // disable features

@@ -9,10 +9,10 @@
 
    //$display("my_access_array: %p", my_access_array);
 
-   // $display("nick notes: out_reg %h", gen_exp_ret);
-   // $display("nick notes: my_wr_val %h", my_wr_val);
+   // $display("out_reg %h", gen_exp_ret);
+   // $display("my_wr_val %h", my_wr_val);
    // `GEN_EXP_VAL(my_wr_val,my_reg_val,my_access_array[5],gen_exp_ret)
-   // $display("nick notes out reg: %h", gen_exp_ret);
+   // $display("out reg: %h", gen_exp_ret);
 
 
    $display("calling finish");
@@ -37,9 +37,9 @@
             my_wr_val = stim_array[i]; //this step is needed, I don't know why
             `GEN_EXP_VAL(my_wr_val,bit_mask_array[_be],my_reg_val,my_access_array[addr_idx],address_array[addr_idx],gen_exp_ret)
             $display("\n_be : %2b", _be);
-            $display("nick notes my_wr_val %h", my_wr_val);
-            $display("nick notes gen_exp_ret: %h", gen_exp_ret);
-            $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
+            $display("my_wr_val %h", my_wr_val);
+            $display("gen_exp_ret: %h", gen_exp_ret);
+            $display("address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
             //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
             `CHECK_RW(address_array[addr_idx], stim_array[i], (gen_exp_ret), _be, 1'b1)
          end
@@ -67,9 +67,9 @@
             my_wr_val = stim_array[i]; //this step is needed, I don't know why
             `GEN_EXP_VAL(my_wr_val,bit_mask_array[_be],normal_reg_values[addr_idx],my_access_array[addr_idx],address_array[addr_idx],gen_exp_ret)
             $display("\n_be : %2b", _be);
-            $display("nick notes my_wr_val %h", my_wr_val);
-            $display("nick notes gen_exp_ret: %h", gen_exp_ret);
-            $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
+            $display("my_wr_val %h", my_wr_val);
+            $display("gen_exp_ret: %h", gen_exp_ret);
+            $display("address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
             //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
             $display("%h", stim_array[i]);
             `CHECK_RW(address_array[addr_idx], stim_array[i], (gen_exp_ret), _be, 1'b1)
@@ -149,9 +149,9 @@
             my_wr_val = 16'h0001; //this step is needed, I don't know why
             `GEN_EXP_VAL(my_wr_val,bit_mask_array[2'b11],error_reg_values[addr_idx],my_access_array[addr_idx],address_array[addr_idx],gen_exp_ret)
             $display("\n_be : %2b", _be);
-            $display("nick notes my_wr_val %h", my_wr_val);
-            $display("nick notes gen_exp_ret: %h", gen_exp_ret);
-            $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
+            $display("my_wr_val %h", my_wr_val);
+            $display("gen_exp_ret: %h", gen_exp_ret);
+            $display("address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
             //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
             $display("%h", stim_array[i]);
             if (address_array[addr_idx] == VCHIP_CMD_ADDR) begin
@@ -206,9 +206,9 @@
             $display("new ger: %h", gen_exp_ret);
 
             $display("\n_be : %2b", _be);
-            $display("nick notes my_wr_val %h", my_wr_val);
-            $display("nick notes gen_exp_ret: %h", gen_exp_ret);
-            $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
+            $display("my_wr_val %h", my_wr_val);
+            $display("gen_exp_ret: %h", gen_exp_ret);
+            $display("address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
             //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
             `CHECK_RW(address_array[addr_idx], stim_array[i], (gen_exp_ret), _be, 1'b1)
             $display("do: %h", data_out);
@@ -249,9 +249,9 @@
                gen_exp_ret = 16'h0000;
             end
             $display("\n_be : %2b", _be);
-            $display("nick notes my_wr_val %h", my_wr_val);
-            $display("nick notes gen_exp_ret: %h", gen_exp_ret);
-            $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
+            $display("my_wr_val %h", my_wr_val);
+            $display("gen_exp_ret: %h", gen_exp_ret);
+            $display("address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
             //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
             $display("%h", stim_array[i]);
             `CHECK_RW(address_array[addr_idx], stim_array[i], (gen_exp_ret), _be, 1'b1)
@@ -293,9 +293,9 @@
          for (int i = 0; i < 4; i++) begin
                if(addr_idx == 4) begin $display("dry soup"); end //HERE
                $display("\n_be : %2b", _be);
-               $display("nick notes my_wr_val %h", my_wr_val);
-               $display("nick notes gen_exp_ret: %h", gen_exp_ret);
-               $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
+               $display("my_wr_val %h", my_wr_val);
+               $display("gen_exp_ret: %h", gen_exp_ret);
+               $display("address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
                //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
             `CHECK_RW(address_array[addr_idx], stim_array[i], 16'h0, _be, 1'b0)
          end
@@ -318,9 +318,9 @@
          for (int i = 0; i < 4; i++) begin
             if(addr_idx == 4) begin $display("dry soup"); end //HERE
             $display("\n_be : %2b", _be);
-            $display("nick notes my_wr_val %h", my_wr_val);
-            $display("nick notes gen_exp_ret: %h", gen_exp_ret);
-            $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
+            $display("my_wr_val %h", my_wr_val);
+            $display("gen_exp_ret: %h", gen_exp_ret);
+            $display("address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
             //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
             `CHECK_RW(address_array[addr_idx], stim_array[i], 16'h0, _be, 1'b0)
          end
@@ -364,9 +364,9 @@
          for (int i = 0; i < 4; i++) begin
             if(addr_idx == 4) begin $display("dry soup"); end //HERE
             $display("\n_be : %2b", _be);
-            $display("nick notes my_wr_val %h", my_wr_val);
-            $display("nick notes gen_exp_ret: %h", gen_exp_ret);
-            $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
+            $display("my_wr_val %h", my_wr_val);
+            $display("gen_exp_ret: %h", gen_exp_ret);
+            $display("address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
             //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
             `CHECK_RW(address_array[addr_idx], stim_array[i], 16'h0, _be, 1'b0)
          end
@@ -389,9 +389,9 @@
                gen_exp_ret = 16'h0000;
             end
             $display("\n_be : %2b", _be);
-            $display("nick notes my_wr_val %h", my_wr_val);
-            $display("nick notes gen_exp_ret: %h", gen_exp_ret);
-            $display("nick notes address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
+            $display("my_wr_val %h", my_wr_val);
+            $display("gen_exp_ret: %h", gen_exp_ret);
+            $display("address and reg name: %0h (%s)", address_array[addr_idx], reg_names[addr_idx]);
             //$display("%h", (gen_exp_ret & bit_mask_array[_be]));
             $display("%h", stim_array[i]);
             $display("chiptune");
